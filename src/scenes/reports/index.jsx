@@ -1,9 +1,62 @@
-import React from 'react'
+import { Box, Button, useTheme } from "@mui/material";
+import { tokens } from "../../theme";
+import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
+import Header from "../../components/Header";
 
-function index() {
+import React from "react";
+import BotPerformance from "./BotPerformance";
+import UserEngagement from "./UserEngagement";
+import BillingReport from "./BillingReport";
+import Reports from "./Reports";
+
+const Dashboard = () => {
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+
   return (
-    <div>reports management</div>
-  )
-}
+    <Box m="20px">
+      {/* HEADER */}
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
 
-export default index
+        <Box>
+          <Button
+            sx={{
+              backgroundColor: colors.blueAccent[700],
+              color: colors.grey[100],
+              fontSize: "14px",
+              fontWeight: "bold",
+              padding: "10px 20px",
+            }}
+          >
+            <DownloadOutlinedIcon sx={{ mr: "10px" }} />
+            Download Reports
+          </Button>
+        </Box>
+      </Box>
+
+      <Box>
+        <div>
+          <div>
+            <div
+              style={{
+                margin: "1em 0",
+                display: "flex",
+                flexWrap: "wrap",
+                gap: ".25em",
+                justifyContent: "space-between",
+              }}
+            >
+              <BotPerformance />
+              <UserEngagement />
+              <BillingReport />
+              <Reports />
+            </div>
+          </div>
+        </div>
+      </Box>
+    </Box>
+  );
+};
+
+export default Dashboard;

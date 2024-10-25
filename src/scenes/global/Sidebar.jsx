@@ -118,7 +118,7 @@ const Sidebar = () => {
                   width="100px"
                   height="100px"
                   src={`../../assets/user.png`}
-                  style={{ cursor: "pointer", borderRadius: "50%" }}
+                  style={{ cursor: "pointer", borderRadius: "50%", objectFit: 'cover' }}
                 />
               </Box>
               <Box textAlign="center">
@@ -128,7 +128,7 @@ const Sidebar = () => {
                   fontWeight="bold"
                   sx={{ m: "10px 0 0 0" }}
                 >
-                  John Doe
+                  John OM
                 </Typography>
                 <Typography variant="h5" color={colors.greenAccent[300]}>
                   johndeo_503
@@ -320,13 +320,6 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-            {/* <Item
-              title="Settings"
-              to="/form"
-              icon={<SettingsIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            /> */}
           </Box>
         </Menu>
       </ProSidebar>

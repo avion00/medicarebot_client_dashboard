@@ -1,0 +1,48 @@
+{
+  "performanceData": [
+    {
+      "botName": "Bot A",
+      "data": [
+        { "name": "Week 1", "responses": 400, "successRate": 8 },
+        { "name": "Week 2", "responses": 100, "successRate": 15 },
+        { "name": "Week 3", "responses": 600, "successRate": 95 },
+        { "name": "Week 4", "responses": 40, "successRate": 5 },
+        { "name": "Week 5", "responses": 950, "successRate": 100 }
+      ]
+    },{
+      "botName": "Bot A",
+      "data": [
+        { "name": "Week 1", "responses": 400, "successRate": 8 },
+        { "name": "Week 2", "responses": 100, "successRate": 15 },
+        { "name": "Week 3", "responses": 600, "successRate": 95 },
+        { "name": "Week 4", "responses": 40, "successRate": 5 },
+        { "name": "Week 5", "responses": 950, "successRate": 100 }
+      ]
+    },
+    {
+      "botName": "Bot B",
+      "data": [
+        { "name": "Week 1", "responses": 40, "successRate": 85 },
+        { "name": "Week 2", "responses": 900, "successRate": 5 },
+        { "name": "Week 3", "responses": 200, "successRate": 95 },
+        { "name": "Week 4", "responses": 100, "successRate": 35 },
+        { "name": "Week 5", "responses": 680, "successRate": 5 }
+      ]
+    }
+  ],
+  "userEngagementData": [
+    { "week": "Week 1", "activeUsers": 100, "newUsers": 20 },
+    { "week": "Week 2", "activeUsers": 600, "newUsers": 2 },
+    { "week": "Week 3", "activeUsers": 300, "newUsers": 80 },
+    { "week": "Week 4", "activeUsers": 120, "newUsers": 30 },
+    { "week": "Week 5", "activeUsers": 600, "newUsers": 10 },
+    { "week": "Week 6", "activeUsers": 10, "newUsers": 90 }
+  ],
+  "billingData": [
+    { "date": "2024-09-01", "amount": 10 },
+    { "date": "2024-09-02", "amount": 200 },
+    { "date": "2024-09-03", "amount": 900 },
+    { "date": "2024-09-04", "amount": 300 },
+    { "date": "2024-09-15", "amount": 800 }
+  ]
+}

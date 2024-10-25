@@ -163,7 +163,8 @@ export const themeSettings = (mode) => {
           }),
     },
     typography: {
-      fontFamily: ["Source Sans Pro", "sans-serif"].join(","),
+      // fontFamily: ["Source Sans Pro", "sans-serif"].join(","),
+      fontFamily: ["Inter", "serif"].join(","),
       fontSize: 12,
       h1: {
         fontFamily: ["Source Sans Pro", "sans-serif"].join(","),
@@ -178,16 +179,16 @@ export const themeSettings = (mode) => {
         fontSize: 24,
       },
       h4: {
-        fontFamily: ["Source Sans Pro", "sans-serif"].join(","),
+        fontFamily: ["Inter", "serif"].join(","),
         fontSize: 20,
       },
       h5: {
-        fontFamily: ["Source Sans Pro", "sans-serif"].join(","),
+        fontFamily: ["Inter", "serif"].join(","),
         fontSize: 16,
       },
       h6: {
-        fontFamily: ["Source Sans Pro", "sans-serif"].join(","),
-        fontSize: 14,
+        fontFamily: ["Inter", "serif"].join(","),
+        fontSize: 12,
       },
     },
   };

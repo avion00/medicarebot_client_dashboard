@@ -1,0 +1,99 @@
+{
+  "bots": [
+    {
+      "id": 1,
+      "name": "Bot A",
+      "performanceData": [
+        { "name": "Day 1", "responses": 40, "successRate": 85 },
+        { "name": "Day 2", "responses": 35, "successRate": 90 },
+        { "name": "Day 3", "responses": 50, "successRate": 88 },
+        { "name": "Day 4", "responses": 45, "successRate": 92 },
+        { "name": "Day 5", "responses": 60, "successRate": 87 },
+        { "name": "Day 6", "responses": 70, "successRate": 93 },
+        { "name": "Day 7", "responses": 80, "successRate": 95 }
+      ],
+      "recentActivities": [
+        { "time": "2 hrs ago", "description": "Bot A handled 40 responses" },
+        { "time": "1 day ago", "description": "Bot A updated training data" },
+        { "time": "3 days ago", "description": "Bot A improved its response accuracy" },
+        { "time": "5 days ago", "description": "Bot A received new feedback" }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Bot B",
+      "performanceData": [
+        { "name": "Day 1", "responses": 50, "successRate": 80 },
+        { "name": "Day 2", "responses": 55, "successRate": 75 },
+        { "name": "Day 3", "responses": 60, "successRate": 82 },
+        { "name": "Day 4", "responses": 65, "successRate": 78 },
+        { "name": "Day 5", "responses": 70, "successRate": 85 },
+        { "name": "Day 6", "responses": 75, "successRate": 80 },
+        { "name": "Day 7", "responses": 80, "successRate": 88 }
+      ],
+      "recentActivities": [
+        { "time": "3 hrs ago", "description": "Bot B successfully completed training" },
+        { "time": "1 day ago", "description": "Bot B updated training data" },
+        { "time": "2 days ago", "description": "Bot B received user feedback" },
+        { "time": "4 days ago", "description": "Bot B was reconfigured for new tasks" }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Bot C",
+      "performanceData": [
+        { "name": "Day 1", "responses": 30, "successRate": 60 },
+        { "name": "Day 2", "responses": 40, "successRate": 70 },
+        { "name": "Day 3", "responses": 50, "successRate": 75 },
+        { "name": "Day 4", "responses": 55, "successRate": 80 },
+        { "name": "Day 5", "responses": 65, "successRate": 82 },
+        { "name": "Day 6", "responses": 70, "successRate": 85 },
+        { "name": "Day 7", "responses": 80, "successRate": 88 }
+      ],
+      "recentActivities": [
+        { "time": "1 hr ago", "description": "Bot C processed a new query" },
+        { "time": "2 days ago", "description": "Bot C updated its response model" },
+        { "time": "4 days ago", "description": "Bot C was deployed in new channels" },
+        { "time": "6 days ago", "description": "Bot C received positive user reviews" }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Bot D",
+      "performanceData": [
+        { "name": "Day 1", "responses": 20, "successRate": 50 },
+        { "name": "Day 2", "responses": 25, "successRate": 55 },
+        { "name": "Day 3", "responses": 30, "successRate": 65 },
+        { "name": "Day 4", "responses": 35, "successRate": 70 },
+        { "name": "Day 5", "responses": 45, "successRate": 75 },
+        { "name": "Day 6", "responses": 50, "successRate": 80 },
+        { "name": "Day 7", "responses": 55, "successRate": 83 }
+      ],
+      "recentActivities": [
+        { "time": "2 hrs ago", "description": "Bot D has learned new keywords" },
+        { "time": "1 day ago", "description": "Bot D participated in a training session" },
+        { "time": "3 days ago", "description": "Bot D was adjusted for better accuracy" },
+        { "time": "5 days ago", "description": "Bot D collected user interaction data" }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Bot E",
+      "performanceData": [
+        { "name": "Day 1", "responses": 15, "successRate": 40 },
+        { "name": "Day 2", "responses": 20, "successRate": 45 },
+        { "name": "Day 3", "responses": 25, "successRate": 50 },
+        { "name": "Day 4", "responses": 30, "successRate": 60 },
+        { "name": "Day 5", "responses": 40, "successRate": 65 },
+        { "name": "Day 6", "responses": 50, "successRate": 70 },
+        { "name": "Day 7", "responses": 60, "successRate": 75 }
+      ],
+      "recentActivities": [
+        { "time": "30 min ago", "description": "Bot E engaged in a new conversation" },
+        { "time": "2 days ago", "description": "Bot E received a performance review" },
+        { "time": "4 days ago", "description": "Bot E's algorithm was updated" },
+        { "time": "6 days ago", "description": "Bot E received a large volume of data" }
+      ]
+    }
+  ]
+}

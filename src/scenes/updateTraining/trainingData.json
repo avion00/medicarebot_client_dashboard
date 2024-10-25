@@ -1,0 +1,10 @@
+{
+    "trainingData": [
+      { "intent": "Greeting", "example": "Hello, how can I help you?" },
+      { "intent": "FAQ", "example": "What are your working hours?" },
+      { "intent": "Goodbye", "example": "Thank you, goodbye!" },
+      { "intent": "Appointment Scheduling", "example": "Can I schedule an appointment?" },
+      { "intent": "Feedback Collection", "example": "Please provide your feedback." }
+    ]
+  }
+  

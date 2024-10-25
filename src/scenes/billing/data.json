@@ -1,0 +1,17 @@
+{
+  "subscriptions": [
+    { "id": 1, "plan": "Basic", "price": 10, "features": ["Feature 1", "Feature 2"], "billingCycle": "Monthly" },
+    { "id": 2, "plan": "Pro", "price": 20, "features": ["Feature 1", "Feature 2", "Feature 3"], "billingCycle": "Monthly" },
+    { "id": 3, "plan": "Enterprise", "price": 50, "features": ["Feature 1", "Feature 2", "Feature 3", "Feature 4"], "billingCycle": "Monthly" }
+  ],
+  "billingHistory": [
+    { "date": "2024-01-01", "amount": 10, "plan": "Basic" },
+    { "date": "2024-02-01", "amount": 20, "plan": "Pro" },
+    { "date": "2024-03-01", "amount": 50, "plan": "Enterprise" }
+  ],
+  "conversationCosts": [
+    { "date": "2024-01-01", "cost": 0.1 },
+    { "date": "2024-02-01", "cost": 0.2 },
+    { "date": "2024-03-01", "cost": 0.15 }
+  ]
+}
