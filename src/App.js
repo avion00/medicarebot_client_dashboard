@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import Topbar from "./scenes/global/Topbar";
 import Sidebar from "./scenes/global/Sidebar";
 import Dashboard from "./scenes/dashboard";
@@ -15,34 +15,87 @@ import Geography from "./scenes/geography";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
 import Calendar from "./scenes/calendar/calendar";
+import LogIn from "./scenes/logIn/index";
+import Register from "./scenes/register/index";
+import ChangePassword from "./scenes/changePassword/index";
+import EditProfile from "./scenes/editProfile/index";
+import ActiveBots from "./scenes/activeBots/index";
+import ConfigureSettings from "./scenes/configureSettings/index";
+import UpdateTraining from "./scenes/updateTraining/index";
+import Deactivate from "./scenes/deactivateBots/index";
+import Settings from "./scenes/settings/index";
+import Interactions from "./scenes/interactions/index";
+import Billing from "./scenes/billing/index";
+import Reports from "./scenes/reports/index";
 
 function App() {
   const [theme, colorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
 
+  const location = useLocation();
+
+  // Determine if the current path is for authentication
+  const isAuthPage =
+    location.pathname === "/" ||
+    location.pathname === "/register" ||
+    location.pathname === "/logIn";
+
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <div className="app">
-          <Sidebar isSidebar={isSidebar} />
-          <main className="content">
-            <Topbar setIsSidebar={setIsSidebar} />
+        {isAuthPage ? (
+          <div className="auth-page" style={{ height: "100vh" }}>
             <Routes>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/team" element={<Team />} />
-              <Route path="/contacts" element={<Contacts />} />
-              <Route path="/invoices" element={<Invoices />} />
-              <Route path="/form" element={<Form />} />
-              <Route path="/bar" element={<Bar />} />
-              <Route path="/pie" element={<Pie />} />
-              <Route path="/line" element={<Line />} />
-              <Route path="/faq" element={<FAQ />} />
-              <Route path="/calendar" element={<Calendar />} />
-              <Route path="/geography" element={<Geography />} />
+              <Route path="/" element={<LogIn />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/logIn" element={<LogIn />} />
+              <Route path="*" element={<Navigate to="/logIn" />} />
             </Routes>
-          </main>
-        </div>
+          </div>
+        ) : (
+          <div className="app" style={{ display: "flex", height: "100vh" }}>
+            <Sidebar isSidebar={isSidebar} />
+            <main
+              className="content"
+              style={{
+                flex: 1,
+                overflowY: "auto", // Allow main content to scroll independently
+                padding: "20px",
+                position: "relative",
+              }}
+            >
+              <Topbar setIsSidebar={setIsSidebar} />
+              <Routes>
+                <Route path="*" element={<Navigate to="/logIn" />} />
+                <Route exact path="/dashboard" element={<Dashboard />} />
+                <Route path="/team" element={<Team />} />
+                <Route path="/contacts" element={<Contacts />} />
+                <Route path="/invoices" element={<Invoices />} />
+                <Route path="/form" element={<Form />} />
+                <Route path="/bar" element={<Bar />} />
+                <Route path="/pie" element={<Pie />} />
+                <Route path="/line" element={<Line />} />
+                <Route path="/faq" element={<FAQ />} />
+                <Route path="/calendar" element={<Calendar />} />
+                <Route path="/geography" element={<Geography />} />
+                <Route path="/changePassword" element={<ChangePassword />} />
+                <Route path="/editProfile" element={<EditProfile />} />
+                <Route path="/activeBots" element={<ActiveBots />} />
+                <Route
+                  path="/configureSettings"
+                  element={<ConfigureSettings />}
+                />
+                <Route path="/updateTraining" element={<UpdateTraining />} />
+                <Route path="/deactivateBots" element={<Deactivate />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/interactions" element={<Interactions />} />
+                <Route path="/billing" element={<Billing />} />
+                <Route path="/reports" element={<Reports />} />
+              </Routes>
+            </main>
+          </div>
+        )}
       </ThemeProvider>
     </ColorModeContext.Provider>
   );
