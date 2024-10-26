@@ -3,6 +3,7 @@ import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import LineChart from "../../components/LineChart";
 import TuneIcon from "@mui/icons-material/Tune";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import React, { useState, useEffect } from "react";
 import {
@@ -26,7 +27,6 @@ import {
 import RecentActivities from "../../components/RecentActivities";
 import CustomizeGraph from "../../components/CustomizeGraph";
 import BotPerformanceData from "../../data/botPerformanceData.json";
-import DashboardIcon from "@mui/icons-material/Dashboard"; // Add this
 
 const Dashboard = () => {
   const theme = useTheme();
@@ -64,7 +64,6 @@ const Dashboard = () => {
         <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
 
         <Box>
-          
           <Button
             sx={{
               backgroundColor: colors.greenAccent[700],
@@ -76,7 +75,7 @@ const Dashboard = () => {
             onClick={toggleCustomizeView}
           >
             {customizing ? (
-              <DashboardIcon sx={{ mr: "10px" }} />
+              <ArrowBackIcon sx={{ mr: "10px" }} />
             ) : (
               <TuneIcon sx={{ mr: "10px" }} />
             )}

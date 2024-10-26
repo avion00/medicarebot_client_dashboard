@@ -2,11 +2,13 @@ import { Box, Button, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import Header from "../../components/Header";
-
+import SaveIcon from "@mui/icons-material/Save";
 import React, { useState } from "react";
-import "./style.css"; // Import your CSS file for additional styles
+import BackupIcon from "@mui/icons-material/Backup";
+import RestoreIcon from "@mui/icons-material/Restore";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
-const Dashboard = () => {
+const ConfigureSetting = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
@@ -56,8 +58,10 @@ const Dashboard = () => {
     <Box m="20px">
       {/* HEADER */}
       <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
-
+        <Header
+          title="CONFIGURE SETTINGS"
+          subtitle="Configure your all settings"
+        />
         <Box>
           <Button
             sx={{
@@ -75,230 +79,242 @@ const Dashboard = () => {
       </Box>
 
       <Box>
-        <section className="settings">
-          <header>
-            <h1
-              style={{
-                fontSize: "18px",
-                fontWeight: "bold",
-                padding: "1em 1.5em",
-                backgroundColor: "#0f3c4c",
-                color: "#fff",
-                margin: "0",
-              }}
-            >
-              Settings
-            </h1>
-          </header>
-          <div
-            className="settings-container"
+        <Box
+          className="settings-section"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Box
             style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: ".5em",
-              padding: "2em 0",
+              fontSize: "1.5em",
+              fontWeight: "700",
             }}
           >
-            <div
-              className="settings-section"
-              style={{
-                display: "flex",
-                flexDirection: "column",
+            General Settings
+          </Box>
+
+          <label
+            htmlFor="api-url"
+            style={{
+              marginTop: "1em",
+              fontSize: "1em",
+              fontWeight: "800",
+            }}
+          >
+            API URL:
+          </label>
+          <input
+            className="api_url_input"
+            type="text"
+            id="api-url"
+            placeholder="Enter API URL"
+            value={apiUrl}
+            onChange={(e) => setApiUrl(e.target.value)}
+            style={{
+              padding: "1em",
+              marginBottom: "1em",
+              backgroundColor: colors.primary[400],
+              border: `1px solid ${colors.grey[600]}`,
+              // outline: 'none',
+            }}
+          />
+          <Box>
+            <Button
+              onClick={handleSaveSettings}
+              sx={{
+                backgroundColor: colors.greenAccent[700],
+                color: colors.grey[100],
+                fontSize: "14px",
+                fontWeight: "bold",
+                padding: ".5em 1em",
+                textTransform: "capitalize",
               }}
             >
-              <h3
-                style={{
-                  fontSize: "1em",
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: "800",
-                  backgroundColor: "rgb(37,150,190, .2)",
-                  padding: "1em 2em",
-                  borderRadius: ".25em .25em 0 0",
-                }}
-              >
-                General Settings
-              </h3>
-              <label
-                htmlFor="api-url"
-                style={{
-                  fontSize: ".75em",
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: "800",
-                  marginLeft: "1em",
-                }}
-              >
-                API URL:
-              </label>
+              <SaveIcon sx={{ mr: "10px" }} />
+              Save Settings
+            </Button>
+          </Box>
+        </Box>
+
+        <Box
+          className="settings-section"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Box
+            style={{
+              fontSize: "1.5em",
+              fontWeight: "700",
+              marginTop: "2em",
+              marginBottom: ".5em",
+              lineHeight: "1",
+            }}
+          >
+            Notification Preferences
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "start",
+              gap: "1.5em",
+              padding: ".5em 0",
+            }}
+          >
+            <label
+              htmlFor="email-notifications"
+              className="notification-label"
+              style={{
+                fontSize: "1em",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: ".75em",
+              }}
+            >
               <input
-                className="api_url_input"
-                type="text"
-                id="api-url"
-                placeholder="Enter API URL"
-                value={apiUrl}
-                onChange={(e) => setApiUrl(e.target.value)}
+                type="checkbox"
+                id="email-notifications"
+                checked={emailNotifications}
+                onChange={() => setEmailNotifications(!emailNotifications)}
                 style={{
-                  padding: ".75em 1em",
-                  backgroundColor: "inherit",
-                  color: "inherit",
-                  borderRadius: ".35em",
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: ".9em",
+                  width: "18px",
+                  height: "18px",
+                  cursor: "pointer",
                 }}
               />
-              <button
-                className="save-settings"
-                onClick={handleSaveSettings}
-                style={{
-                  padding: ".75em 1.5em",
-                  width: "fit-content",
-                  marginBottom: "2.5em",
-                  fontSize: ".9em",
-                  marginTop: ".5em",
-                }}
-              >
-                Save Settings
-              </button>
-            </div>
-
-            <div
-              className="settings-section"
+              Email Notifications
+            </label>
+            <label
+              htmlFor="sms-notifications"
+              className="notification-label"
               style={{
+                fontSize: "1em",
+                marginLeft: "1em",
+                cursor: "pointer",
                 display: "flex",
-                flexDirection: "column",
+                alignItems: "center",
+                gap: ".75em",
               }}
             >
-              <h3
+              <input
+                type="checkbox"
+                id="sms-notifications"
+                checked={smsNotifications}
+                onChange={() => setSmsNotifications(!smsNotifications)}
                 style={{
-                  fontSize: "1em",
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: "800",
-                }}
-              >
-                Notification Preferences
-              </h3>
-              <label
-                htmlFor="email-notifications"
-                className="notification-label"
-                style={{
-                  fontSize: "1em",
-                  fontFamily: "Inter, sans-serif",
-                  marginLeft: "1em",
+                  width: "18px",
+                  height: "18px",
                   cursor: "pointer",
                 }}
-              >
-                <input
-                  type="checkbox"
-                  id="email-notifications"
-                  checked={emailNotifications}
-                  onChange={() => setEmailNotifications(!emailNotifications)}
-                />
-                Email Notifications
-              </label>
-              <label
-                htmlFor="sms-notifications"
-                className="notification-label"
-                style={{
-                  fontSize: "1em",
-                  fontFamily: "Inter, sans-serif",
-                  marginLeft: "1em",
-                  cursor: "pointer",
-                }}
-              >
-                <input
-                  type="checkbox"
-                  id="sms-notifications"
-                  checked={smsNotifications}
-                  onChange={() => setSmsNotifications(!smsNotifications)}
-                />
-                SMS Notifications
-              </label>
-              <button
-                className="save-notifications"
-                onClick={handleSaveNotifications}
-                style={{
-                  padding: ".75em 1.5em",
-                  width: "fit-content",
-                  fontSize: ".9em",
-                  margin: ".5em 0",
-                  marginBottom: "2.5em",
-                }}
-              >
-                Save Notification Preferences
-              </button>
-            </div>
+              />
+              SMS Notifications
+            </label>
+          </Box>
+          <Box>
+            <Button
+              onClick={handleSaveNotifications}
+              sx={{
+                backgroundColor: colors.greenAccent[700],
+                color: colors.grey[100],
+                fontSize: "14px",
+                fontWeight: "bold",
+                padding: ".5em 1em",
+                marginTop: ".5em",
+                textTransform: "capitalize",
+              }}
+            >
+              <SaveIcon sx={{ mr: "10px" }} />
+              Save Notification Preferences
+            </Button>
+          </Box>
+        </Box>
 
-            <div className="settings-section">
-              <h3
-                style={{
-                  fontSize: "1em",
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: "800",
+        <div className="settings-section">
+          <h3
+            style={{
+              fontSize: "1.5em",
+              fontWeight: "700",
+              marginTop: "2em",
+              marginBottom: ".5em",
+              lineHeight: "1",
+            }}
+          >
+            Data Management
+          </h3>
+          <div
+            style={{
+              display: "flex",
+              gap: "1em",
+              flexWrap: "wrap",
+              alignItems: "center",
+            }}
+          >
+            <Box>
+              <Button
+                onClick={handleBackupData}
+                sx={{
+                  backgroundColor: colors.greenAccent[700],
+                  color: colors.grey[100],
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                  padding: ".5em 1em",
+                  marginTop: ".5em",
+                  textTransform: "capitalize",
                 }}
               >
-                Data Management
-              </h3>
-              <div
-                style={{
-                  display: "flex",
-                  gap: "1em",
-                  flexWrap: "wrap",
-                  alignItems: "center",
+                <BackupIcon sx={{ mr: ".5em" }} />
+                Backup Data
+              </Button>
+            </Box>
+            {backupStatus && <p className="status-message">{backupStatus}</p>}
+            <Box>
+              <Button
+                onClick={handleRestoreData}
+                sx={{
+                  backgroundColor: colors.blueAccent[700],
+                  color: colors.grey[100],
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                  padding: ".5em 1em",
+                  marginTop: ".5em",
+                  textTransform: "capitalize",
                 }}
               >
-                <button
-                  className="data-action"
-                  onClick={handleBackupData}
-                  style={{
-                    padding: ".75em 1.5em",
-                    width: "fit-content",
-                    fontSize: ".9em",
-                    margin: ".5em 0",
-                  }}
-                >
-                  Backup Data
-                </button>
-                {backupStatus && (
-                  <p className="status-message">{backupStatus}</p>
-                )}
-
-                <button
-                  className="data-action"
-                  onClick={handleRestoreData}
-                  style={{
-                    padding: ".75em 1.5em",
-                    width: "fit-content",
-                    fontSize: ".9em",
-                    margin: ".5em 0",
-                  }}
-                >
-                  Restore Data
-                </button>
-                {restoreStatus && (
-                  <p className="status-message">{restoreStatus}</p>
-                )}
-
-                <button
-                  className="data-action delete-data"
-                  onClick={handleDeleteData}
-                  style={{
-                    padding: ".75em 1.5em",
-                    width: "fit-content",
-                    fontSize: ".9em",
-                    margin: ".5em 0",
-                  }}
-                >
-                  Delete All Data
-                </button>
-                {deleteStatus && (
-                  <p className="status-message delete">{deleteStatus}</p>
-                )}
-              </div>
-            </div>
+                <RestoreIcon sx={{ mr: ".5em" }} />
+                Restore Data
+              </Button>
+            </Box>
+            {restoreStatus && <p className="status-message">{restoreStatus}</p>}
+            <Box>
+              <Button
+                onClick={handleDeleteData}
+                sx={{
+                  backgroundColor: colors.redAccent[700],
+                  color: colors.grey[100],
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                  padding: ".5em 1em",
+                  marginTop: ".5em",
+                  textTransform: "capitalize",
+                }}
+              >
+                <DeleteForeverIcon sx={{ mr: ".5em" }} />
+                Delete All Data
+              </Button>
+            </Box>
+            {deleteStatus && (
+              <p className="status-message delete">{deleteStatus}</p>
+            )}
           </div>
-        </section>
+        </div>
       </Box>
     </Box>
   );
 };
 
-export default Dashboard;
+export default ConfigureSetting;

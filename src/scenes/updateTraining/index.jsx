@@ -1,10 +1,18 @@
-import { Box, Button, useTheme } from "@mui/material";
+import {
+  Box,
+  Button,
+  useTheme,
+  Typography,
+  Input,
+  InputLabel,
+  FormControl,
+} from "@mui/material";
 import { tokens } from "../../theme";
-import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import Header from "../../components/Header";
 import React, { useState, useEffect } from "react";
-import trainingDataJson from "./trainingData.json"; // Import the JSON file
-import "./style.css";
+import trainingDataJson from "../../data/trainingData.json";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 const Dashboard = () => {
   const theme = useTheme();
@@ -47,14 +55,18 @@ const Dashboard = () => {
     setValidationError(false);
   };
 
+  const handleDeleteData = (index) => {
+    setTrainingData(trainingData.filter((_, i) => i !== index));
+  };
+
   return (
     <Box m="20px">
       {/* HEADER */}
       <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
-
+        <Header title="UPDATE TRAINING" subtitle="Train your Bot" />
         <Box>
           <Button
+            onClick={() => setIsModalOpen(true)}
             sx={{
               backgroundColor: colors.blueAccent[700],
               color: colors.grey[100],
@@ -63,149 +75,220 @@ const Dashboard = () => {
               padding: "10px 20px",
             }}
           >
-            <DownloadOutlinedIcon sx={{ mr: "10px" }} />
-            Download Reports
+            <AddIcon sx={{ mr: "10px" }} />
+            Add new Training Data
           </Button>
         </Box>
       </Box>
 
-      <Box>
-        <section className="main container training-data">
-          <h2
-            style={{
-              fontSize: "18px",
-              fontWeight: "bold",
-              padding: "1em 1.5em",
-              backgroundColor: "#0f3c4c",
-              color: "#fff",
-              margin: "0",
-            }}
+      <Box
+        sx={{
+          position: "relative",
+        }}
+      >
+        <Box
+          gridColumn="span 4"
+          gridRow="span 2"
+          backgroundColor={colors.primary[400]}
+          overflow="auto"
+        >
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            borderBottom={`4px solid ${colors.primary[500]}`}
+            colors={colors.grey[100]}
+            p="15px"
           >
-            Training Data
-          </h2>
-          <div
-            className="training-box"
-            style={{
-              padding: "1.5em 0",
-            }}
-          >
-            <div
-              className="training-container"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                borderRadius: ".75em",
-                boxShadow: "2px 2px 50px 5px rgb(125,125, 125, 0.15)",
-                transition: "all .3s ease-out",
-                border: "1px solid rgb(125, 125, 125, 0.3)",
+            <Typography color={colors.grey[100]} variant="h5" fontWeight="600">
+              Available Training Data
+            </Typography>
+          </Box>
+          {trainingData.map((data, i) => (
+            <Box
+              key={`${data.intent}-${i}`}
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              borderBottom={`4px solid ${colors.primary[500]}`}
+              p="15px"
+            >
+              <Box>
+                <Typography
+                  color={colors.greenAccent[500]}
+                  variant="h5"
+                  fontWeight="600"
+                >
+                  {data.intent}
+                </Typography>
+                <Typography
+                  color={colors.blueAccent[500]}
+                  variant="h5"
+                  fontWeight="600"
+                >
+                  {data.example}
+                </Typography>
+              </Box>
+              <Box>
+                <Button
+                  onClick={() => handleDeleteData(i)}
+                  sx={{ color: "red" }}
+                >
+                  <DeleteOutlineIcon />
+                </Button>
+              </Box>
+            </Box>
+          ))}
+        </Box>
+        {isModalOpen && (
+          <>
+            <Box
+              sx={{
+                position: "fixed",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                bgcolor: "rgba(0, 0, 0, 0.5)",
+                zIndex: 999,
+              }}
+              onClick={closeModal}
+            />
+
+            <Box
+              className="modal"
+              sx={{
+                position: "fixed",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                zIndex: 1000,
+                width: "90%",
+                maxWidth: "500px",
+                bgcolor: colors.primary[400],
+                p: 4,
+                borderRadius: "8px",
+                boxShadow: 24, // Elevates the modal to make it stand out
               }}
             >
-              <h3
-                style={{
-                  padding: ".7em 1.25em",
-                  backgroundColor: "rgb(125, 125, 125, 0.25)",
-                  borderRadius: ".5em .5em 0 0",
-                  fontSize: "1.25em",
-                }}
-              >
-                Available Training Data
-              </h3>
-              <ul
-                className="training-list"
-                style={{
-                  padding: "0 .5em",
-                }}
-              >
-                {trainingData.map((data, index) => (
-                  <li
-                    key={index}
-                    style={{
-                      padding: ".75em",
-                      backgroundColor: "rgb(105, 155, 245, 0.2)",
-                      borderRadius: ".5em",
-                      cursor: "pointer",
-                      transition: "all .3s ease-out",
-                      paddingBottom: ".5em",
-                      borderBottom: "1px solid rgb(125, 125, 125, 0.5)",
-                      borderLeft: "5px solid #007bff",
-                      marginBottom: ".5em",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = "#007bff";
-                      e.currentTarget.style.color = "#fff";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor =
-                        "rgb(105, 155, 245, 0.2)";
-                      e.currentTarget.style.color = "inherit";
+              <Box className="modal-content" sx={{ color: colors.grey[100] }}>
+                <Typography
+                  variant="h5"
+                  gutterBottom
+                  sx={{
+                    borderBottom: `1px solid ${colors.primary[300]}`,
+                    paddingBottom: ".5em",
+                    fontWeight: "600",
+                    // paddingLeft: '.5em'
+                  }}
+                >
+                  Add New Training Data
+                </Typography>
+
+                <FormControl fullWidth sx={{ m: "1em 0" }}>
+                  <InputLabel
+                    sx={{
+                      color:
+                        validationError && !newIntent
+                          ? "red"
+                          : colors.grey[300],
+                      "&.Mui-focused": {
+                        color: colors.blueAccent[300],
+                        fontWeight: 600,
+                        fontSize: "1.2em",
+                      },
                     }}
                   >
-                    Intent: {data.intent} - Example: "{data.example}"
-                  </li>
-                ))}
-              </ul>
-              <button
-                className="add-training-data"
-                onClick={() => setIsModalOpen(true)}
-                style={{
-                  padding: ".75em 1.5em",
-                  margin: " 1em",
-                  width: "fit-content",
-                  borderRadius: ".35em",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = "#0056b3";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "#097df9be";
-                }}
-              >
-                + Add New Training Data
-              </button>
-            </div>
-          </div>
-
-          {isModalOpen && (
-            <div className="modal">
-              <div className="modal-content">
-                <h2>Add New Training Data</h2>
-                <label>
-                  Intent:
-                  <input
+                    Intent
+                  </InputLabel>
+                  <Input
                     type="text"
                     value={newIntent}
                     onChange={(e) => setNewIntent(e.target.value)}
                     placeholder="Enter intent"
-                    className={
-                      validationError && !newIntent ? "input-error" : ""
-                    }
+                    error={validationError && !newIntent}
+                    sx={{
+                      color: colors.grey[100],
+                      "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                        {
+                          borderColor: "red",
+                        },
+                      borderColor:
+                        validationError && !newIntent ? "red" : "inherit",
+                    }}
                   />
-                </label>
-                <label>
-                  Example:
-                  <input
+                </FormControl>
+
+                <FormControl fullWidth sx={{ m: "1em 0" }}>
+                  <InputLabel
+                    sx={{
+                      color:
+                        validationError && !newExample
+                          ? "red"
+                          : colors.grey[300],
+                      "&.Mui-focused": {
+                        color: colors.blueAccent[300],
+                        fontWeight: 600,
+                        fontSize: "1.2em",
+                      },
+                    }}
+                  >
+                    Example
+                  </InputLabel>
+                  <Input
                     type="text"
                     value={newExample}
                     onChange={(e) => setNewExample(e.target.value)}
                     placeholder="Enter example"
-                    className={
-                      validationError && !newExample ? "input-error" : ""
-                    }
+                    error={validationError && !newExample}
+                    sx={{
+                      color: colors.grey[100],
+                      "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                        {
+                          borderColor: "red",
+                        },
+                      borderColor:
+                        validationError && !newExample ? "red" : "inherit",
+                    }}
                   />
-                </label>
+                </FormControl>
 
                 {validationError && (
-                  <p className="error-message">Please fill out both fields.</p>
+                  <Typography color="error" sx={{ mb: 2 }}>
+                    Please fill out both fields.
+                  </Typography>
                 )}
 
-                <div className="modal-actions">
-                  <button onClick={handleAddNewData}>Add</button>
-                  <button onClick={closeModal}>Cancel</button>
-                </div>
-              </div>
-            </div>
-          )}
-        </section>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    mt: 3,
+                  }}
+                >
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={closeModal}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleAddNewData}
+                    sx={{
+                      backgroundColor: colors.greenAccent[500],
+                    }}
+                  >
+                    <AddIcon sx={{ mr: "10px" }} />
+                    Add
+                  </Button>
+                </Box>
+              </Box>
+            </Box>
+          </>
+        )}
       </Box>
     </Box>
   );
