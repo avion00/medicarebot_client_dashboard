@@ -140,6 +140,7 @@ const Dashboard = () => {
             </Box>
           ))}
         </Box>
+        
         {isModalOpen && (
           <>
             <Box

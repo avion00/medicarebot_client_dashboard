@@ -4,7 +4,6 @@ import Header from "../../components/Header";
 
 import React, { useEffect, useState } from "react";
 import botsData from "../../data/ActiveBotsData.json";
-import "./ActiveBots.css";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import ChangeCircleIcon from "@mui/icons-material/ChangeCircle";
 import UpdateIcon from "@mui/icons-material/Update";

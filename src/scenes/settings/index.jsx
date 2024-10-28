@@ -1,38 +1,94 @@
-import { Box, Button, useTheme } from "@mui/material";
-import { tokens } from "../../theme";
-import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
-import Header from "../../components/Header";
-
 import React, { useState } from "react";
-import "./style.css";
+import {
+  Box,
+  Button,
+  useTheme,
+  TextField,
+  Chip,
+  Snackbar,
+  Autocomplete,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  Typography,
+  Alert,
+  Checkbox,
+  FormControlLabel,
+} from "@mui/material";
+import SettingsIcon from "@mui/icons-material/Settings";
+import Header from "../../components/Header";
+import { tokens } from "../../theme";
+import ExtensionIcon from "@mui/icons-material/Extension";
 
-const Dashboard = () => {
+const Settings = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
   const [configResponse, setConfigResponse] = useState("");
-  const [crawlingStatus, setCrawlingStatus] = useState("");
-  const [analyticsData, setAnalyticsData] = useState("");
-  const [feedbackList, setFeedbackList] = useState("");
-  const [activityLogs, setActivityLogs] = useState("");
   const [advancedSettings, setAdvancedSettings] = useState({
     responseTime: "",
     supportedLanguages: [],
   });
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [selectedChannels, setSelectedChannels] = useState([]);
+
+  const channelOptions = [
+    "Webchat",
+    "Email",
+    "WhatsApp",
+    "Messenger",
+    "Telegram",
+  ];
+  const languageOptions = ["English", "Spanish", "French", "German", "Chinese"];
+
+  const configureBots = () => {
+    setConfigResponse("Bots have been configured successfully!");
+    setOpenSnackbar(true);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setAdvancedSettings((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
+
+  const [crawlingStatus] = useState("");
+  const [analyticsData] = useState("");
+  const [feedbackList] = useState("");
+  const [activityLogs] = useState("");
+
   const [crawlSettings, setCrawlSettings] = useState({
+    websiteURL: "",
     depth: "",
+    uploadData: "",
     includeSitemap: false,
   });
+
+  const [crawlFileName, setCrawlFileName] = useState("Choose a file...");
+
+  const handleCrawlDataUpload = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      setCrawlFileName(selectedFile.name); 
+      setCrawlSettings({ ...crawlSettings, uploadData: selectedFile }); 
+    } else {
+      setCrawlFileName("Choose a file..."); 
+
+    }
+  };
+
   const [botAppearance, setBotAppearance] = useState({
     colorScheme: "",
     fontStyle: "",
   });
   const [feedback, setFeedback] = useState("");
-
-  // Event Handlers
-  const configureBots = () => {
-    // Handle bot configuration
-  };
 
   const startCrawling = () => {
     // Handle website crawling
@@ -74,14 +130,6 @@ const Dashboard = () => {
     // Export activity logs
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setAdvancedSettings((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
   const handleCrawlSettingChange = (e) => {
     const { name, value, checked, type } = e.target;
     setCrawlSettings((prevState) => ({
@@ -102,695 +150,966 @@ const Dashboard = () => {
     setFeedback(e.target.value);
   };
 
+  // customise bot, here okey
+  const [customizeSettings, setCustomizeSettings] = useState("");
+  const [fileName, setFileName] = useState("Choose a file...");
+
+  const handleAvatarChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      setFileName(selectedFile.name);
+      setCustomizeSettings({ ...customizeSettings, avatar: selectedFile });
+    } else {
+      setFileName("Choose a file...");
+    }
+  };
+
+  // this is for icon, okey
+  const [iconFileName, setIconFileName] = useState("Choose an icon...");
+
+  const handleIconChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      setIconFileName(selectedFile.name);
+      setCustomizeSettings({ ...customizeSettings, icon: selectedFile });
+    } else {
+      setIconFileName("Choose an icon...");
+    }
+  };
+
   return (
     <Box m="20px">
-      {/* HEADER */}
       <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
+        <Header title="CONFIGURE BOTS" subtitle="Set up and configure bots" />
 
-        <Box>
-          <Button
-            sx={{
-              backgroundColor: colors.blueAccent[700],
-              color: colors.grey[100],
-              fontSize: "14px",
-              fontWeight: "bold",
-              padding: "10px 20px",
-            }}
-          >
-            <DownloadOutlinedIcon sx={{ mr: "10px" }} />
-            Download Reports
-          </Button>
-        </Box>
+        <Button
+          onClick={configureBots}
+          sx={{
+            backgroundColor: colors.blueAccent[700],
+            color: colors.grey[100],
+            fontSize: "14px",
+            fontWeight: "bold",
+            padding: "10px 20px",
+            "&:hover": {
+              backgroundColor: colors.primary[400],
+            },
+          }}
+        >
+          <SettingsIcon sx={{ mr: "10px" }} />
+          Configure
+        </Button>
       </Box>
 
       <Box>
-        <div>
-          <div className="main container bot_settings" style={{}}>
-            {/* Configure Bots */}
-            <section
-              style={{
-                border: "1px solid rgb(125, 125, 125, 0.1)",
-                borderRadius: ".5em",
-                boxShadow: "2px 2px 20px 5px rgb(125, 125, 125, 0.15)",
-                margin: "1.5em 1em",
-                padding: ".5em",
-              }}
-            >
-              <h3
-                style={{
-                  fontSize: "1em",
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: "800",
-                  backgroundColor: "rgb(37,150,190, .2)",
-                  padding: "1em 2em",
-                  borderRadius: ".25em .25em 0 0",
-                }}
-              >
-                Configure Bots
-              </h3>
-              <label
-                style={{
-                  padding: "1.5em .75em",
-                  fontWeight: "600",
-                  fontSize: "1em",
-                }}
-              >
-                Select Channels:
-              </label>
-              <select
-                className="select_channels"
-                multiple
-                style={{
-                  width: "98%",
-                  padding: "0",
-                  margin: " .5em",
-                  backgroundColor: "rgb(37,150,190, .06)",
-                  color: "inherit",
-                  overflow: "auto",
-                  borderRadius: ".25em",
-                  border: "1px solid rgb(125, 125, 125, 0.3)",
-                }}
-              >
-                <option
-                  style={{
-                    padding: ".5em 1em",
-                    borderBottom: "5px solid rgb(125, 125, 125, 0.5)",
-                    fontFamily: "Inter, sans-serif",
-                  }}
-                >
-                  Webchat
-                </option>
-                <option
-                  style={{
-                    padding: ".5em 1em",
-                    borderBottom: "5px solid rgb(125, 125, 125, 0.5)",
-                    fontFamily: "Inter, sans-serif",
-                  }}
-                >
-                  Email
-                </option>
-                <option
-                  style={{
-                    padding: ".5em 1em",
-                    borderBottom: "5px solid rgb(125, 125, 125, 0.5)",
-                    fontFamily: "Inter, sans-serif",
-                  }}
-                >
-                  WhatsApp
-                </option>
-                <option
-                  style={{
-                    padding: ".5em 1em",
-                    borderBottom: "5px solid rgb(125, 125, 125, 0.5)",
-                    fontFamily: "Inter, sans-serif",
-                  }}
-                >
-                  Messenger
-                </option>
-                <option
-                  style={{
-                    padding: ".5em 1em",
-                    fontFamily: "Inter, sans-serif",
-                  }}
-                >
-                  Telegram
-                </option>
-              </select>
-              <button
-                style={{
-                  padding: ".65em 1.25em",
-                  margin: ".5em",
-                  backgroundColor: "#165a72",
-                  color: "white",
-                  border: "none",
-                }}
-                onClick={configureBots}
-              >
-                Configure Bots
-              </button>
-              <p>{configResponse}</p>
+        <Typography
+          variant="h3"
+          fontWeight="bold"
+          gutterBottom
+          sx={{ mt: ".25em" }}
+        >
+          Configure Bots
+        </Typography>
 
-              <h4
-                style={{
-                  margin: "2em .5em",
-                  marginBottom: "1em",
-                  padding: " 0 .5em",
-                  fontWeight: "600",
-                  fontSize: "1em",
-                  fontFamily: "Inter",
+        <FormControl fullWidth sx={{ mt: "1em" }} variant="filled">
+          <InputLabel
+            sx={{
+              color: colors.grey[100],
+              "&.Mui-focused": { color: colors.grey[100], fontWeight: "bold" },
+            }}
+          >
+            Select Channels
+          </InputLabel>
+          <Select
+            multiple
+            value={selectedChannels}
+            onChange={(e) => setSelectedChannels(e.target.value)}
+            renderValue={(selected) => (
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                {selected.map((value) => (
+                  <Chip key={value} label={value} />
+                ))}
+              </Box>
+            )}
+            sx={{
+              backgroundColor: colors.primary[400],
+              "& .Mui-focused": {
+                border: `1px solid ${colors.grey[100]}`,
+              },
+            }}
+          >
+            {channelOptions.map((channel) => (
+              <MenuItem
+                key={channel}
+                value={channel}
+                sx={{
+                  color: colors.grey[100],
+                  "&.Mui-selected": {
+                    backgroundColor: colors.blueAccent[800],
+                    color: colors.grey[50],
+                  },
+                  "&.Mui-selected:hover": {
+                    backgroundColor: colors.blueAccent[700],
+                  },
+                  "&:hover": {
+                    backgroundColor: colors.blueAccent[900],
+                    color: colors.grey[100],
+                  },
                 }}
               >
-                Advanced Bot Settings
-              </h4>
-              <label
-                style={{
-                  padding: ".15em 1em",
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: "600",
-                }}
-              >
-                Response Time (ms):
-              </label>
-              <input
-                type="number"
-                name="responseTime"
-                value={advancedSettings.responseTime}
-                onChange={handleInputChange}
-                style={{
-                  padding: ".35em 1em",
-                  fontFamily: "Inter, sans-serif",
-                  margin: "0 0 .75em 1em",
-                  backgroundColor: "rgb(37,150,190,.08)",
-                  color: "inherit",
-                  borderRadius: ".25em",
-                  border: "1px solid rgb(125, 125, 125, 0.3)",
+                {channel}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <Typography
+          variant="h4"
+          fontWeight="bold"
+          mt={5}
+          color={colors.grey[100]}
+        >
+          Advanced Bot Settings
+        </Typography>
+
+        <Box
+          sx={{ display: "flex", alignItems: "center", gap: "1em", mt: "1em" }}
+        >
+          <TextField
+            label="Response Time (ms)"
+            variant="filled"
+            type="number"
+            name="responseTime"
+            value={advancedSettings.responseTime}
+            onChange={handleInputChange}
+            sx={{
+              width: "30%",
+              backgroundColor: colors.primary[400],
+              "& .MuiFilledInput-root": {
+                backgroundColor: colors.primary[400],
+                color: colors.grey[100],
+                "&.Mui-focused": {
+                  backgroundColor: colors.primary[400],
+                  borderColor: colors.grey[100],
+                },
+                "&:hover": {
+                  backgroundColor: colors.primary[400],
+                },
+              },
+              "& .MuiInputLabel-root": {
+                color: colors.grey[100],
+                "&.Mui-focused": {
+                  color: colors.grey[100],
+                  fontWeight: "bold",
+                },
+              },
+              "& .MuiInputBase-input": {
+                color: colors.grey[100],
+              },
+            }}
+          />
+          <Autocomplete
+            sx={{
+              width: "70%",
+            }}
+            multiple
+            options={languageOptions}
+            value={advancedSettings.supportedLanguages}
+            onChange={(event, newValue) =>
+              setAdvancedSettings({
+                ...advancedSettings,
+                supportedLanguages: newValue,
+              })
+            }
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                variant="filled"
+                label="Supported Languages"
+                placeholder="Add languages"
+                sx={{
+                  backgroundColor: colors.primary[400],
+                  "& .MuiFilledInput-root": {
+                    backgroundColor: colors.primary[400],
+                  },
+                  "& .Mui-focused": {
+                    backgroundColor: colors.primary[400],
+                    color: colors.grey[100],
+                  },
+                  "& .MuiInputLabel-root": {
+                    color: colors.grey[100],
+                    "&.Mui-focused": {
+                      color: colors.grey[100],
+                      backgroundColor: colors.primary[400],
+                      fontWeight: "bold",
+                    },
+                  },
+                  "& .MuiInputBase-input": {
+                    color: colors.grey[100],
+                  },
                 }}
               />
-              <label
-                style={{
-                  padding: ".15em 1em",
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: "600",
-                }}
-              >
-                Supported Languages:
-              </label>
-              <input
-                type="text"
-                name="supportedLanguages"
-                value={advancedSettings.supportedLanguages}
-                onChange={handleInputChange}
-                placeholder="Comma separated"
-                style={{
-                  padding: ".35em 1em",
-                  fontFamily: "Inter, sans-serif",
-                  margin: "0 0 .75em 1em",
-                  backgroundColor: "rgb(37,150,190,.1)",
-                  color: "inherit",
-                  borderRadius: ".25em",
-                  border: "1px solid rgb(125, 125, 125, 0.3)",
-                }}
-              />
-            </section>
+            )}
+          />
+        </Box>
 
-            {/* Website Crawling */}
-            <section
-              style={{
-                border: "1px solid rgb(125, 125, 125, 0.1)",
-                borderRadius: ".5em",
-                boxShadow: "2px 2px 20px 5px rgb(125, 125, 125, 0.15)",
-                margin: "1.5em 1em",
-                padding: ".5em",
-              }}
-            >
-              <h3
-                style={{
-                  fontSize: "1em",
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: "800",
-                  backgroundColor: "rgb(37,150,190, .2)",
-                  padding: "1em 2em",
-                  borderRadius: ".25em .25em 0 0",
-                }}
-              >
-                Website Crawling
-              </h3>
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  alignItems: "center",
-                  gap: "1em",
-                  padding: "1em .5em",
-                }}
-              >
-                <input
-                  type="text"
-                  placeholder="Enter website URL"
-                  style={{
-                    padding: ".5em 1em",
-                    backgroundColor: "rgb(37,150,190,.08)",
-                    color: "inherit",
-                    borderRadius: ".25em",
-                    border: "1px solid rgb(125, 125, 125, 0.5)",
-                    flex: "1",
-                    maxWidth: "750px",
-                  }}
-                />
-                <label
-                  style={{
-                    padding: " 0 .5em",
-                    fontWeight: "600",
-                    fontSize: "1.1em",
+        <Snackbar
+          open={openSnackbar}
+          autoHideDuration={4000}
+          onClose={handleCloseSnackbar}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <Alert
+            onClose={handleCloseSnackbar}
+            severity="success"
+            sx={{
+              backgroundColor: colors.greenAccent[600],
+              color: colors.grey[100],
+              fontWeight: "500",
+            }}
+          >
+            {configResponse}
+          </Alert>
+        </Snackbar>
+      </Box>
+
+      <Box>
+        <Typography
+          variant="h3"
+          fontWeight="bold"
+          gutterBottom
+          sx={{ mt: "1.5em" }}
+        >
+          Website Crawling
+        </Typography>
+
+        <Box
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            gap: "1em",
+            padding: ".5em 0",
+          }}
+        >
+          <TextField
+            label="Enter Website URL"
+            variant="filled"
+            type="text"
+            name="websiteURL"
+            value={crawlSettings.websiteURL}
+            onChange={(e) =>
+              setCrawlSettings({ ...crawlSettings, websiteURL: e.target.value })
+            }
+            sx={{
+              width: "200px",
+              flexGrow: "1",
+              backgroundColor: colors.primary[400],
+              "& .MuiFilledInput-root": {
+                backgroundColor: colors.primary[400],
+                color: colors.grey[100],
+                "&.Mui-focused": {
+                  backgroundColor: colors.primary[400],
+                  borderColor: colors.grey[100],
+                },
+                "&:hover": {
+                  backgroundColor: colors.primary[400],
+                },
+              },
+              "& .MuiInputLabel-root": {
+                color: colors.grey[100],
+                "&.Mui-focused": {
+                  color: colors.grey[100],
+                  fontWeight: "bold",
+                },
+              },
+              "& .MuiInputBase-input": {
+                color: colors.grey[100],
+              },
+            }}
+          />
+
+          <TextField
+            label="Crawl Depth"
+            variant="filled"
+            type="number"
+            name="depth"
+            value={crawlSettings.depth}
+            onChange={handleCrawlSettingChange}
+            sx={{
+              width: "200px",
+              flexGrow: "1",
+              backgroundColor: colors.primary[400],
+              "& .MuiFilledInput-root": {
+                backgroundColor: colors.primary[400],
+                color: colors.grey[100],
+                "&.Mui-focused": {
+                  backgroundColor: colors.primary[400],
+                  borderColor: colors.grey[100],
+                },
+                "&:hover": {
+                  backgroundColor: colors.primary[400],
+                },
+              },
+              "& .MuiInputLabel-root": {
+                color: colors.grey[100],
+                "&.Mui-focused": {
+                  color: colors.grey[100],
+                  fontWeight: "bold",
+                },
+              },
+              "& .MuiInputBase-input": {
+                color: colors.grey[100],
+              },
+            }}
+          />
+          <TextField
+            label="Upload Data Files"
+            variant="filled"
+            type="text"
+            name="uploadData"
+            value={crawlFileName} 
+            InputProps={{
+              readOnly: true,
+              endAdornment: (
+                <Button
+                  variant="contained"
+                  component="label"
+                  sx={{
+                    backgroundColor: "transparent",
+                    color: "white",
+                    textTransform: "none",
+                    width: "100%",
+                    height: "100%",
+                    position: "absolute",
+                    top: "0",
+                    left: "0",
+                    "&:hover": {
+                      backgroundColor: "transparent",
+                    },
                   }}
                 >
-                  Crawl Depth:
-                </label>
-                <input
-                  type="number"
-                  name="depth"
-                  value={crawlSettings.depth}
-                  onChange={handleCrawlSettingChange}
-                  style={{
-                    padding: ".5em 1em",
-                    backgroundColor: "rgb(37,150,190,.08)",
-                    color: "inherit",
-                    borderRadius: ".25em",
-                    border: "1px solid rgb(125, 125, 125, 0.5)",
-                  }}
-                />
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "start",
-                  flexWrap: "wrap",
-                  gap: "1em",
-                }}
-              >
-                <label
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: ".5em",
-                    fontFamily: "Inter, sans-serif",
-                  }}
-                >
+                  {/* The hidden file input */}
                   <input
-                    type="checkbox"
-                    name="includeSitemap"
-                    checked={crawlSettings.includeSitemap}
-                    onChange={handleCrawlSettingChange}
-                    style={{
-                      margin: "0 0 0 .5em",
-                      border: "1px solid rgb(125, 125, 125, 0.5)",
-                    }}
-                  />{" "}
-                  Include Sitemap
-                </label>
-                <button
-                  style={{
-                    padding: "10px 20px",
-                    backgroundColor: "#007bff",
-                    color: "white",
-                    border: "none",
-                  }}
-                  onClick={startCrawling}
-                >
-                  Start Crawling
-                </button>
-                <button
-                  style={{
-                    padding: "10px 20px",
-                    backgroundColor: "#28a745",
-                    color: "white",
-                    border: "none",
-                    marginLeft: "10px",
-                  }}
-                  onClick={saveCrawlingSettings}
-                >
-                  Save Crawling Settings
-                </button>
-                <p>{crawlingStatus}</p>
-              </div>
-            </section>
+                    type="file"
+                    hidden
+                    name="uploadData"
+                    onChange={handleCrawlDataUpload}
+                  />
+                </Button>
+              ),
+            }}
+            sx={{
+              position: "relative",
+              width: "200px",
+              flexGrow: "1",
+              backgroundColor: colors.primary[400],
+              "& .MuiFilledInput-root": {
+                backgroundColor: colors.primary[400],
+                color: colors.grey[100],
+                "&.Mui-focused": {
+                  backgroundColor: colors.primary[400],
+                  borderColor: colors.grey[100],
+                },
+                "&:hover": {
+                  backgroundColor: colors.primary[400],
+                },
+              },
+              "& .MuiInputLabel-root": {
+                color: colors.grey[100],
+                "&.Mui-focused": {
+                  color: colors.grey[100],
+                  fontWeight: "bold",
+                },
+              },
+              "& .MuiInputBase-input": {
+                color: colors.grey[100],
+              },
+            }}
+          />
+        </Box>
 
-            {/* Bot Customization */}
-            <section
-              style={{
-                border: "1px solid rgb(125, 125, 125, 0.1)",
-                borderRadius: ".5em",
-                boxShadow: "2px 2px 20px 5px rgb(125, 125, 125, 0.15)",
-                margin: "1.5em 1em",
-                padding: ".5em",
-              }}
-            >
-              <h3
-                style={{
-                  fontSize: "1em",
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: "800",
-                  backgroundColor: "rgb(37,150,190, .2)",
-                  padding: "1em 2em",
-                  borderRadius: ".25em .25em 0 0",
-                }}
-              >
-                Bot Customization
-              </h3>
-              <label
-                style={{
-                  padding: " 0 .5em",
-                  fontWeight: "600",
-                  fontSize: "1.1em",
-                  margin: "1em",
-                }}
-              >
-                Avatar:
-              </label>
-              <input
-                type="file"
-                style={{
-                  padding: ".5em 1em",
-                  margin: ".5em 1em",
-                  backgroundColor: "rgb(37,150,190, 0.07)",
-                  color: "inherit",
-                  borderRadius: ".25em",
-                  border: "1px solid rgb(125, 125, 125, 0.5)",
-                  width: "fit-content",
+        <Box
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "start",
+            flexWrap: "wrap",
+            gap: "1em",
+            margin: ".5em 0",
+          }}
+        >
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={crawlSettings.includeSitemap}
+                onChange={handleCrawlSettingChange}
+                name="includeSitemap"
+                sx={{
+                  color: colors.grey[100],
+                  "&.Mui-checked": {
+                    color: colors.blueAccent[300],
+                  },
                 }}
               />
-              <label
-                style={{
-                  padding: " 0 .5em",
-                  fontWeight: "600",
-                  fontSize: "1.1em",
-                  margin: "1em",
-                }}
-              >
-                Icon:
-              </label>
-              <input
-                type="file"
-                style={{
-                  padding: ".5em 1em",
-                  margin: ".5em 1em",
-                  backgroundColor: "rgb(37,150,190, 0.07)",
-                  color: "inherit",
-                  borderRadius: ".25em",
-                  border: "1px solid rgb(125, 125, 125, 0.5)",
-                  width: "fit-content",
-                }}
-              />
-              <label
-                style={{
-                  padding: " 0 .5em",
-                  fontWeight: "600",
-                  fontSize: "1.1em",
-                  margin: "1em",
-                }}
-              >
-                Color Scheme:
-              </label>
-              <input
-                type="text"
-                name="colorScheme"
-                value={botAppearance.colorScheme}
-                onChange={handleBotAppearanceChange}
-                placeholder="e.g., #ff0000"
-                style={{
-                  padding: ".5em 1em",
-                  margin: ".5em 1em",
-                  backgroundColor: "rgb(37,150,190, 0.07)",
-                  color: "inherit",
-                  borderRadius: ".25em",
-                  border: "1px solid rgb(125, 125, 125, 0.5)",
-                }}
-              />
-              <label
-                style={{
-                  padding: " 0 .5em",
-                  fontWeight: "600",
-                  fontSize: "1.1em",
-                  margin: "1em",
-                }}
-              >
-                Font Style:
-              </label>
-              <input
-                type="text"
-                name="fontStyle"
-                value={botAppearance.fontStyle}
-                onChange={handleBotAppearanceChange}
-                placeholder="e.g., Arial"
-                style={{
-                  padding: ".5em 1em",
-                  margin: ".5em 1em",
-                  backgroundColor: "rgb(37,150,190, 0.07)",
-                  color: "inherit",
-                  borderRadius: ".25em",
-                  border: "1px solid rgb(125, 125, 125, 0.5)",
-                }}
-              />
-              <button
-                style={{
-                  padding: ".65em 1.25em",
-                  margin: ".5em .7em",
-                  backgroundColor: "#28a745",
-                  color: "white",
-                  border: "none",
-                }}
-                onClick={customizeBot}
-              >
-                Customize Bot
-              </button>
-            </section>
+            }
+            label="Include Sitemap"
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: ".2em",
+              marginLeft: "1em",
+            }}
+          />
+          <Button
+            onClick={startCrawling}
+            color="secondary"
+            variant="outlined"
+            style={{
+              borderRadius: "20px",
+              marginRight: "8px",
+            }}
+          >
+            Start Crawling
+          </Button>
+          <Button
+            onClick={saveCrawlingSettings}
+            variant="outlined"
+            sx={{
+              color: colors.blueAccent[300],
+              borderColor: colors.blueAccent[300],
+              borderRadius: "20px",
+              marginRight: "8px",
+              "&:hover": {
+                backgroundColor: colors.blueAccent[700],
+                borderColor: colors.blueAccent[700],
+              },
+            }}
+          >
+            Save Crawling Settings
+          </Button>
 
-            {/* Code Integration */}
-            <section
-              style={{
-                border: "1px solid rgb(125, 125, 125, 0.1)",
-                borderRadius: ".5em",
-                boxShadow: "2px 2px 20px 5px rgb(125, 125, 125, 0.15)",
-                margin: "1.5em 1em",
-                padding: ".5em",
-              }}
-            >
-              <h3
-                style={{
-                  fontSize: "1em",
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: "800",
-                  backgroundColor: "rgb(37,150,190, .2)",
-                  padding: "1em 2em",
-                  borderRadius: ".25em .25em 0 0",
-                }}
-              >
-                Code Integration
-              </h3>
-              <textarea
-                type="text"
-                placeholder="Enter custom platform (e.g., WordPress)"
-                style={{
-                  width: "99%",
-                  height: "200px",
-                  fontFamily: "Inter, sans-serif",
-                  padding: ".5em 1em",
-                  margin: " .75em 0 1em .5em",
-                  backgroundColor: "rgb(37,150,190, 0.08)",
-                  color: "inherit",
-                  borderRadius: ".25em",
-                  border: "1px solid rgb(125, 125, 125, 0.5)",
-                }}
-              />
-              <button
-                style={{
-                  padding: "0.65em 1em",
-                  margin: ".7em",
-                  backgroundColor: "#ffc107",
-                  color: "black",
-                  border: "none",
-                }}
-                onClick={generateCode}
-              >
-                Generate Code Snippet
-              </button>
-            </section>
+          <p>{crawlingStatus}</p>
+        </Box>
+      </Box>
 
-            {/* Bot Analytics */}
-            <section
-              style={{
-                border: "1px solid rgb(125, 125, 125, 0.1)",
-                borderRadius: ".5em",
-                boxShadow: "2px 2px 20px 5px rgb(125, 125, 125, 0.15)",
-                margin: "1.5em 1em",
-                padding: ".5em",
-              }}
-            >
-              <h3
-                style={{
-                  fontSize: "1em",
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: "800",
-                  backgroundColor: "rgb(37,150,190, .2)",
-                  padding: "1em 2em",
-                  borderRadius: ".25em .25em 0 0",
-                }}
-              >
-                Bot Analytics
-              </h3>
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: "1em",
-                  padding: ".5em",
-                }}
-              >
-                <button
-                  style={{
-                    padding: ".6em 1em",
-                    backgroundColor: "#17a2b8",
-                    color: "white",
-                    border: "none",
+      <Box
+        style={{
+          padding: ".5em 0",
+        }}
+      >
+        <Typography
+          variant="h3"
+          fontWeight="bold"
+          gutterBottom
+          color={colors.grey[100]}
+          sx={{ mt: "1em" }}
+        >
+          Bot Customization
+        </Typography>
+        <Box
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            gap: "1em",
+            padding: "1em 0",
+          }}
+        >
+          <TextField
+            label="Avatar"
+            variant="filled"
+            type="text"
+            name="avatar"
+            value={fileName} 
+            InputProps={{
+              readOnly: true,
+              endAdornment: (
+                <Button
+                  variant="contained"
+                  component="label"
+                  sx={{
+                    backgroundColor: "transparent",
+                    color: colors.grey[100],
+                    textTransform: "none",
+                    width: "100%",
+                    height: "100%",
+                    position: "absolute",
+                    top: "0",
+                    left: "0",
+                    "&:hover": {
+                      backgroundColor: "transparent",
+                    },
                   }}
-                  onClick={fetchAnalytics}
                 >
-                  Fetch Analytics
-                </button>
-                <button
-                  style={{
-                    padding: "10px 20px",
-                    backgroundColor: "#ffc107",
-                    color: "black",
-                    border: "none",
-                    marginLeft: "10px",
-                  }}
-                  onClick={exportAnalytics}
-                >
-                  Export Analytics
-                </button>
-                <p>{analyticsData}</p>
-              </div>
-            </section>
+                  {/* The hidden file input */}
+                  <input
+                    type="file"
+                    hidden
+                    name="avatar"
+                    onChange={handleAvatarChange}
+                  />
+                </Button>
+              ),
+            }}
+            sx={{
+              position: "relative",
+              width: "200px",
+              flexGrow: "1",
+              backgroundColor: colors.primary[400],
+              "& .MuiFilledInput-root": {
+                backgroundColor: colors.primary[400],
+                color: colors.grey[100],
+                "&.Mui-focused": {
+                  backgroundColor: colors.primary[400],
+                  borderColor: colors.grey[100],
+                },
+                "&:hover": {
+                  backgroundColor: colors.primary[400],
+                },
+              },
+              "& .MuiInputLabel-root": {
+                color: colors.grey[100],
+                "&.Mui-focused": {
+                  color: colors.grey[100],
+                  fontWeight: "bold",
+                },
+              },
+              "& .MuiInputBase-input": {
+                color: colors.grey[100],
+              },
+            }}
+          />
 
-            {/* User Feedback */}
-            <section
-              style={{
-                border: "1px solid rgb(125, 125, 125, 0.1)",
-                borderRadius: ".5em",
-                boxShadow: "2px 2px 20px 5px rgb(125, 125, 125, 0.15)",
-                margin: "1.5em 1em",
-                padding: ".5em",
-              }}
-            >
-              <h3
-                style={{
-                  fontSize: "1em",
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: "800",
-                  backgroundColor: "rgb(37,150,190, .2)",
-                  padding: "1em 2em",
-                  borderRadius: ".25em .25em 0 0",
-                }}
-              >
-                User Feedback
-              </h3>
-              <textarea
-                value={feedback}
-                onChange={handleFeedbackInput}
-                placeholder="Enter feedback"
-                style={{
-                  width: "99%",
-                  height: "200px",
-                  fontFamily: "Inter, sans-serif",
-                  padding: ".5em 1em",
-                  margin: " .75em 0 1em .5em",
-                  backgroundColor: "rgb(37,150,190, 0.08)",
-                  color: "inherit",
-                  borderRadius: ".25em",
-                  border: "1px solid rgb(125, 125, 125, 0.5)",
-                }}
-              ></textarea>
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  alignItems: "center",
-                  gap: "1em",
-                  padding: ".5em",
-                }}
-              >
-                <button
-                  style={{
-                    padding: "10px 20px",
-                    backgroundColor: "#007bff",
-                    color: "white",
-                    border: "none",
+          <TextField
+            label="Icon"
+            variant="filled"
+            type="text"
+            name="icon"
+            value={iconFileName}
+            InputProps={{
+              readOnly: true,
+              endAdornment: (
+                <Button
+                  variant="contained"
+                  component="label"
+                  sx={{
+                    backgroundColor: "transparent",
+                    color: colors.grey[100],
+                    textTransform: "none",
+                    width: "100%",
+                    height: "100%",
+                    position: "absolute",
+                    top: "0",
+                    left: "0",
+                    "&:hover": {
+                      backgroundColor: "transparent",
+                    },
                   }}
-                  onClick={submitFeedback}
                 >
-                  Submit Feedback
-                </button>
-                <button
-                  style={{
-                    padding: "10px 20px",
-                    backgroundColor: "#17a2b8",
-                    color: "white",
-                    border: "none",
-                    marginLeft: "10px",
-                  }}
-                  onClick={fetchFeedback}
-                >
-                  Fetch Feedback
-                </button>
-                <p>{feedbackList}</p>
-              </div>
-            </section>
+                 
+                  <input
+                    type="file"
+                    hidden
+                    name="icon"
+                    onChange={handleIconChange} 
+                    accept="image/*" 
+                  />
+                </Button>
+              ),
+            }}
+            sx={{
+              position: "relative",
+              width: "200px",
+              flexGrow: "1",
+              backgroundColor: colors.primary[400],
+              "& .MuiFilledInput-root": {
+                backgroundColor: colors.primary[400],
+                color: colors.grey[100],
+                "&.Mui-focused": {
+                  backgroundColor: colors.primary[400],
+                  borderColor: colors.grey[100],
+                },
+                "&:hover": {
+                  backgroundColor: colors.primary[400],
+                },
+              },
+              "& .MuiInputLabel-root": {
+                color: colors.grey[100],
+                "&.Mui-focused": {
+                  color: colors.grey[100],
+                  fontWeight: "bold",
+                },
+              },
+              "& .MuiInputBase-input": {
+                color: colors.grey[100],
+              },
+            }}
+          />
+          <TextField
+            label="Color Scheme"
+            variant="filled"
+            type="text"
+            name="colorScheme"
+            value={botAppearance.colorScheme}
+            onChange={handleBotAppearanceChange}
+            placeholder="e.g., #ff0000"
+            sx={{
+              width: "200px",
+              flexGrow: "1",
+              backgroundColor: colors.primary[400],
+              "& .MuiFilledInput-root": {
+                backgroundColor: colors.primary[400],
+                color: colors.grey[100],
+                "&.Mui-focused": {
+                  backgroundColor: colors.primary[400],
+                  borderColor: colors.grey[100],
+                },
+                "&:hover": {
+                  backgroundColor: colors.primary[400],
+                },
+              },
+              "& .MuiInputLabel-root": {
+                color: colors.grey[100],
+                "&.Mui-focused": {
+                  color: colors.grey[100],
+                  fontWeight: "bold",
+                },
+              },
+              "& .MuiInputBase-input": {
+                color: colors.grey[100],
+              },
+            }}
+          />
+          <TextField
+            label="Font Style"
+            variant="filled"
+            type="text"
+            name="fontStyle"
+            value={botAppearance.fontStyle}
+            onChange={handleBotAppearanceChange}
+            placeholder="e.g., Arial"
+            sx={{
+              width: "200px",
+              flexGrow: "1",
+              backgroundColor: colors.primary[400],
+              "& .MuiFilledInput-root": {
+                backgroundColor: colors.primary[400],
+                color: colors.grey[100],
+                "&.Mui-focused": {
+                  backgroundColor: colors.primary[400],
+                  borderColor: colors.grey[100],
+                },
+                "&:hover": {
+                  backgroundColor: colors.primary[400],
+                },
+              },
+              "& .MuiInputLabel-root": {
+                color: colors.grey[100],
+                "&.Mui-focused": {
+                  color: colors.grey[100],
+                  fontWeight: "bold",
+                },
+              },
+              "& .MuiInputBase-input": {
+                color: colors.grey[100],
+              },
+            }}
+          />
+        </Box>
+        <Button
+          onClick={customizeBot}
+          color="secondary"
+          variant="outlined"
+          style={{
+            borderRadius: "20px",
+            marginRight: "8px",
+          }}
+        >
+          <ExtensionIcon sx={{ marginRight: "8px" }} />
+          Customize bot
+        </Button>
+      </Box>
 
-            {/* Activity Logs */}
-            <section
-              style={{
-                border: "1px solid rgb(125, 125, 125, 0.1)",
-                borderRadius: ".5em",
-                boxShadow: "2px 2px 20px 5px rgb(125, 125, 125, 0.15)",
-                margin: "1.5em 1em",
-                padding: ".5em",
-              }}
-            >
-              <h3
-                style={{
-                  fontSize: "1em",
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: "800",
-                  backgroundColor: "rgb(37,150,190, .2)",
-                  padding: "1em 2em",
-                  borderRadius: ".25em .25em 0 0",
-                }}
-              >
-                Activity Logs
-              </h3>
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  alignItems: "center",
-                  gap: "1em",
-                  padding: ".5em",
-                }}
-              >
-                <button
-                  style={{
-                    padding: "10px 20px",
-                    backgroundColor: "#6c757d",
-                    color: "white",
-                    border: "none",
-                  }}
-                  onClick={fetchLogs}
-                >
-                  Fetch Logs
-                </button>
-                <button
-                  style={{
-                    padding: "10px 20px",
-                    backgroundColor: "#ffc107",
-                    color: "black",
-                    border: "none",
-                    marginLeft: "10px",
-                  }}
-                  onClick={exportLogs}
-                >
-                  Export Logs
-                </button>
-                <p>{activityLogs}</p>
-              </div>
-            </section>
-          </div>
+      {/* Code Integration */}
+      <Box
+        sx={{
+          padding: ".5em 0",
+        }}
+      >
+        <Typography
+          variant="h3"
+          fontWeight="bold"
+          mt={5}
+          color={colors.grey[100]}
+        >
+          Code Integration
+        </Typography>
+        <TextField
+          label="Custom Platform"
+          placeholder="Enter custom platform (e.g., WordPress)"
+          multiline
+          rows={10}
+          variant="outlined"
+          sx={{
+            width: "100%",
+            margin: "1.5em 0",
+            backgroundColor: colors.primary[400],
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: colors.primary[400],
+              },
+              "&:hover fieldset": {
+                borderColor: colors.greenAccent[700],
+                borderRadius: "0",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: colors.greenAccent[700],
+                borderRadius: "0",
+              },
+            },
+            "& .MuiInputLabel-root": {
+              color: colors.grey[100],
+              fontWeight: "bold",
+            },
+            "& .MuiInputLabel-root.Mui-focused": {
+              color: colors.grey[100],
+            },
+            "& textarea": {
+              fontFamily: "Inter, sans-serif", 
+              color: "inherit",
+            },
+          }}
+        />
+
+        <Button
+          onClick={generateCode}
+          color="secondary"
+          variant="outlined"
+          style={{
+            borderRadius: "20px",
+            marginRight: "8px",
+          }}
+        >
+          Generate Code Snippet
+        </Button>
+      </Box>
+
+      {/* Bot Analytics */}
+      <Box
+        sx={{
+          padding: "1em 0",
+        }}
+      >
+        <Typography
+          variant="h3"
+          fontWeight="bold"
+          gutterBottom
+          sx={{ mt: "1.5em" }}
+        >
+          Bot Analytics
+        </Typography>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "1em",
+            padding: ".5em",
+          }}
+        >
+          <Button
+            onClick={fetchAnalytics}
+            color="secondary"
+            variant="outlined"
+            style={{
+              borderRadius: "20px",
+              marginRight: "8px",
+            }}
+          >
+            Fetch Analytics
+          </Button>
+          <Button
+            onClick={exportAnalytics}
+            variant="outlined"
+            sx={{
+              color: colors.blueAccent[300],
+              borderColor: colors.blueAccent[300],
+              borderRadius: "20px",
+              marginRight: "8px",
+              "&:hover": {
+                backgroundColor: colors.blueAccent[700],
+                borderColor: colors.blueAccent[700],
+              },
+            }}
+          >
+            Export Analytics
+          </Button>
+        </div>
+        <Box
+          sx={{
+            height: "200px",
+            width: "100%",
+            backgroundColor: colors.primary[400],
+          }}
+        >
+          {analyticsData}
+        </Box>
+      </Box>
+
+      {/* User Feedback */}
+      <Box
+        sx={{
+          padding: "1em 0",
+        }}
+      >
+        <Typography
+          variant="h3"
+          fontWeight="bold"
+          gutterBottom
+          color={colors.grey[100]}
+          sx={{ mt: "1em" }}
+        >
+          User Feedback
+        </Typography>
+        <TextField
+          value={feedback}
+          onChange={handleFeedbackInput}
+          label="Feedback"
+          placeholder="Enter you Feedback"
+          multiline
+          rows={10}
+          variant="outlined"
+          sx={{
+            width: "100%",
+            margin: "1.5em 0",
+            backgroundColor: colors.primary[400],
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: colors.primary[400],
+              },
+              "&:hover fieldset": {
+                borderColor: colors.greenAccent[700],
+                borderRadius: "0",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: colors.greenAccent[700],
+                borderRadius: "0",
+              },
+            },
+            "& .MuiInputLabel-root": {
+              color: colors.grey[100],
+              fontWeight: "bold",
+            },
+            "& .MuiInputLabel-root.Mui-focused": {
+              color: colors.grey[100],
+            },
+            "& textarea": {
+              fontFamily: "Inter, sans-serif", 
+              color: "inherit",
+            },
+          }}
+        />
+
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            gap: "1em",
+            padding: ".5em",
+          }}
+        >
+          <Button
+            onClick={submitFeedback}
+            color="secondary"
+            variant="outlined"
+            style={{
+              borderRadius: "20px",
+              marginRight: "8px",
+            }}
+          >
+            Submit Feedback
+          </Button>
+
+          <Button
+            onClick={fetchFeedback}
+            variant="outlined"
+            sx={{
+              color: colors.blueAccent[300],
+              borderColor: colors.blueAccent[300],
+              borderRadius: "20px",
+              marginRight: "8px",
+              "&:hover": {
+                backgroundColor: colors.blueAccent[700],
+                borderColor: colors.blueAccent[700],
+              },
+            }}
+          >
+            Fetch Feedback
+          </Button>
+          <p>{feedbackList}</p>
+        </div>
+      </Box>
+
+      {/* Activity Logs */}
+      <Box
+        style={{
+          padding: "1em 0",
+        }}
+      >
+        <Typography
+          variant="h3"
+          fontWeight="bold"
+          gutterBottom
+          color={colors.grey[100]}
+          sx={{ mt: "1em" }}
+        >
+          Activity Logs
+        </Typography>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            gap: "1em",
+            padding: ".5em",
+          }}
+        >
+          <Button
+            onClick={fetchLogs}
+            color="secondary"
+            variant="outlined"
+            style={{
+              borderRadius: "20px",
+              marginRight: "8px",
+            }}
+          >
+            Fetch Logs
+          </Button>
+          <Button
+            onClick={exportLogs}
+            variant="outlined"
+            sx={{
+              color: colors.blueAccent[300],
+              borderColor: colors.blueAccent[300],
+              borderRadius: "20px",
+              marginRight: "8px",
+              "&:hover": {
+                backgroundColor: colors.blueAccent[700],
+                borderColor: colors.blueAccent[700],
+              },
+            }}
+          >
+            Export Logs
+          </Button>
+          <Box sx={{
+            width: '100%',
+            height: '200px',
+            backgroundColor: colors.primary[400]
+          }}>{activityLogs}</Box>
         </div>
       </Box>
     </Box>
   );
 };
 
-export default Dashboard;
+export default Settings;

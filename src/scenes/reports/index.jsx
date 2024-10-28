@@ -4,10 +4,9 @@ import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import Header from "../../components/Header";
 
 import React from "react";
-import BotPerformance from "./BotPerformance";
-import UserEngagement from "./UserEngagement";
-import BillingReport from "./BillingReport";
-import Reports from "./Reports";
+import BotPerformance from "../../components/BotPerformance";
+import UserEngagement from "../../components/UserEngagement";
+import Reports from "../../components/RPAdashboard";
 
 const Dashboard = () => {
   const theme = useTheme();
@@ -17,7 +16,7 @@ const Dashboard = () => {
     <Box m="20px">
       {/* HEADER */}
       <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
+        <Header title="Reports" subtitle="Welcome to your dashboard" />
 
         <Box>
           <Button
@@ -36,24 +35,24 @@ const Dashboard = () => {
       </Box>
 
       <Box>
-        <div>
-          <div>
-            <div
-              style={{
-                margin: "1em 0",
-                display: "flex",
-                flexWrap: "wrap",
-                gap: ".25em",
-                justifyContent: "space-between",
-              }}
-            >
-              <BotPerformance />
-              <UserEngagement />
-              <BillingReport />
-              <Reports />
-            </div>
-          </div>
-        </div>
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "repeat(2, 1fr)", // Two equal columns
+            gridTemplateRows: "auto auto", // Two rows, auto-sized to fit content
+            gap: "1em",
+            width: "100%",
+            "& > :nth-of-type(3)": {
+              // Targets the third component
+              gridColumn: "1 / -1", // Spans across both columns
+            },
+          }}
+        >
+          <BotPerformance />
+          <UserEngagement />
+          {/* <BillingReport /> */}
+          <Reports />
+        </Box>
       </Box>
     </Box>
   );

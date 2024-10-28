@@ -1,32 +1,115 @@
-import { Box, Button, useTheme } from "@mui/material";
-import { tokens } from "../../theme";
+import React, { useState, useEffect } from "react";
+import { Box, Button, useTheme, Typography } from "@mui/material";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import Header from "../../components/Header";
+import { tokens } from "../../theme";
+import InteractionsDataJson from "../../data/interactionData.json";
 
-import React, { useState, useEffect } from "react";
-import { Card, CardContent, Typography, Grid, Tabs, Tab } from "@mui/material";
-import ChatHistory from "./ChatHistory";
-import CustomerLogs from "./CustomerLogs";
-import OfflineMessages from "./OfflineMessages";
-import data from "./data.json";
-
-const Dashboard = () => {
+const Interactions = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  const [tabValue, setTabValue] = useState(0);
+  const [customerLogs, setCustomerLogs] = useState([]);
+  const [chatHistories, setChatHistories] = useState([]);
+  const [offlineMessages, setOfflineMessages] = useState([]);
 
-  const handleTabChange = (event, newValue) => {
-    setTabValue(newValue);
+  useEffect(() => {
+    setCustomerLogs(InteractionsDataJson.customerLogs);
+    setChatHistories(InteractionsDataJson.chatHistories);
+    setOfflineMessages(InteractionsDataJson.offlineMessages);
+  }, []);
+
+
+  const formatDateAndTime = (timestamp) => {
+    const date = new Date(timestamp);
+    const formattedDate = date.toLocaleDateString(); 
+    const formattedTime = date.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    }); 
+    return { formattedDate, formattedTime };
   };
 
+  const renderTable = (title, data, columns) => (
+    <Box
+      gridColumn="span 4"
+      gridRow="span 2"
+      backgroundColor={colors.primary[400]}
+      overflow="auto"
+      mt={3}
+      sx={{
+        flexGrow: "1",
+        width: "25%",
+      }}
+    >
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        borderBottom={`4px solid ${colors.primary[500]}`}
+        p="16px"
+      >
+        <Typography color={colors.grey[100]} variant="h4" fontWeight="600">
+          {title}
+        </Typography>
+      </Box>
+      {data.map((row, i) => {
+        const { formattedDate, formattedTime } = formatDateAndTime(
+          row.timestamp
+        );
+        return (
+          <Box
+            key={`${row.id}-${i}`}
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            borderBottom={`4px solid ${colors.primary[500]}`}
+            p="15px"
+          >
+            <Box>
+              <Box
+                color={colors.blueAccent[400]}
+                fontWeight="700"
+                height="25px"
+                overflow="hidden"
+                fontSize="15px"
+              >
+                {row.customer}
+              </Box>
+
+              {columns.includes("action") && (
+                <Box sx={{ color: colors.greenAccent[400],overflow:"hidden", height: "25px" }}>
+                  {row.action}
+                </Box>
+              )}
+              {columns.includes("message") && (
+                <Box sx={{ color: colors.greenAccent[400], height:"25px", overflow: "hidden" }}>
+                  {row.message}
+                </Box>
+              )}
+            </Box>
+            <Box textAlign="right">
+              <Box color={colors.grey[200]} fontSize="14px">
+                {formattedDate}
+              </Box>
+              <Box color={colors.grey[200]} fontSize="13px">
+                {formattedTime}
+              </Box>
+            </Box>
+          </Box>
+        );
+      })}
+    </Box>
+  );
 
   return (
-    <Box m="20px">
+    <Box m="20px" mb="0">
       {/* HEADER */}
       <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
-
+        <Header
+          title="INTERACTIONS MANAGEMENT"
+          subtitle="Interactions Management Dashboard"
+        />
         <Box>
           <Button
             sx={{
@@ -43,57 +126,28 @@ const Dashboard = () => {
         </Box>
       </Box>
 
-      <Box>
-        <div>
-          <Typography
-            variant="h4"
-            style={{
-              fontSize: "24px",
-              fontWeight: "bold",
-              padding: ".75em 1em",
-              backgroundColor: "#0f3c4c",
-              color: "#fff",
-              margin: "0 .6em",
-            }}
-          >
-            Interactions Management Dashboard
-          </Typography>
-          <Card
-            style={{
-              margin: " 2em 1em",
-              backgroundColor: "rgb(37,150,190, .1)",
-            }}
-          >
-            <CardContent>
-              <Tabs
-                value={tabValue}
-                onChange={handleTabChange}
-                variant="fullWidth"
-              >
-                <Tab label="Chat History" />
-                <Tab label="Customer Logs" />
-                <Tab label="Offline Messages" />
-              </Tabs>
+      <Box
+        sx={{
+          display: "flex",
+          gap: "1em",
+          height: "100%",
+          maxHeight: '70dvh'
+        }}
+      >
+        {/* Customer Logs */}
+        {renderTable("Customer Logs", customerLogs, ["customer", "action"])}
 
-              <Grid container spacing={3} style={{ marginTop: "20px" }}>
-                <Grid item xs={12}>
-                  {tabValue === 0 && (
-                    <ChatHistory chatHistories={data.chatHistories} />
-                  )}
-                  {tabValue === 1 && (
-                    <CustomerLogs customerLogs={data.customerLogs} />
-                  )}
-                  {tabValue === 2 && (
-                    <OfflineMessages offlineMessages={data.offlineMessages} />
-                  )}
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </div>
+        {/* Chat History */}
+        {renderTable("Chat History", chatHistories, ["customer", "message"])}
+
+        {/* Offline Messages */}
+        {renderTable("Offline Messages", offlineMessages, [
+          "customer",
+          "message",
+        ])}
       </Box>
     </Box>
   );
 };
 
-export default Dashboard;
+export default Interactions;
