@@ -207,18 +207,17 @@ const ActiveBots = () => {
           flexWrap: "wrap",
           gap: "1em",
           padding: ".5em",
-          marginTop: '1em'
+          marginTop: "1em",
         }}
       >
         <Box>
           <Button
-            sx={{
-              backgroundColor: colors.blueAccent[700],
-              color: colors.grey[100],
-              fontSize: "14px",
-              fontWeight: "bold",
-              padding: "8px 16px",
-              textTransform: "capitalize",
+            // onClick={}
+            color="secondary"
+            variant="outlined"
+            style={{
+              borderRadius: "20px",
+              marginRight: "8px",
             }}
           >
             <ChangeCircleIcon sx={{ mr: "8px" }} />
@@ -227,13 +226,12 @@ const ActiveBots = () => {
         </Box>
         <Box>
           <Button
-            sx={{
-              backgroundColor: colors.blueAccent[700],
-              color: colors.grey[100],
-              fontSize: "14px",
-              fontWeight: "bold",
-              padding: "8px 16px",
-              textTransform: "capitalize",
+            // onClick={}
+            color="secondary"
+            variant="outlined"
+            style={{
+              borderRadius: "20px",
+              marginRight: "8px",
             }}
           >
             <UpdateIcon sx={{ mr: "8px" }} />
@@ -243,13 +241,16 @@ const ActiveBots = () => {
         <Box>
           <Button
             onClick={() => handleDeactivate(bot.id)}
+            variant="outlined"
             sx={{
-              backgroundColor: colors.redAccent[700],
-              color: colors.grey[100],
-              fontSize: "14px",
-              fontWeight: "bold",
-              padding: "8px 16px",
-              textTransform: "capitalize",
+              color: colors.redAccent[300],
+              borderColor: colors.redAccent[300],
+              borderRadius: "20px",
+              marginRight: "8px",
+              "&:hover": {
+                backgroundColor: colors.redAccent[700],
+                borderColor: colors.redAccent[700],
+              },
             }}
           >
             <DoDisturbIcon sx={{ mr: "8px" }} />
@@ -259,13 +260,12 @@ const ActiveBots = () => {
 
         <Box>
           <Button
-            sx={{
-              backgroundColor: colors.blueAccent[700],
-              color: colors.grey[100],
-              fontSize: "14px",
-              fontWeight: "bold",
-              padding: "8px 16px",
-              textTransform: "capitalize",
+            // onClick={}
+            color="secondary"
+            variant="outlined"
+            style={{
+              borderRadius: "20px",
+              marginRight: "8px",
             }}
           >
             <QueryStatsIcon sx={{ mr: "8px" }} />
@@ -304,18 +304,23 @@ const ActiveBots = () => {
           ))}
         </div>
         {activeBots.length > 2 && !showAll && (
-          <Box>
+          <Box sx={{
+            marginTop: '1em',
+            float: 'right'
+          }}>
             <Button
-              sx={{
-                backgroundColor: colors.greenAccent[700],
-                color: colors.grey[100],
-                fontSize: "14px",
-                fontWeight: "bold",
-                padding: "8px 16px",
-                float: "right",
-                marginTop: "1em",
-              }}
               onClick={handleViewAllClick}
+              variant="outlined"
+              sx={{
+                color: colors.blueAccent[300],
+                borderColor: colors.blueAccent[300],
+                borderRadius: "20px",
+                marginRight: "8px",
+                "&:hover": {
+                  backgroundColor: colors.blueAccent[700],
+                  borderColor: colors.blueAccent[700],
+                },
+              }}
             >
               <ViewListIcon sx={{ mr: "10px" }} />
               View All

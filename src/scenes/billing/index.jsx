@@ -2,20 +2,12 @@ import { Box, Button, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import Header from "../../components/Header";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
 import React, { useState, useEffect } from "react";
 import {
-  Card,
-  CardContent,
   Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   FormControl,
-  InputLabel,
   Select,
   MenuItem,
 } from "@mui/material";
@@ -24,7 +16,7 @@ import JsPDF from "jspdf"; // For generating PDFs
 import * as XLSX from "xlsx"; // For generating Excel files
 import data from "./data.json"; // Import the JSON data
 
-const Dashboard = () => {
+const Billing = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
@@ -106,8 +98,7 @@ const Dashboard = () => {
     <Box m="20px">
       {/* HEADER */}
       <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
-
+        <Header title="BILLING" subtitle="Welcome to your Billing dashboard" />
         <Box>
           <Button
             sx={{
@@ -125,271 +116,495 @@ const Dashboard = () => {
       </Box>
 
       <Box>
-        <div>
-          <div className="main container">
-            {/* Subscription Plans */}
-            <Card style={{ margin: "2em 1em", padding: "0.5em" }}>
-              <CardContent>
-                <Typography
-                  variant="h6"
-                  style={{
-                    padding: "0 .5em",
-                    fontSize: "1em",
-                    fontFamily: "Inter, sans-serif",
+        {/* subscription plan */}
+        <Box>
+          <Typography variant="h3" mt="1em" fontWeight="700">
+            Subscription Plan
+          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "space-between",
+              gap: "1em",
+              margin: "2em 0",
+            }}
+          >
+            {subscriptions.map((subscription) => (
+              <Box
+                key={subscription.id}
+                sx={{
+                  flexGrow: 1,
+                  minWidth: "320px",
+                  maxWidth: "360px",
+                  padding: "2em",
+                  borderRadius: "16px",
+                  backgroundColor: colors.primary[400],
+                  boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                  "&:hover": {
+                    transform: "scale(1.02)",
+                    boxShadow: "0px 6px 24px rgba(0, 0, 0, 0.15)",
+                  },
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                }}
+              >
+                {/* Plan Header */}
+                <Box sx={{ textAlign: "center" }}>
+                  <Typography
+                    variant="h5"
+                    fontWeight="600"
+                    sx={{
+                      color: colors.greenAccent[400],
+                      fontSize: "1.8em",
+                      mb: "0.5em",
+                    }}
+                  >
+                    {subscription.plan}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{ color: colors.grey[300], fontSize: "0.9em" }}
+                  >
+                    Perfect for growing businesses
+                  </Typography>
+                </Box>
+
+                {/* Price Section */}
+                <Box
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  sx={{
+                    padding: "1em 1.5em",
+                    borderRadius: "12px",
+                    backgroundColor: colors.blueAccent[800],
+                    margin: "1em 0",
                   }}
                 >
-                  Subscription Plans
-                </Typography>
-                <TableContainer>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell
-                          style={{
-                            padding: ".5em",
-                          }}
-                        >
-                          Plan
-                        </TableCell>
-                        <TableCell
-                          style={{
-                            padding: ".5em",
-                          }}
-                        >
-                          Price
-                        </TableCell>
-                        <TableCell
-                          style={{
-                            padding: ".5em",
-                          }}
-                        >
-                          Features
-                        </TableCell>
-                        <TableCell
-                          style={{
-                            padding: ".5em",
-                          }}
-                        >
-                          Billing Cycle
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {subscriptions.map((subscription) => (
-                        <TableRow key={subscription.id}>
-                          <TableCell
-                            style={{
-                              padding: "1em .5em",
-                              fontFamily: "Inter, sans-serif",
-                            }}
-                          >
-                            {subscription.plan}
-                          </TableCell>
-                          <TableCell
-                            style={{
-                              padding: "1em .5em",
-                              fontFamily: "Inter, sans-serif",
-                            }}
-                          >
-                            ${subscription.price}
-                          </TableCell>
-                          <TableCell
-                            style={{
-                              padding: "1em .5em",
-                              fontFamily: "Inter, sans-serif",
-                            }}
-                          >
-                            {subscription.features.join(", ")}
-                          </TableCell>
-                          <TableCell
-                            style={{
-                              padding: "1em .5em",
-                              fontFamily: "Inter, sans-serif",
-                            }}
-                          >
-                            {subscription.billingCycle}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </CardContent>
-            </Card>
+                  <Typography
+                    sx={{
+                      fontSize: "1.5em",
+                      color: colors.grey[300],
+                      fontWeight: "700",
+                      marginRight: "0.5em",
+                    }}
+                  >
+                    ${subscription.price}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      fontSize: "1em",
+                      color: colors.grey[500],
+                    }}
+                  >
+                    / {subscription.billingCycle}
+                  </Typography>
+                </Box>
 
-            {/* Billing History */}
-            <Card style={{ margin: "1em", padding: ".5em" }}>
-              <CardContent>
-                <Typography
-                  variant="h6"
-                  style={{
-                    padding: "0 .5em",
-                    fontSize: "1em",
-                    fontFamily: "Inter, sans-serif",
+                {/* Features List */}
+                <Box>
+                  <Typography
+                    sx={{
+                      fontWeight: "bold",
+                      fontSize: "1rem",
+                      color: colors.grey[200],
+                      mb: "0.5em",
+                    }}
+                  >
+                    Features Included
+                  </Typography>
+                  <ul
+                    style={{
+                      listStyle: "none",
+                      padding: 0,
+                      margin: 0,
+                      lineHeight: "1.4",
+                      color: colors.grey[300],
+                    }}
+                  >
+                    {subscription.features.map((feature, index) => (
+                      <li
+                        key={index}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          padding: "0.5em 0",
+                          borderBottom:
+                            index !== subscription.features.length - 1
+                              ? `1px solid ${colors.grey[800]}`
+                              : "none",
+                        }}
+                      >
+                        <CheckCircleOutlineIcon
+                          sx={{
+                            color: colors.greenAccent[500],
+                            fontSize: "1.1rem",
+                            marginRight: "0.5em",
+                          }}
+                        />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </Box>
+
+                {/* Billing Cycle and CTA */}
+                <Box
+                  sx={{
+                    mt: 3,
+                    padding: "1em",
+                    textAlign: "center",
                   }}
+                >
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    sx={{
+                      padding: "0.75em 2em",
+                      fontWeight: "600",
+                      borderRadius: "8px",
+                      backgroundColor: colors.greenAccent[500],
+                      color: colors.grey[900],
+                      "&:hover": {
+                        backgroundColor: colors.greenAccent[800],
+                        color: colors.grey[300],
+                      },
+                    }}
+                  >
+                    Choose Plan
+                  </Button>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: colors.grey[500],
+                      fontSize: "0.8rem",
+                      mt: "0.5em",
+                    }}
+                  >
+                    Cancel anytime
+                  </Typography>
+                </Box>
+              </Box>
+            ))}
+          </Box>
+        </Box>
+
+        {/* Billing History and conversation cost */}
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+            gap: "1em",
+          }}
+        >
+          <Box
+            sx={{
+              flexGrow: "1",
+              maxHeight: "400px",
+              overflow: "auto",
+            }}
+          >
+            <Box gridColumn="span 2" gridRow="span 2" overflow="auto">
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                borderBottom={`4px solid ${colors.primary[500]}`}
+                colors={colors.grey[100]}
+                p="15px"
+                backgroundColor={colors.primary[400]}
+              >
+                <Typography
+                  color={colors.grey[100]}
+                  variant="h4"
+                  fontWeight="600"
                 >
                   Billing History
                 </Typography>
-                <TableContainer>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell
-                          style={{
-                            padding: "1em .5em",
-                            fontFamily: "Inter, sans-serif",
-                          }}
-                        >
-                          Date
-                        </TableCell>
-                        <TableCell
-                          style={{
-                            padding: "1em .5em",
-                            fontFamily: "Inter, sans-serif",
-                          }}
-                        >
-                          Amount
-                        </TableCell>
-                        <TableCell
-                          style={{
-                            padding: "1em .5em",
-                            fontFamily: "Inter, sans-serif",
-                          }}
-                        >
-                          Plan
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {billingHistory.map((bill, index) => (
-                        <TableRow key={index}>
-                          <TableCell
-                            style={{
-                              padding: "1em .5em",
-                              fontFamily: "Inter, sans-serif",
-                            }}
-                          >
-                            {bill.date}
-                          </TableCell>
-                          <TableCell
-                            style={{
-                              padding: "1em .5em",
-                              fontFamily: "Inter, sans-serif",
-                            }}
-                          >
-                            ${bill.amount}
-                          </TableCell>
-                          <TableCell
-                            style={{
-                              padding: "1em .5em",
-                              fontFamily: "Inter, sans-serif",
-                            }}
-                          >
-                            {bill.plan}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-
-                {/* Download Format Selection for Billing History */}
-                <FormControl
-                  variant="outlined"
-                  style={{ marginTop: "10px", minWidth: 120 }}
-                >
-                  <InputLabel>Download Format</InputLabel>
-                  <Select
-                    value={downloadFormat}
-                    onChange={(e) => setDownloadFormat(e.target.value)}
-                    label="Download Format"
+              </Box>
+              {/* Header Row */}
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                backgroundColor={colors.primary[400]}
+                borderBottom={`4px solid ${colors.primary[500]}`}
+                p="15px"
+              >
+                <Box width="30%" textAlign="left">
+                  <Typography
+                    color={colors.blueAccent[500]}
+                    variant="h5"
+                    fontWeight="700"
                   >
-                    <MenuItem value="">Select</MenuItem>
-                    <MenuItem value="CSV">CSV</MenuItem>
-                    <MenuItem value="Excel">Excel</MenuItem>
-                    <MenuItem value="PDF">PDF</MenuItem>
-                  </Select>
-                </FormControl>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  style={{ marginTop: "10px", marginLeft: "10px" }}
-                  onClick={handleDownloadBilling}
+                    Date
+                  </Typography>
+                </Box>
+                <Box
+                  width="30%"
+                  textAlign="center"
+                  sx={{ fontWeight: "700", color: colors.blueAccent[500] }}
                 >
-                  Download
-                </Button>
-              </CardContent>
-            </Card>
+                  Plan
+                </Box>
+                <Box
+                  width="30%"
+                  textAlign="center"
+                  sx={{ fontWeight: "700", color: colors.blueAccent[500] }}
+                >
+                  Amount
+                </Box>
+              </Box>
 
-            {/* Conversation Costs */}
-            <Card
-              style={{
+              {/* Billing History Data Rows */}
+              {billingHistory.map((bill, index) => (
+                <Box
+                  key={`${index}`}
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  backgroundColor={colors.primary[400]}
+                  borderBottom={`4px solid ${colors.primary[500]}`}
+                  p="15px"
+                >
+                  <Box width="30%" textAlign="left">
+                    <Typography
+                      color={colors.greenAccent[500]}
+                      variant="h6"
+                      fontWeight="600"
+                    >
+                      {bill.date}
+                    </Typography>
+                  </Box>
+                  <Box width="30%" textAlign="center" color={colors.grey[100]}>
+                    {bill.plan}
+                  </Box>
+                  <Box width="30%" textAlign="center" color={colors.grey[100]}>
+                    {bill.amount}
+                  </Box>
+                </Box>
+              ))}
+            </Box>
+
+            {/* Form Controls */}
+            <FormControl
+              variant="outlined"
+              size="small"
+              sx={{
+                minWidth: 100,
                 margin: "1em",
-                padding: ".5em",
+                "& .MuiOutlinedInput-root": {
+                  backgroundColor: colors.primary[400],
+                  borderRadius: "20px",
+                  padding: "0px 8px",
+                  "& fieldset": {
+                    borderColor: colors.grey[600],
+                  },
+                  "&:hover fieldset": {
+                    borderColor: colors.greenAccent[400],
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: colors.greenAccent[600],
+                  },
+                },
+                "& .MuiSelect-icon": {
+                  color: colors.grey[100],
+                  fontSize: "1.2rem",
+                },
               }}
             >
-              <CardContent>
+              <Select
+                value={downloadFormat}
+                onChange={(e) => setDownloadFormat(e.target.value)}
+                displayEmpty
+                sx={{
+                  color: colors.grey[100],
+                  fontWeight: "500",
+                  fontSize: "14px",
+                  "&:focus": {
+                    backgroundColor: "transparent",
+                  },
+                }}
+              >
+                <MenuItem value="" disabled>
+                  <em style={{ fontSize: "14px", fontStyle: "normal" }}>
+                    Select Format
+                  </em>
+                </MenuItem>
+                <MenuItem value="PDF">PDF</MenuItem>
+                <MenuItem value="CSV">CSV</MenuItem>
+                <MenuItem value="Excel">Excel</MenuItem>
+              </Select>
+            </FormControl>
+
+            <Button
+              onClick={handleDownloadBilling}
+              color="secondary"
+              variant="outlined"
+              style={{
+                marginTop: "1.3em",
+                borderRadius: "20px",
+                marginRight: "8px",
+              }}
+            >
+              Download Bills
+            </Button>
+          </Box>
+
+          <Box
+            sx={{
+              flexGrow: "1",
+              maxHeight: "400px",
+              overflow: "auto",
+            }}
+          >
+            <Box gridColumn="span 2" gridRow="span 2" overflow="auto">
+              {/* Title Row */}
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                borderBottom={`4px solid ${colors.primary[500]}`}
+                colors={colors.grey[100]}
+                p="15px"
+                backgroundColor={colors.primary[400]}
+              >
                 <Typography
-                  variant="h6"
-                  style={{
-                    padding: "0 .5em",
-                    fontSize: "1em",
-                    fontFamily: "Inter, sans-serif",
-                  }}
+                  color={colors.grey[100]}
+                  variant="h4"
+                  fontWeight="600"
                 >
                   Conversation Costs
                 </Typography>
-                <TableContainer>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Date</TableCell>
-                        <TableCell>Cost</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {conversationCosts.map((cost, index) => (
-                        <TableRow key={index}>
-                          <TableCell>{cost.date}</TableCell>
-                          <TableCell>${cost.cost}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
+              </Box>
 
-                {/* Download Format Selection for Conversation Costs */}
-                <FormControl
-                  variant="outlined"
-                  style={{ marginTop: "10px", minWidth: 120 }}
-                >
-                  <InputLabel>Download Format</InputLabel>
-                  <Select
-                    value={costDownloadFormat}
-                    onChange={(e) => setCostDownloadFormat(e.target.value)}
-                    label="Download Format"
+              {/* Header Row */}
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                backgroundColor={colors.primary[400]}
+                borderBottom={`4px solid ${colors.primary[500]}`}
+                p="15px"
+              >
+                <Box width="50%" textAlign="left">
+                  <Typography
+                    color={colors.blueAccent[500]}
+                    variant="h5"
+                    fontWeight="700"
                   >
-                    <MenuItem value="">Select</MenuItem>
-                    <MenuItem value="CSV">CSV</MenuItem>
-                    <MenuItem value="Excel">Excel</MenuItem>
-                    <MenuItem value="PDF">PDF</MenuItem>
-                  </Select>
-                </FormControl>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  style={{ marginTop: "10px", marginLeft: "10px" }}
-                  onClick={handleDownloadCosts}
+                    Date
+                  </Typography>
+                </Box>
+                <Box
+                  width="50%"
+                  textAlign="center"
+                  sx={{ fontWeight: "700", color: colors.blueAccent[500] }}
                 >
-                  Download
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+                  Cost
+                </Box>
+              </Box>
+
+              {/* Data Rows */}
+              {conversationCosts.map((cost, index) => (
+                <Box
+                  key={index}
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  backgroundColor={colors.primary[400]}
+                  borderBottom={`4px solid ${colors.primary[500]}`}
+                  p="15px"
+                >
+                  <Box width="50%" textAlign="left">
+                    <Typography
+                      color={colors.greenAccent[500]}
+                      variant="h6"
+                      fontWeight="600"
+                    >
+                      {cost.date}
+                    </Typography>
+                  </Box>
+                  <Box width="50%" textAlign="center" color={colors.grey[100]}>
+                    {cost.cost}
+                  </Box>
+                </Box>
+              ))}
+            </Box>
+
+            {/* Format Selector */}
+            <FormControl
+              variant="outlined"
+              size="small"
+              sx={{
+                minWidth: 100,
+                margin: "1em",
+                "& .MuiOutlinedInput-root": {
+                  backgroundColor: colors.primary[400],
+                  borderRadius: "20px",
+                  padding: "0px 8px",
+                  "& fieldset": {
+                    borderColor: colors.grey[600],
+                  },
+                  "&:hover fieldset": {
+                    borderColor: colors.greenAccent[400],
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: colors.greenAccent[600],
+                  },
+                },
+                "& .MuiSelect-icon": {
+                  color: colors.grey[100],
+                  fontSize: "1.2rem",
+                },
+              }}
+            >
+              <Select
+                value={costDownloadFormat}
+                onChange={(e) => setCostDownloadFormat(e.target.value)}
+                displayEmpty
+                sx={{
+                  color: colors.grey[100],
+                  fontWeight: "500",
+                  fontSize: "14px",
+                  "&:focus": {
+                    backgroundColor: "transparent",
+                  },
+                }}
+              >
+                <MenuItem value="" disabled>
+                  <em style={{ fontSize: "14px", fontStyle: "normal" }}>
+                    Select Format
+                  </em>
+                </MenuItem>
+                <MenuItem value="PDF">PDF</MenuItem>
+                <MenuItem value="CSV">CSV</MenuItem>
+                <MenuItem value="Excel">Excel</MenuItem>
+              </Select>
+            </FormControl>
+
+            {/* Download Button */}
+            <Button
+              onClick={handleDownloadCosts}
+              color="secondary"
+              variant="outlined"
+              sx={{
+                marginTop: "1.3em",
+                borderRadius: "20px",
+                marginRight: "8px",
+              }}
+            >
+              Download Reports
+            </Button>
+          </Box>
+        </Box>
       </Box>
     </Box>
   );
 };
 
-export default Dashboard;
+export default Billing;

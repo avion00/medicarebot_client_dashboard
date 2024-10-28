@@ -123,13 +123,11 @@ const ConfigureSetting = () => {
           <Box>
             <Button
               onClick={handleSaveSettings}
-              sx={{
-                backgroundColor: colors.greenAccent[700],
-                color: colors.grey[100],
-                fontSize: "14px",
-                fontWeight: "bold",
-                padding: ".5em 1em",
-                textTransform: "capitalize",
+              color="secondary"
+              variant="outlined"
+              style={{
+                borderRadius: "20px",
+                marginRight: "8px",
               }}
             >
               <SaveIcon sx={{ mr: "10px" }} />
@@ -215,17 +213,14 @@ const ConfigureSetting = () => {
               SMS Notifications
             </label>
           </Box>
-          <Box>
+          <Box mt=".5em">
             <Button
               onClick={handleSaveNotifications}
-              sx={{
-                backgroundColor: colors.greenAccent[700],
-                color: colors.grey[100],
-                fontSize: "14px",
-                fontWeight: "bold",
-                padding: ".5em 1em",
-                marginTop: ".5em",
-                textTransform: "capitalize",
+              color="secondary"
+              variant="outlined"
+              style={{
+                borderRadius: "20px",
+                marginRight: "8px",
               }}
             >
               <SaveIcon sx={{ mr: "10px" }} />
@@ -257,14 +252,11 @@ const ConfigureSetting = () => {
             <Box>
               <Button
                 onClick={handleBackupData}
-                sx={{
-                  backgroundColor: colors.greenAccent[700],
-                  color: colors.grey[100],
-                  fontSize: "14px",
-                  fontWeight: "bold",
-                  padding: ".5em 1em",
-                  marginTop: ".5em",
-                  textTransform: "capitalize",
+                color="secondary"
+                variant="outlined"
+                style={{
+                  borderRadius: "20px",
+                  marginRight: "8px",
                 }}
               >
                 <BackupIcon sx={{ mr: ".5em" }} />
@@ -275,14 +267,16 @@ const ConfigureSetting = () => {
             <Box>
               <Button
                 onClick={handleRestoreData}
+                variant="outlined"
                 sx={{
-                  backgroundColor: colors.blueAccent[700],
-                  color: colors.grey[100],
-                  fontSize: "14px",
-                  fontWeight: "bold",
-                  padding: ".5em 1em",
-                  marginTop: ".5em",
-                  textTransform: "capitalize",
+                  color: colors.blueAccent[300],
+                  borderColor: colors.blueAccent[300],
+                  borderRadius: "20px",
+                  marginRight: "8px",
+                  "&:hover": {
+                    backgroundColor: colors.blueAccent[700],
+                    borderColor: colors.blueAccent[700],
+                  },
                 }}
               >
                 <RestoreIcon sx={{ mr: ".5em" }} />
@@ -290,17 +284,20 @@ const ConfigureSetting = () => {
               </Button>
             </Box>
             {restoreStatus && <p className="status-message">{restoreStatus}</p>}
-            <Box>
+            <Box mt=".5em">
+
               <Button
                 onClick={handleDeleteData}
+                variant="outlined"
                 sx={{
-                  backgroundColor: colors.redAccent[700],
-                  color: colors.grey[100],
-                  fontSize: "14px",
-                  fontWeight: "bold",
-                  padding: ".5em 1em",
-                  marginTop: ".5em",
-                  textTransform: "capitalize",
+                  color: colors.blueAccent[300],
+                  borderColor: colors.blueAccent[300],
+                  borderRadius: "20px",
+                  marginRight: "8px",
+                  "&:hover": {
+                    backgroundColor: colors.blueAccent[700],
+                    borderColor: colors.blueAccent[700],
+                  },
                 }}
               >
                 <DeleteForeverIcon sx={{ mr: ".5em" }} />

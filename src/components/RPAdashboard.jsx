@@ -150,7 +150,7 @@ const Reports = () => {
             minWidth: 100,
             margin: "1em",
             "& .MuiOutlinedInput-root": {
-              backgroundColor: theme.palette.primary[400],
+              backgroundColor: colors.primary[400],
               borderRadius: "20px",
               padding: "0px 8px",
               "& fieldset": {
@@ -160,11 +160,11 @@ const Reports = () => {
                 borderColor: colors.greenAccent[400],
               },
               "&.Mui-focused fieldset": {
-                borderColor: theme.palette.secondary.main,
+                borderColor: colors.greenAccent[600],
               },
             },
             "& .MuiSelect-icon": {
-              color: theme.palette.grey[200],
+              color: colors.grey[100],
               fontSize: "1.2rem", // Small icon size
             },
           }}
@@ -174,7 +174,7 @@ const Reports = () => {
             onChange={handleFormatChange}
             displayEmpty
             sx={{
-              color: theme.palette.grey[100],
+              color: colors.grey[100],
               fontWeight: "500",
               fontSize: "0.875rem", // Smaller text size
               "&:focus": {
