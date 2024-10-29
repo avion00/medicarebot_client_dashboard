@@ -61,9 +61,6 @@ const Register = () => {
     borderRadius: "3px",
   };
 
-  // const handleUsageChange = (event) => {
-  //   setUsage(event.target.value);
-  // };
 
 const initialValues = {
   firstName: "",
@@ -696,6 +693,7 @@ const checkoutSchema = yup.object().shape({
               </form>
             )}
           </Formik>
+          
         </Box>
       </Box>
     </Box>

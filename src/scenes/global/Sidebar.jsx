@@ -5,27 +5,18 @@ import { Link } from "react-router-dom";
 import "react-pro-sidebar/dist/css/styles.css";
 import { tokens } from "../../theme";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-// import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
-// import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
-// import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
-// import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
-// import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
-// import BarChartOutlinedIcon from "@mui/icons-material/BarChartOutlined";
-// import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutlined";
-// import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-// import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import PrecisionManufacturingIcon from "@mui/icons-material/PrecisionManufacturing";
-import PaymentIcon from "@mui/icons-material/Payment";
-import HelpCenterIcon from "@mui/icons-material/HelpCenter";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import PasswordIcon from "@mui/icons-material/Password";
-// import SettingsIcon from "@mui/icons-material/Settings";
-import PersonIcon from "@mui/icons-material/Person";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
-import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import SettingsIcon from "@mui/icons-material/Settings";
+import BlurOffIcon from "@mui/icons-material/BlurOff";
+import UpdateIcon from "@mui/icons-material/Update";
+import LayersIcon from "@mui/icons-material/Layers";
+import PaidIcon from "@mui/icons-material/Paid";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -118,7 +109,11 @@ const Sidebar = () => {
                   width="100px"
                   height="100px"
                   src={`../../assets/user.png`}
-                  style={{ cursor: "pointer", borderRadius: "50%", objectFit: 'cover' }}
+                  style={{
+                    cursor: "pointer",
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                  }}
                 />
               </Box>
               <Box textAlign="center">
@@ -141,13 +136,6 @@ const Sidebar = () => {
           )}
 
           <Box paddingLeft={isCollapsed ? undefined : "10%"}>
-            {/* <Item
-              title="Medicare Admin"
-              to="/"
-              icon={<HomeOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            /> */}
             <Typography
               variant="h6"
               color={colors.grey[300]}
@@ -166,26 +154,21 @@ const Sidebar = () => {
             <SubMenu
               title="Bot Management"
               icon={<ManageAccountsIcon />}
-              active={selected === "support"}
               style={{
                 color: colors.grey[100],
               }}
             >
               <MenuItem
-                icon={<PersonIcon />}
-                sx={{
-                  "&:hover": {
-                    color: "#868dfb !important",
-                  },
-                  "&.active": {
-                    color: "#6870fa !important",
-                  },
-                }}
+                icon={<SmartToyIcon />}
                 onClick={() => setSelected("Client Profile")}
                 style={{
                   marginLeft: "-6px",
                   fontSize: "14px",
                   marginBottom: ".5em",
+                  color:
+                    selected === "Client Profile"
+                      ? "#6870fa"
+                      : colors.grey[100],
                 }}
               >
                 <Link
@@ -197,20 +180,14 @@ const Sidebar = () => {
               </MenuItem>
 
               <MenuItem
-                icon={<SmartToyIcon />}
-                sx={{
-                  "&:hover": {
-                    color: "#868dfb !important",
-                  },
-                  "&.active": {
-                    color: "#6870fa !important",
-                  },
-                }}
+                icon={<PrecisionManufacturingIcon />}
                 onClick={() => setSelected("Assign Bot")}
                 style={{
                   marginLeft: "-6px",
                   fontSize: "14px",
                   marginBottom: ".5em",
+                  color:
+                    selected === "Assign Bot" ? "#6870fa" : colors.grey[100],
                 }}
               >
                 <Link
@@ -222,20 +199,13 @@ const Sidebar = () => {
               </MenuItem>
 
               <MenuItem
-                icon={<AccountBalanceIcon />}
-                sx={{
-                  "&:hover": {
-                    color: "#868dfb !important",
-                  },
-                  "&.active": {
-                    color: "#6870fa !important",
-                  },
-                }}
+                icon={<UpdateIcon />}
                 onClick={() => setSelected("Account")}
                 style={{
                   marginLeft: "-6px",
                   fontSize: "14px",
                   marginBottom: "1em",
+                  color: selected === "Account" ? "#6870fa" : colors.grey[100],
                 }}
               >
                 <Link
@@ -245,21 +215,18 @@ const Sidebar = () => {
                   Update Training Data
                 </Link>
               </MenuItem>
+
               <MenuItem
-                icon={<AccountBalanceIcon />}
-                sx={{
-                  "&:hover": {
-                    color: "#868dfb !important",
-                  },
-                  "&.active": {
-                    color: "#6870fa !important",
-                  },
-                }}
-                onClick={() => setSelected("Account")}
+                icon={<BlurOffIcon />}
+                onClick={() => setSelected("Deactivate Bots")}
                 style={{
                   marginLeft: "-6px",
                   fontSize: "14px",
                   marginBottom: "1em",
+                  color:
+                    selected === "Deactivate Bots"
+                      ? "#6870fa"
+                      : colors.grey[100],
                 }}
               >
                 <Link
@@ -274,21 +241,21 @@ const Sidebar = () => {
             <Item
               title="Settings Management"
               to="/settings"
-              icon={<PrecisionManufacturingIcon />}
+              icon={<SettingsIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Interactions Management"
               to="/interactions"
-              icon={<PaymentIcon />}
+              icon={<LayersIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Billing Management"
               to="/billing"
-              icon={<HelpCenterIcon />}
+              icon={<PaidIcon />}
               selected={selected}
               setSelected={setSelected}
             />

@@ -1,6 +1,5 @@
 import { Box, Button, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
-import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import Header from "../../components/Header";
 import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
@@ -120,7 +119,6 @@ const DeactivateBots = () => {
               fontSize: "14px",
               fontWeight: "bold",
               padding: "10px 20px",
-              textTransform: "capitalize",
             }}
           >
             <RotateLeftIcon sx={{ mr: "10px" }} />
@@ -131,7 +129,7 @@ const DeactivateBots = () => {
 
       <Box
         m="40px 0 0 0"
-        height="75vh"
+        height="65vh"
         sx={{
           "& .MuiDataGrid-root": {
             border: "none",
