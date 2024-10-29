@@ -173,7 +173,11 @@ const Sidebar = () => {
               >
                 <Link
                   to="/activeBots"
-                  style={{ textDecoration: "none", color: "inherit" }}
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    fontSize: "14px",
+                  }}
                 >
                   Active Bots
                 </Link>
@@ -192,7 +196,11 @@ const Sidebar = () => {
               >
                 <Link
                   to="/configureSettings"
-                  style={{ textDecoration: "none", color: "inherit" }}
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    fontSize: "14px",
+                  }}
                 >
                   Configure Settings
                 </Link>
@@ -210,7 +218,11 @@ const Sidebar = () => {
               >
                 <Link
                   to="/updateTraining"
-                  style={{ textDecoration: "none", color: "inherit" }}
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    fontSize: "14px",
+                  }}
                 >
                   Update Training Data
                 </Link>
