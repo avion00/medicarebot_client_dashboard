@@ -51,7 +51,7 @@ const Sidebar = () => {
         overflowY: "auto",
         background: colors.primary[400],
         "& .pro-sidebar-inner": {
-          background: `${colors.primary[400]} !important`,
+          backgroundColor: `${colors.primary[400]} !important`,
         },
         "& .pro-icon-wrapper": {
           backgroundColor: "transparent !important",
@@ -63,6 +63,9 @@ const Sidebar = () => {
           color: "#868dfb !important",
         },
         "& .pro-menu-item.active": {
+          color: "#6870fa !important",
+        },
+        "& .pro-sub-menu-item.active": {
           color: "#6870fa !important",
         },
       }}
@@ -156,14 +159,23 @@ const Sidebar = () => {
               icon={<ManageAccountsIcon />}
               style={{
                 color: colors.grey[100],
+                "& .pro-menu-item.active": {
+                  color: "#6870fa !important",
+                },
+                "& .pro-sub-menu-item.active": {
+                  color: "#6870fa !important",
+                },"& .pro-inner-item:focus": {
+                  // color: 'red',
+                }
+                // .pro-sidebar .pro-menu .pro-menu-item > .pro-inner-item:focus 
               }}
             >
               <MenuItem
                 icon={<SmartToyIcon />}
                 onClick={() => setSelected("Client Profile")}
                 style={{
-                  marginLeft: "-6px",
-                  fontSize: "14px",
+                  // marginLeft: "-10px",
+                  // fontSize: "14px",
                   marginBottom: ".5em",
                   color:
                     selected === "Client Profile"
@@ -176,7 +188,7 @@ const Sidebar = () => {
                   style={{
                     textDecoration: "none",
                     color: "inherit",
-                    fontSize: "14px",
+                    fontSize: "13px",
                   }}
                 >
                   Active Bots
@@ -187,8 +199,7 @@ const Sidebar = () => {
                 icon={<PrecisionManufacturingIcon />}
                 onClick={() => setSelected("Assign Bot")}
                 style={{
-                  marginLeft: "-6px",
-                  fontSize: "14px",
+                  // marginLeft: "-6px",
                   marginBottom: ".5em",
                   color:
                     selected === "Assign Bot" ? "#6870fa" : colors.grey[100],
@@ -199,7 +210,7 @@ const Sidebar = () => {
                   style={{
                     textDecoration: "none",
                     color: "inherit",
-                    fontSize: "14px",
+                    fontSize: "13px",
                   }}
                 >
                   Configure Settings
@@ -210,8 +221,7 @@ const Sidebar = () => {
                 icon={<UpdateIcon />}
                 onClick={() => setSelected("Account")}
                 style={{
-                  marginLeft: "-6px",
-                  fontSize: "14px",
+                  // marginLeft: "-6px",
                   marginBottom: "1em",
                   color: selected === "Account" ? "#6870fa" : colors.grey[100],
                 }}
@@ -221,7 +231,7 @@ const Sidebar = () => {
                   style={{
                     textDecoration: "none",
                     color: "inherit",
-                    fontSize: "14px",
+                    fontSize: "13px",
                   }}
                 >
                   Update Training Data
@@ -232,8 +242,7 @@ const Sidebar = () => {
                 icon={<BlurOffIcon />}
                 onClick={() => setSelected("Deactivate Bots")}
                 style={{
-                  marginLeft: "-6px",
-                  fontSize: "14px",
+                  // marginLeft: "-6px",
                   marginBottom: "1em",
                   color:
                     selected === "Deactivate Bots"
@@ -243,7 +252,11 @@ const Sidebar = () => {
               >
                 <Link
                   to="/deactivateBots"
-                  style={{ textDecoration: "none", color: "inherit" }}
+                  style={{
+                    textDecoration: "none",
+                    fontSize: "13px",
+                    color: "inherit",
+                  }}
                 >
                   Deactivate Bots
                 </Link>
