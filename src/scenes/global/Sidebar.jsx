@@ -17,6 +17,7 @@ import BlurOffIcon from "@mui/icons-material/BlurOff";
 import UpdateIcon from "@mui/icons-material/Update";
 import LayersIcon from "@mui/icons-material/Layers";
 import PaidIcon from "@mui/icons-material/Paid";
+import AddIcon from "@mui/icons-material/Add";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -164,18 +165,36 @@ const Sidebar = () => {
                 },
                 "& .pro-sub-menu-item.active": {
                   color: "#6870fa !important",
-                },"& .pro-inner-item:focus": {
+                },
+                "& .pro-inner-item:focus": {
                   // color: 'red',
-                }
-                // .pro-sidebar .pro-menu .pro-menu-item > .pro-inner-item:focus 
+                },
+                // .pro-sidebar .pro-menu .pro-menu-item > .pro-inner-item:focus
               }}
             >
+              <MenuItem
+                icon={<AddIcon />}
+                onClick={() => setSelected("Add Bots")}
+                style={{
+                  marginBottom: ".5em",
+                  color: selected === "Add Bots" ? "#6870fa" : colors.grey[100],
+                }}
+              >
+                <Link
+                  to="/addbot"
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    fontSize: "13px",
+                  }}
+                >
+                  Add Bots
+                </Link>
+              </MenuItem>
               <MenuItem
                 icon={<SmartToyIcon />}
                 onClick={() => setSelected("Client Profile")}
                 style={{
-                  // marginLeft: "-10px",
-                  // fontSize: "14px",
                   marginBottom: ".5em",
                   color:
                     selected === "Client Profile"

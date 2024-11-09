@@ -7,7 +7,7 @@ import {
   useTheme,
   IconButton,
   InputAdornment,
-  Divider,
+  // Divider,
 } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -25,9 +25,9 @@ import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 
-import GoogleIcon from "@mui/icons-material/Google";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import GitHubIcon from "@mui/icons-material/GitHub";
+// import GoogleIcon from "@mui/icons-material/Google";
+// import TwitterIcon from "@mui/icons-material/Twitter";
+// import GitHubIcon from "@mui/icons-material/GitHub";
 
 const LogIn = () => {
   const theme = useTheme();
@@ -48,13 +48,13 @@ const LogIn = () => {
     navigate("/dashboard");
   };
 
-  const buttonStyles = {
-    flexGrow: 1,
-    padding: ".75em 1em",
-    borderColor: colors.grey[900],
-    color: colors.blueAccent[100],
-    borderRadius: "3px",
-  };
+  // const buttonStyles = {
+  //   flexGrow: 1,
+  //   padding: ".75em 1em",
+  //   borderColor: colors.grey[900],
+  //   color: colors.blueAccent[100],
+  //   borderRadius: "3px",
+  // };
 
   return (
     <Box
@@ -286,7 +286,7 @@ const LogIn = () => {
                 </Box>
 
                 {/* Horizontal line and centered text */}
-                <Box
+                {/* <Box
                   sx={{
                     display: "flex",
                     alignItems: "center",
@@ -302,7 +302,6 @@ const LogIn = () => {
                   <Divider sx={{ flexGrow: 1 }} />
                 </Box>
 
-                {/* Social Media Buttons */}
                 <Box
                   display="flex"
                   justifyContent="space-between"
@@ -357,7 +356,7 @@ const LogIn = () => {
                   >
                     GitHub
                   </Button>
-                </Box>
+                </Box> */}
               </form>
             )}
           </Formik>

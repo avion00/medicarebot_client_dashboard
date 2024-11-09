@@ -9,7 +9,7 @@ import ChangeCircleIcon from "@mui/icons-material/ChangeCircle";
 import UpdateIcon from "@mui/icons-material/Update";
 import DoDisturbIcon from "@mui/icons-material/DoDisturb";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
-
+import AddIcon from "@mui/icons-material/Add";
 
 const ActiveBots = () => {
   const theme = useTheme();
@@ -282,12 +282,27 @@ const ActiveBots = () => {
   // Limit to show only 2 active bots initially
   const displayedBots = showAll ? activeBots : activeBots.slice(0, 2);
 
-
   return (
     <Box m="20px">
       {/* HEADER */}
-      <Box>
+
+      <Box display="flex" justifyContent="space-between" alignItems="center">
         <Header title="ACTIVE BOTS" subtitle="List of Active Bots" />
+
+        <Box>
+          <Button
+            sx={{
+              backgroundColor: colors.greenAccent[700],
+              color: colors.grey[100],
+              fontSize: "14px",
+              fontWeight: "bold",
+              padding: "10px 20px",
+            }}
+          >
+            <AddIcon sx={{ mr: "10px" }} />
+            ADD NEW BOT
+          </Button>
+        </Box>
       </Box>
 
       <Box>
@@ -304,10 +319,12 @@ const ActiveBots = () => {
           ))}
         </div>
         {activeBots.length > 2 && !showAll && (
-          <Box sx={{
-            marginTop: '1em',
-            float: 'right'
-          }}>
+          <Box
+            sx={{
+              marginTop: "1em",
+              float: "right",
+            }}
+          >
             <Button
               onClick={handleViewAllClick}
               variant="outlined"

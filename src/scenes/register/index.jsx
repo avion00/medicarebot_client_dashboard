@@ -6,7 +6,7 @@ import {
   useTheme,
   IconButton,
   InputAdornment,
-  Divider,
+  // Divider,
 } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -23,9 +23,9 @@ import { useNavigate } from "react-router-dom";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import GoogleIcon from "@mui/icons-material/Google";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import GitHubIcon from "@mui/icons-material/GitHub";
+// import GoogleIcon from "@mui/icons-material/Google";
+// import TwitterIcon from "@mui/icons-material/Twitter";
+// import GitHubIcon from "@mui/icons-material/GitHub";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -41,7 +41,7 @@ const Register = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  // const [Usage, setUsage] = useState(""); 
+  // const [Usage, setUsage] = useState("");
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = (event) => {
@@ -50,53 +50,52 @@ const Register = () => {
 
   const handleFormSubmit = (values) => {
     console.log(values);
-    navigate("/login"); 
+    navigate("/login");
   };
 
-  const buttonStyles = {
-    flexGrow: 1,
-    padding: ".75em 1em",
-    borderColor: colors.grey[900],
-    color: colors.blueAccent[100],
-    borderRadius: "3px",
+  // const buttonStyles = {
+  //   flexGrow: 1,
+  //   padding: ".75em 1em",
+  //   borderColor: colors.grey[900],
+  //   color: colors.blueAccent[100],
+  //   borderRadius: "3px",
+  // };
+
+  const initialValues = {
+    firstName: "",
+    lastName: "",
+    username: "",
+    email: "",
+    phoneNumber: "",
+    companyName: "",
+    city: "",
+    state: "",
+    country: "",
+    botUsage: "", // Change this to match the form field name
+    password: "",
+    confirmPassword: "",
   };
 
-
-const initialValues = {
-  firstName: "",
-  lastName: "",
-  username: "",
-  email: "",
-  phoneNumber: "",
-  companyName: "",
-  city: "",
-  state: "",
-  country: "",
-  botUsage: "", // Change this to match the form field name
-  password: "",
-  confirmPassword: "",
-};
-
-const checkoutSchema = yup.object().shape({
-  firstName: yup.string().required("First Name is required"),
-  lastName: yup.string().required("Last Name is required"),
-  username: yup.string().required("Username is required"),
-  email: yup.string().email("Invalid email").required("Email is required"),
-  phoneNumber: yup.string().required("Phone number is required"),
-  companyName: yup.string().required("Company name is required"),
-  city: yup.string().required("City is required"),
-  state: yup.string().required("State is required"),
-  country: yup.string().required("Country is required"),
-  botUsage: yup.string().required("Bot usage is required"), // Make sure to validate botUsage
-  password: yup
-    .string()
-    .required("Password is required")
-    .min(6, "Password must be at least 6 characters"),
-  confirmPassword: yup
-    .string()
-    .oneOf([yup.ref("password"), null], "Passwords must match")
-    .required("Confirm Password is required"),
-});
+  const checkoutSchema = yup.object().shape({
+    firstName: yup.string().required("First Name is required"),
+    lastName: yup.string().required("Last Name is required"),
+    username: yup.string().required("Username is required"),
+    email: yup.string().email("Invalid email").required("Email is required"),
+    phoneNumber: yup.string().required("Phone number is required"),
+    companyName: yup.string().required("Company name is required"),
+    city: yup.string().required("City is required"),
+    state: yup.string().required("State is required"),
+    country: yup.string().required("Country is required"),
+    botUsage: yup.string().required("Bot usage is required"), // Make sure to validate botUsage
+    password: yup
+      .string()
+      .required("Password is required")
+      .min(6, "Password must be at least 6 characters"),
+    confirmPassword: yup
+      .string()
+      .oneOf([yup.ref("password"), null], "Passwords must match")
+      .required("Confirm Password is required"),
+  });
 
   return (
     <Box
@@ -615,7 +614,7 @@ const checkoutSchema = yup.object().shape({
                 </Box>
 
                 {/* Horizontal line and centered text */}
-                <Box
+                {/* <Box
                   sx={{
                     display: "flex",
                     alignItems: "center",
@@ -631,7 +630,6 @@ const checkoutSchema = yup.object().shape({
                   <Divider sx={{ flexGrow: 1 }} />
                 </Box>
 
-                {/* Social Media Buttons */}
                 <Box
                   display="flex"
                   justifyContent="space-between"
@@ -689,11 +687,10 @@ const checkoutSchema = yup.object().shape({
                   >
                     GitHub
                   </Button>
-                </Box>
+                </Box> */}
               </form>
             )}
           </Formik>
-          
         </Box>
       </Box>
     </Box>

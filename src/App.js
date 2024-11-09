@@ -27,6 +27,8 @@ import Settings from "./scenes/settings/index";
 import Interactions from "./scenes/interactions/index";
 import Billing from "./scenes/billing/index";
 import Reports from "./scenes/reports/index";
+import AddBot from "./scenes/addBot/index";
+
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -92,6 +94,7 @@ function App() {
                 <Route path="/interactions" element={<Interactions />} />
                 <Route path="/billing" element={<Billing />} />
                 <Route path="/reports" element={<Reports />} />
+                <Route path="/addBot" element={<AddBot />} />
               </Routes>
             </main>
           </div>
