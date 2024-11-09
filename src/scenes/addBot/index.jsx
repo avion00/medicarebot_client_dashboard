@@ -12,7 +12,6 @@ import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
 import { tokens } from "../../theme";
-import LoginIcon from "@mui/icons-material/Login";
 import { useNavigate } from "react-router-dom";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -37,15 +36,58 @@ const AddBot = () => {
     setSnackbarOpen(false);
   };
 
+  const handleBotNameChange = (event, handleChange) => {
+    handleChange(event);
+  };
+
   const handleBotImageUpload = (event) => {
     const file = event.target.files[0];
     setSelectedImage(file ? file.name : "");
+  };
+
+  const handleStatusChange = (event, handleChange) => {
+    handleChange(event);
+  };
+
+  const handleUsageFrequencyChange = (event, handleChange) => {
+    handleChange(event);
+  };
+
+  const handleResponseAccuracyChange = (event, handleChange) => {
+    handleChange(event);
+  };
+
+  const handleLanguageSupportChange = (event, handleChange) => {
+    handleChange(event);
+  };
+
+  const handlePerformanceScoreChange = (event, handleChange) => {
+    handleChange(event);
+  };
+
+  const handleResponseTimeChange = (event, handleChange) => {
+    handleChange(event);
+  };
+
+  const handleAverageLengthChange = (event, handleChange) => {
+    handleChange(event);
+  };
+
+  const handleTotalInteractionsChange = (event, handleChange) => {
+    handleChange(event);
   };
 
   const initialValues = {
     botName: "",
     botImage: "",
     status: "",
+    usageFrequency: "",
+    responseAccuracy: "",
+    languageSupport: "",
+    performanceScore: "",
+    responseTime: "",
+    averageLength: "",
+    totalInteractions: "",
   };
 
   const checkoutSchema = yup.object().shape({
@@ -56,8 +98,8 @@ const AddBot = () => {
   return (
     <Box m="20px">
       <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Header title="ACTIVE BOTS" subtitle="List of Active Bots" />
-        <Box>
+        <Header title="ADD NEW BOTS" subtitle="Add your new bots" />
+        {/* <Box>
           <Button
             type="submit"
             sx={{
@@ -71,7 +113,7 @@ const AddBot = () => {
             <AddIcon sx={{ mr: "10px" }} />
             ADD NEW BOT
           </Button>
-        </Box>
+        </Box> */}
       </Box>
 
       <Box>
@@ -105,7 +147,7 @@ const AddBot = () => {
                   type="text"
                   label="Bot Name"
                   onBlur={handleBlur}
-                  onChange={handleChange}
+                  onChange={(e) => handleBotNameChange(e, handleChange)}
                   value={values.botName}
                   name="botName"
                   error={!!touched.botName && !!errors.botName}
@@ -177,7 +219,6 @@ const AddBot = () => {
                   }}
                 />
 
-                {/* Additional form fields for Bot Status or other inputs */}
                 <FormControl
                   fullWidth
                   variant="filled"
@@ -194,34 +235,26 @@ const AddBot = () => {
                   </InputLabel>
                   <Select
                     labelId="status"
-                    id="state"
+                    id="status"
                     value={values.status}
                     name="status"
-                    onChange={handleChange}
+                    onChange={(e) => handleStatusChange(e, handleChange)}
                     onBlur={handleBlur}
                     error={!!touched.status && !!errors.status}
                   >
-                    <MenuItem value={10}>Active</MenuItem>
-                    <MenuItem value={20}>Deactive</MenuItem>
+                    <MenuItem value="Active">Active</MenuItem>
+                    <MenuItem value="Inactive">Inactive</MenuItem>
                   </Select>
-                  {touched.status && errors.status ? (
+                  {touched.status && errors.status && (
                     <Box color="red" mt="4px" fontSize="11px" ml="1.5em">
                       {errors.status}
                     </Box>
-                  ) : null}{" "}
+                  )}
                 </FormControl>
 
-                <TextField
+                <FormControl
                   fullWidth
                   variant="filled"
-                  type="text"
-                  label="Usage Frequency"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.usageFrequency}
-                  name="usageFrequency"
-                  error={!!touched.usageFrequency && !!errors.usageFrequency}
-                  helperText={touched.usageFrequency && errors.usageFrequency}
                   sx={{
                     gridColumn: "span 1",
                     "& .MuiFormLabel-root.Mui-focused": {
@@ -229,7 +262,35 @@ const AddBot = () => {
                       fontWeight: "bold",
                     },
                   }}
-                />
+                >
+                  <InputLabel
+                    id="usage-frequency"
+                    sx={{ color: colors.primary[100] }}
+                  >
+                    Usage Frequency
+                  </InputLabel>
+                  <Select
+                    labelId="usage-frequency"
+                    id="usage"
+                    onBlur={handleBlur}
+                    onChange={(e) =>
+                      handleUsageFrequencyChange(e, handleChange)
+                    }
+                    value={values.usageFrequency}
+                    name="usageFrequency"
+                    error={!!touched.usageFrequency && !!errors.usageFrequency}
+                    helperText={touched.usageFrequency && errors.usageFrequency}
+                  >
+                    <MenuItem value="high">High</MenuItem>
+                    <MenuItem value="medium">Medium</MenuItem>
+                    <MenuItem value="low">Low</MenuItem>
+                  </Select>
+                  {touched.status && errors.status && (
+                    <Box color="red" mt="4px" fontSize="11px" ml="1.5em">
+                      {errors.status}
+                    </Box>
+                  )}
+                </FormControl>
 
                 <TextField
                   fullWidth
@@ -237,7 +298,9 @@ const AddBot = () => {
                   type="number"
                   label="Response Accuracy"
                   onBlur={handleBlur}
-                  onChange={handleChange}
+                  onChange={(e) =>
+                    handleResponseAccuracyChange(e, handleChange)
+                  }
                   value={values.responseAccuracy}
                   name="responseAccuracy"
                   error={
@@ -274,24 +337,29 @@ const AddBot = () => {
                   </InputLabel>
                   <Select
                     labelId="language-support"
-                    id="lang-support"
+                    id="languageSupport"
                     value={values.languageSupport}
                     name="languageSupport"
-                    onChange={handleChange}
+                    onChange={(e) =>
+                      handleLanguageSupportChange(e, handleChange)
+                    }
                     onBlur={handleBlur}
                     error={
                       !!touched.languageSupport && !!errors.languageSupport
                     }
                   >
-                    <MenuItem value={10}>English</MenuItem>
-                    <MenuItem value={20}>Italy</MenuItem>
-                    <MenuItem value={30}>Spanish</MenuItem>
+                    <MenuItem value="English">English</MenuItem>
+                    <MenuItem value="Italian">Italian</MenuItem>
+                    <MenuItem value="French">French</MenuItem>
+                    <MenuItem value="German">German</MenuItem>
+                    <MenuItem value="Spanish">Spanish</MenuItem>
+                    <MenuItem value="Hindi">Hindi</MenuItem>
                   </Select>
-                  {touched.languageSupport && errors.languageSupport ? (
+                  {touched.languageSupport && errors.languageSupport && (
                     <Box color="red" mt="4px" fontSize="11px" ml="1.5em">
                       {errors.languageSupport}
                     </Box>
-                  ) : null}{" "}
+                  )}
                 </FormControl>
 
                 <TextField
@@ -300,7 +368,9 @@ const AddBot = () => {
                   type="number"
                   label="Performance Score"
                   onBlur={handleBlur}
-                  onChange={handleChange}
+                  onChange={(e) =>
+                    handlePerformanceScoreChange(e, handleChange)
+                  }
                   value={values.performanceScore}
                   name="performanceScore"
                   error={
@@ -324,7 +394,7 @@ const AddBot = () => {
                   type="number"
                   label="Response Time"
                   onBlur={handleBlur}
-                  onChange={handleChange}
+                  onChange={(e) => handleResponseTimeChange(e, handleChange)}
                   value={values.responseTime}
                   name="responseTime"
                   error={!!touched.responseTime && !!errors.responseTime}
@@ -344,11 +414,11 @@ const AddBot = () => {
                   type="number"
                   label="Average Length"
                   onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.averageLenth}
-                  name="responseTime"
-                  error={!!touched.averageLenth && !!errors.averageLenth}
-                  helperText={touched.averageLenth && errors.averageLenth}
+                  onChange={(e) => handleAverageLengthChange(e, handleChange)}
+                  value={values.averageLength}
+                  name="averageLength"
+                  error={!!touched.averageLength && !!errors.averageLength}
+                  helperText={touched.averageLength && errors.averageLength}
                   sx={{
                     gridColumn: "span 1",
                     "& .MuiFormLabel-root.Mui-focused": {
@@ -364,9 +434,11 @@ const AddBot = () => {
                   type="number"
                   label="Total Interactions"
                   onBlur={handleBlur}
-                  onChange={handleChange}
+                  onChange={(e) =>
+                    handleTotalInteractionsChange(e, handleChange)
+                  }
                   value={values.totalInteractions}
-                  name="responseTime"
+                  name="totalInteractions"
                   error={
                     !!touched.totalInteractions && !!errors.totalInteractions
                   }
@@ -382,41 +454,43 @@ const AddBot = () => {
                   }}
                 />
               </Box>
+
               <Box display="flex" justifyContent="start" mt="2em">
                 <Button
                   type="submit"
                   color="secondary"
-                  variant="contained"
-                  startIcon={<AddIcon />}
-                  sx={{ gridColumn: "span 1", padding: ".8em 2em", fontWeight: 'bold' }}
+                  variant="outlined"
+                  style={{
+                    borderRadius: "20px",
+                    marginRight: "8px",
+                  }}
                 >
-                  Add New Bot
+                  <AddIcon sx={{ mr: ".5em" }} />
+                  Create New Bot
                 </Button>
               </Box>
+
+              <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={3000}
+                onClose={handleSnackbarClose}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "center",
+                }}
+              >
+                <Alert
+                  onClose={handleSnackbarClose}
+                  severity="success"
+                  sx={{ width: "100%" }}
+                >
+                  Congratulations, you have created bot name:{" "}
+                  <strong>{values.botName}</strong>
+                </Alert>
+              </Snackbar>
             </form>
           )}
         </Formik>
-
-        {/* Snackbar notification */}
-        <Snackbar
-          open={snackbarOpen}
-          onClose={handleSnackbarClose}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-          autoHideDuration={4000}
-        >
-          <Alert
-            onClose={handleSnackbarClose}
-            severity="success"
-            sx={{
-              width: "100%",
-              fontSize: "13px",
-              fontWeight: "500",
-              color: colors.greenAccent[200],
-            }}
-          >
-            Congratulations, you have created new bot {initialValues.botName}
-          </Alert>
-        </Snackbar>
       </Box>
     </Box>
   );

@@ -9,6 +9,7 @@ import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import PrecisionManufacturingIcon from "@mui/icons-material/PrecisionManufacturing";
 import AssessmentIcon from "@mui/icons-material/Assessment";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import PasswordIcon from "@mui/icons-material/Password";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
@@ -22,6 +23,7 @@ import AddIcon from "@mui/icons-material/Add";
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+
   return (
     <MenuItem
       active={selected === title}
@@ -37,22 +39,28 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
   );
 };
 
-const Sidebar = () => {
+const Sidebar = ({ isSidebar }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
+  const isNonMobile = useMediaQuery("(min-width:768px)");
+
 
   return (
     <Box
       sx={{
-        position: "sticky",
+        position: isNonMobile ? "sticky" : "fixed",
         top: 0,
+        left: 0, 
+        width: isCollapsed ? "80px" : "270px",
         height: "100vh",
+        zIndex: isNonMobile ? 1 : 1000,
         overflowY: "auto",
-        background: colors.primary[400],
+        transition: "width 0.3s ease",
+
         "& .pro-sidebar-inner": {
-          backgroundColor: `${colors.primary[400]} !important`,
+          backgroundColor: colors.primary[400],
         },
         "& .pro-icon-wrapper": {
           backgroundColor: "transparent !important",
@@ -143,7 +151,10 @@ const Sidebar = () => {
             <Typography
               variant="h6"
               color={colors.grey[300]}
-              sx={{ m: "12px 0 5px 20px" }}
+              sx={{
+                margin: isCollapsed ? 0 : "12px 0 5px 20px",
+                textAlign: isCollapsed ? "center" : "left",
+              }}
             >
               Client Dashboard
             </Typography>

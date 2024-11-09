@@ -7,7 +7,6 @@ import {
   useTheme,
   IconButton,
   InputAdornment,
-  // Divider,
 } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -24,6 +23,7 @@ import { useNavigate } from "react-router-dom";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
+import { Link } from "react-router-dom";
 
 // import GoogleIcon from "@mui/icons-material/Google";
 // import TwitterIcon from "@mui/icons-material/Twitter";
@@ -33,7 +33,7 @@ const LogIn = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
-  const isNonMobile = useMediaQuery("(min-width:600px)");
+  const isNonMobile = useMediaQuery("(min-width:768px)");
 
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate(); // Initialize navigate hook
@@ -61,8 +61,10 @@ const LogIn = () => {
       sx={{
         display: "flex",
         justifyContent: "space-between",
-        height: "100dvh",
+        alignItems: isNonMobile ? "inherit" : "center",
+        flexDirection: isNonMobile ? "row" : "column",
         position: "relative",
+        marginTop: isNonMobile ? "0" : "3em",
       }}
     >
       <Box style={{ position: "absolute", top: "3em", right: "3em" }}>
@@ -76,10 +78,15 @@ const LogIn = () => {
       </Box>
       <Box
         sx={{
-          width: "300px",
+          width: "80%",
+          position: isNonMobile ? "sticky" : "relative",
+          height: isNonMobile ? "100dvh" : "100%",
+          top: "0",
+          left: "0",
           flexGrow: "1",
           display: "flex",
           alignItems: "center",
+          textAlign: isNonMobile ? "inherit" : "center",
           justifyContent: "center",
         }}
       >
@@ -93,7 +100,8 @@ const LogIn = () => {
       <Box
         m="20px"
         sx={{
-          width: "300px",
+          marginTop: isNonMobile ? "10.4em" : "1em",
+          width: "80%",
           flexGrow: "1",
           display: "flex",
           alignItems: "center",
@@ -118,18 +126,18 @@ const LogIn = () => {
                 cursor: "pointer",
               }}
             >
-              <a
+              <Link
                 style={{
                   all: "unset",
                   display: "flex",
                   alignItems: "center",
                   gap: ".5em",
                 }}
-                href="/register"
+                to="/register"
               >
                 <ArrowForwardIcon />
                 Create New Account
-              </a>
+              </Link>
             </Box>
           </Box>
 
@@ -264,11 +272,19 @@ const LogIn = () => {
                           opacity: 0.7,
                         },
                       }}
-                      onClick={() => {
-                        // Handle forget password logic here
-                      }}
                     >
-                      Forget Password?
+                      <Link
+                        to="/forgetPassword"
+                        style={{
+                          all: "unset",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: ".5em",
+                          color: colors.blueAccent[200],
+                        }}
+                      >
+                        Forget Password?
+                      </Link>
                     </Box>
                   </Box>
                 </Box>

@@ -1,4 +1,4 @@
-import { Box, Button, useTheme } from "@mui/material";
+import { Box, Button, useTheme, Snackbar } from "@mui/material";
 import { tokens } from "../../theme";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import Header from "../../components/Header";
@@ -7,6 +7,7 @@ import React, { useState } from "react";
 import BackupIcon from "@mui/icons-material/Backup";
 import RestoreIcon from "@mui/icons-material/Restore";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import { SnackbarContent } from "@mui/material";
 
 const ConfigureSetting = () => {
   const theme = useTheme();
@@ -19,12 +20,23 @@ const ConfigureSetting = () => {
   const [restoreStatus, setRestoreStatus] = useState("");
   const [deleteStatus, setDeleteStatus] = useState("");
 
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarAction, setSnackbarAction] = useState(""); // Added for action-based styling
+
+  const handleSnackbar = (message, actionType) => {
+    setSnackbarMessage(message);
+    setOpenSnackbar(true);
+    setSnackbarAction(actionType); // Store the action type for conditional styling
+    setTimeout(() => setOpenSnackbar(false), 3000); // Close Snackbar after 3 seconds
+  };
+
   const handleSaveSettings = () => {
-    alert(`API URL saved: ${apiUrl}`);
+    handleSnackbar(`API URL saved: ${apiUrl}`);
   };
 
   const handleSaveNotifications = () => {
-    alert(
+    handleSnackbar(
       `Notifications saved:\nEmail: ${
         emailNotifications ? "On" : "Off"
       }\nSMS: ${smsNotifications ? "On" : "Off"}`
@@ -33,24 +45,23 @@ const ConfigureSetting = () => {
 
   const handleBackupData = () => {
     setBackupStatus("Backup successful.");
-    setTimeout(() => setBackupStatus(""), 3000); // Clear message after 3 seconds
+    handleSnackbar("Backup successful.");
   };
 
   const handleRestoreData = () => {
     // Simulating data restoration
     setRestoreStatus("Data restored.");
-    setTimeout(() => setRestoreStatus(""), 3000); // Clear message after 3 seconds
+    handleSnackbar("Data restored.");
   };
 
   const handleDeleteData = () => {
-    // Simulating delete all data logic
     if (
       window.confirm(
         "Are you sure you want to delete all data? This action cannot be undone."
       )
     ) {
       setDeleteStatus("All data deleted.");
-      setTimeout(() => setDeleteStatus(""), 3000); // Clear message after 3 seconds
+      handleSnackbar("All data deleted.", "delete");
     }
   };
 
@@ -77,7 +88,6 @@ const ConfigureSetting = () => {
           </Button>
         </Box>
       </Box>
-
       <Box>
         <Box
           className="settings-section"
@@ -99,8 +109,9 @@ const ConfigureSetting = () => {
             htmlFor="api-url"
             style={{
               marginTop: "1em",
+              marginBottom: ".5em",
               fontSize: "1em",
-              fontWeight: "800",
+              fontWeight: "600",
             }}
           >
             API URL:
@@ -114,10 +125,11 @@ const ConfigureSetting = () => {
             onChange={(e) => setApiUrl(e.target.value)}
             style={{
               padding: "1em",
-              marginBottom: "1em",
+              font: "inherit",
+              marginBottom: "1.5em",
+              color: colors.grey[100],
               backgroundColor: colors.primary[400],
               border: `1px solid ${colors.grey[600]}`,
-              // outline: 'none',
             }}
           />
           <Box>
@@ -263,7 +275,6 @@ const ConfigureSetting = () => {
                 Backup Data
               </Button>
             </Box>
-            {backupStatus && <p className="status-message">{backupStatus}</p>}
             <Box>
               <Button
                 onClick={handleRestoreData}
@@ -283,9 +294,7 @@ const ConfigureSetting = () => {
                 Restore Data
               </Button>
             </Box>
-            {restoreStatus && <p className="status-message">{restoreStatus}</p>}
             <Box mt=".5em">
-
               <Button
                 onClick={handleDeleteData}
                 variant="outlined"
@@ -304,12 +313,26 @@ const ConfigureSetting = () => {
                 Delete All Data
               </Button>
             </Box>
-            {deleteStatus && (
-              <p className="status-message delete">{deleteStatus}</p>
-            )}
+            
           </div>
         </div>
       </Box>
+      <Snackbar
+        open={openSnackbar}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        autoHideDuration={3000}
+      >
+        <SnackbarContent
+          sx={{
+            backgroundColor:
+              snackbarAction === "delete" ? colors.redAccent[700] : colors.greenAccent[700],
+            color: colors.grey[100],
+            fontWeight: "600",
+            padding: ".4em 1em",
+          }}
+          message={snackbarMessage}
+        />
+      </Snackbar>
     </Box>
   );
 };

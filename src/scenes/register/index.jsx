@@ -8,6 +8,7 @@ import {
   InputAdornment,
   // Divider,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -38,7 +39,7 @@ const Register = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
-  const isNonMobile = useMediaQuery("(min-width:600px)");
+  const isNonMobile = useMediaQuery("(min-width:768px)");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   // const [Usage, setUsage] = useState("");
@@ -102,7 +103,10 @@ const Register = () => {
       sx={{
         display: "flex",
         justifyContent: "space-between",
+        alignItems: isNonMobile ? "inherit" : "center",
+        flexDirection: isNonMobile ? "row" : "column",
         position: "relative",
+        marginTop: isNonMobile ? "0" : "3em",
       }}
     >
       <Box
@@ -123,14 +127,15 @@ const Register = () => {
 
       <Box
         sx={{
-          width: "300px",
-          height: "100dvh",
-          position: "sticky",
+          width: "80%",
+          position: isNonMobile ? "sticky" : "relative",
+          height: isNonMobile ? "100dvh" : "100%",
           top: "0",
           left: "0",
           flexGrow: "1",
           display: "flex",
           alignItems: "center",
+          textAlign: isNonMobile ? "inherit" : "center",
           justifyContent: "center",
         }}
       >
@@ -143,8 +148,8 @@ const Register = () => {
       <Box
         m="20px"
         sx={{
-          marginTop: "10.4em",
-          width: "300px",
+          marginTop: isNonMobile ? "10.4em" : "1em",
+          width: "80%",
           flexGrow: "1",
           display: "flex",
           alignItems: "center",
@@ -169,18 +174,18 @@ const Register = () => {
                 cursor: "pointer",
               }}
             >
-              <a
+              <Link
                 style={{
                   all: "unset",
                   display: "flex",
                   alignItems: "center",
                   gap: ".5em",
                 }}
-                href="/login"
+                to="/login"
               >
                 <ArrowForwardIcon />
                 Already have Account?
-              </a>
+              </Link>
             </Box>
           </Box>
 
