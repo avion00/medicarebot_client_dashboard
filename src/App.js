@@ -16,10 +16,12 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
 import Calendar from "./scenes/calendar/calendar";
-import LogIn from "./scenes/logIn/index";
-import Register from "./scenes/register/index";
-import ChangePassword from "./scenes/changePassword/index";
-import ForgetPassword from "./scenes/forgetPassword/index";
+import LogIn from "./scenes/auth/logIn/index";
+import Register from "./scenes/auth/register/index";
+import ChangePassword from "./scenes/auth/changePassword/index";
+import ForgetPassword from "./scenes/auth/forgetPassword/index";
+import OTP from "./scenes/auth/otp/index";
+import NewPassword from "./scenes/auth/newPassword/index";
 import EditProfile from "./scenes/editProfile/index";
 import ActiveBots from "./scenes/activeBots/index";
 import ConfigureSettings from "./scenes/configureSettings/index";
@@ -44,7 +46,11 @@ function App() {
     location.pathname === "/" ||
     location.pathname === "/register" ||
     location.pathname === "/forgetPassword" ||
-    location.pathname === "/logIn";
+    location.pathname === "/logIn" ||
+    location.pathname === "/otp"||
+    location.pathname === "/newPassword";
+    
+    
 
   return (
     <ColorModeContext.Provider value={colorMode}>
@@ -57,6 +63,9 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/logIn" element={<LogIn />} />
               <Route path="/forgetPassword" element={<ForgetPassword />} />
+              <Route path="/otp" element={<OTP />} />
+              <Route path="/newPassword" element={<NewPassword />} />
+
               <Route path="*" element={<Navigate to="/logIn" />} />
             </Routes>
           </div>
@@ -73,8 +82,8 @@ function App() {
               style={{
                 flex: 1,
                 overflowY: "auto",
-                padding: isNonMobile ? "20px" : '20px 0',
-                marginLeft: isNonMobile ? "0" : "80px", 
+                padding: isNonMobile ? "20px" : "20px 0",
+                marginLeft: isNonMobile ? "0" : "80px",
                 position: "relative",
                 transition: "margin-left 0.3s ease",
               }}

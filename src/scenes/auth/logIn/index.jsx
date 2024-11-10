@@ -11,8 +11,8 @@ import {
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import Header from "../../components/Header";
-import { tokens, ColorModeContext } from "../../theme";
+import Header from "../../../components/Header";
+import { tokens, ColorModeContext } from "../../../theme";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
