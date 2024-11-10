@@ -4,6 +4,7 @@ import Header from "../../components/Header";
 import LineChart from "../../components/LineChart";
 import TuneIcon from "@mui/icons-material/Tune";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 import React, { useState, useEffect } from "react";
 import {
@@ -31,6 +32,7 @@ import BotPerformanceData from "../../data/botPerformanceData.json";
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const isNonMobile = useMediaQuery("(min-width:768px)");
 
   const [bots, setBots] = useState([]);
   const [selectedBotId, setSelectedBotId] = useState(1);
@@ -60,7 +62,12 @@ const Dashboard = () => {
   return (
     <Box m="20px">
       {/* HEADER */}
-      <Box display="flex" justifyContent="space-between" alignItems="center">
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        flexWrap="wrap"
+      >
         <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
 
         <Box>
@@ -70,14 +77,14 @@ const Dashboard = () => {
               color: colors.grey[100],
               fontSize: "14px",
               fontWeight: "bold",
-              padding: "10px 20px",
+              padding: isNonMobile ? "10px 20px" : ".5em"
             }}
             onClick={toggleCustomizeView}
           >
             {customizing ? (
-              <ArrowBackIcon sx={{ mr: "10px" }} />
+              <ArrowBackIcon sx={{ mr: "8px" }} />
             ) : (
-              <TuneIcon sx={{ mr: "10px" }} />
+              <TuneIcon sx={{ mr: "8px" }} />
             )}
             {customizing
               ? "Back to Dashboard"
@@ -89,6 +96,7 @@ const Dashboard = () => {
         <FormControl
           fullWidth
           sx={{
+            marginTop: isNonMobile ? "0": '1em',
             marginBottom: "1em",
             transition: "all .3s ease",
             "& .MuiOutlinedInput-root": {
@@ -132,7 +140,8 @@ const Dashboard = () => {
             value={selectedBotId}
             onChange={handleBotSelectionChange}
             sx={{
-              width: "30%",
+              // width: "30%",
+              width: isNonMobile ? '30%' : "100%",
               "& .MuiOutlinedInput-notchedOutline": {
                 borderColor: colors.primary[300],
               },
@@ -169,7 +178,7 @@ const Dashboard = () => {
                       variant="h5"
                       gutterBottom
                       sx={{
-                        padding: "1em",
+                        padding: isNonMobile? "1em" : "1em 0",
                         fontWeight: "600",
                         borderBottom: `1px solid ${colors.grey[600]}`,
                       }}
@@ -183,7 +192,16 @@ const Dashboard = () => {
                           <CartesianGrid strokeDasharray="3 3" />
                           <XAxis dataKey="name" />
                           <YAxis />
-                          <Tooltip />
+                          <Tooltip
+                            contentStyle={{
+                              backgroundColor: colors.blueAccent[700],
+                              border: `1px solid ${colors.grey[700]}`,
+                              borderRadius: ".5em",
+                              fontSize: "12px",
+                              color: colors.grey[100],
+                            }}
+                            itemStyle={{ color: colors.textPrimary }}
+                          />
                           <Legend />
                           <Line
                             type="monotone"

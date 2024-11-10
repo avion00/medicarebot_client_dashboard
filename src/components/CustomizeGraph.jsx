@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import {
   Card,
   CardContent,
@@ -23,10 +24,13 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { tokens } from "../theme";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const CustomizeGraph = ({ onBack, botData }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const isNonMobile = useMediaQuery("(min-width:768px)");
+
   const [chartType, setChartType] = useState("LineChart");
   const [dataKey, setDataKey] = useState("responses");
 
@@ -52,10 +56,12 @@ const CustomizeGraph = ({ onBack, botData }) => {
           variant="h5"
           gutterBottom
           sx={{
-            padding: "1em",
+            padding: isNonMobile? "1em" : '1em 0',
+
             fontWeight: "600",
             borderBottom: `1px solid ${colors.grey[600]}`,
-            width: "calc(100% - 500px)"
+            // width: "calc(100% - 500px)",
+            width: isNonMobile ? "calc(100% - 500px)" : "100%",
           }}
         >
           Customize Your Graph
@@ -66,14 +72,18 @@ const CustomizeGraph = ({ onBack, botData }) => {
             display: "flex",
             flexWrap: "wrap",
             alignItems: "center",
-            justifyContent: "end",
+            justifyContent: isNonMobile? "end" : "start",
+            
             gap: "1em",
-            margin: "-2.5em 0 1.5em 0",
+            // margin: "-2.5em 0 1.5em 0",
+            margin: isNonMobile ? "-2.5em 0 1.5em 0 " : "2em 0em",
             // float: "right"
-
           }}
         >
-          <FormControl fullWidth style={{ width: "220px" }}>
+          <FormControl
+            fullWidth
+            style={{ width: isNonMobile ? "220px" : "120px" }}
+          >
             <InputLabel
               style={{
                 marginTop: "-0.6em",
@@ -84,13 +94,20 @@ const CustomizeGraph = ({ onBack, botData }) => {
             >
               Chart Type
             </InputLabel>
-            <Select value={chartType} sx={{borderRadius: '0'}} onChange={handleChartTypeChange}>
+            <Select
+              value={chartType}
+              sx={{ borderRadius: "0" }}
+              onChange={handleChartTypeChange}
+            >
               <MenuItem value="LineChart">Line Chart</MenuItem>
               <MenuItem value="BarChart">Bar Chart</MenuItem>
             </Select>
           </FormControl>
 
-          <FormControl fullWidth style={{ width: "220px" }}>
+          <FormControl
+            fullWidth
+            style={{ width: isNonMobile ? "220px" : "120px" }}
+          >
             <InputLabel
               style={{
                 marginTop: "-0.6em",
@@ -101,7 +118,11 @@ const CustomizeGraph = ({ onBack, botData }) => {
             >
               Data Key
             </InputLabel>
-            <Select value={dataKey} sx={{borderRadius: '0'}} onChange={handleDataKeyChange}>
+            <Select
+              value={dataKey}
+              sx={{ borderRadius: "0" }}
+              onChange={handleDataKeyChange}
+            >
               <MenuItem value="responses">Responses</MenuItem>
               <MenuItem value="successRate">Success Rate</MenuItem>
             </Select>
@@ -111,16 +132,27 @@ const CustomizeGraph = ({ onBack, botData }) => {
         <ResponsiveContainer width="100%" height={300}>
           {chartType === "LineChart" ? (
             <LineChart data={botData.performanceData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
+              <CartesianGrid strokeDasharray="3 3" stroke={colors.grey[100]} />
+              <XAxis dataKey="name" stroke={colors.greenAccent[100]} />
+              <YAxis stroke={colors.grey[100]} />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: colors.blueAccent[700],
+                  border: `1px solid ${colors.grey[700]}`,
+                  borderRadius: ".5em",
+                  fontSize: "12px",
+                  color: colors.grey[100],
+                }}
+                itemStyle={{ color: colors.textPrimary }}
+              />
               <Legend />
               <Line
                 type="monotone"
                 dataKey={dataKey}
-                stroke={colors.greenAccent[400]}
-                activeDot={{ r: 8 }}
+                stroke={colors.blueAccent[500]}
+                strokeWidth={2}
+                activeDot={{ r: 4 }}
+                dot={{ r: 4 }}
               />
             </LineChart>
           ) : (
@@ -128,7 +160,16 @@ const CustomizeGraph = ({ onBack, botData }) => {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
               <YAxis />
-              <Tooltip />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: colors.blueAccent[700],
+                  border: `1px solid ${colors.grey[700]}`,
+                  borderRadius: ".5em",
+                  fontSize: "12px",
+                  color: colors.grey[100],
+                }}
+                itemStyle={{ color: colors.textPrimary }}
+              />
               <Legend />
               <Bar dataKey={dataKey} fill={colors.blueAccent[500]} />
             </BarChart>

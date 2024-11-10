@@ -46,13 +46,12 @@ const Sidebar = ({ isSidebar }) => {
   const [selected, setSelected] = useState("Dashboard");
   const isNonMobile = useMediaQuery("(min-width:768px)");
 
-
   return (
     <Box
       sx={{
         position: isNonMobile ? "sticky" : "fixed",
         top: 0,
-        left: 0, 
+        left: 0,
         width: isCollapsed ? "80px" : "270px",
         height: "100vh",
         zIndex: isNonMobile ? 1 : 1000,
@@ -229,7 +228,6 @@ const Sidebar = ({ isSidebar }) => {
                 icon={<PrecisionManufacturingIcon />}
                 onClick={() => setSelected("Assign Bot")}
                 style={{
-                  // marginLeft: "-6px",
                   marginBottom: ".5em",
                   color:
                     selected === "Assign Bot" ? "#6870fa" : colors.grey[100],
@@ -251,7 +249,6 @@ const Sidebar = ({ isSidebar }) => {
                 icon={<UpdateIcon />}
                 onClick={() => setSelected("Account")}
                 style={{
-                  // marginLeft: "-6px",
                   marginBottom: "1em",
                   color: selected === "Account" ? "#6870fa" : colors.grey[100],
                 }}
@@ -272,7 +269,6 @@ const Sidebar = ({ isSidebar }) => {
                 icon={<BlurOffIcon />}
                 onClick={() => setSelected("Deactivate Bots")}
                 style={{
-                  // marginLeft: "-6px",
                   marginBottom: "1em",
                   color:
                     selected === "Deactivate Bots"

@@ -12,6 +12,7 @@ import Line from "./scenes/line";
 import Pie from "./scenes/pie";
 import FAQ from "./scenes/faq";
 import Geography from "./scenes/geography";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
 import Calendar from "./scenes/calendar/calendar";
@@ -34,6 +35,7 @@ import AddBot from "./scenes/addBot/index";
 function App() {
   const [theme, colorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
+    const isNonMobile = useMediaQuery("(min-width:768px)");
 
   const location = useLocation();
 
@@ -59,17 +61,22 @@ function App() {
             </Routes>
           </div>
         ) : (
-          <div className="app" style={{
-            display: "flex",
-            }}>
+          <div
+            className="app"
+            style={{
+              display: "flex",
+            }}
+          >
             <Sidebar isSidebar={isSidebar} />
             <main
               className="content"
               style={{
                 flex: 1,
                 overflowY: "auto",
-                padding: "20px",
+                padding: isNonMobile ? "20px" : '20px 0',
+                marginLeft: isNonMobile ? "0" : "80px", 
                 position: "relative",
+                transition: "margin-left 0.3s ease",
               }}
             >
               <Topbar setIsSidebar={setIsSidebar} />

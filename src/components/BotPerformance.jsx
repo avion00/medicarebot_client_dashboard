@@ -12,10 +12,9 @@ import {
 import data from "../data/ReportData.json";
 import { tokens } from "../theme";
 
-
 const BotPerformance = () => {
-    const theme = useTheme();
-    const colors = tokens(theme.palette.mode);
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
 
   const performanceData = data.performanceData[0].data;
 
@@ -42,7 +41,7 @@ const BotPerformance = () => {
         height={300}
         style={{
           backgroundColor: colors.primary[400],
-          padding: '2em .5em 1em 0',
+          padding: "2em .5em 1em 0",
         }}
       >
         <LineChart data={performanceData}>
@@ -53,8 +52,8 @@ const BotPerformance = () => {
             contentStyle={{
               backgroundColor: colors.blueAccent[700],
               border: `1px solid ${colors.grey[700]}`,
-              borderRadius: '.5em',
-              fontSize: '12px',
+              borderRadius: ".5em",
+              fontSize: "12px",
               color: colors.grey[100],
             }}
             itemStyle={{ color: colors.textPrimary }}
