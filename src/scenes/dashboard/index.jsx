@@ -68,7 +68,7 @@ const Dashboard = () => {
         alignItems="center"
         flexWrap="wrap"
       >
-        <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
+        <Header title="DASHBOARD" subtitle="Welcome to your Medicare Bot dashboard" />
 
         <Box>
           <Button
