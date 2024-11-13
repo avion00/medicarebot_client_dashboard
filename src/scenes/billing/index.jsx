@@ -3,6 +3,7 @@ import { tokens } from "../../theme";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import Header from "../../components/Header";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 import React, { useState, useEffect } from "react";
 import {
@@ -11,14 +12,15 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
-import { saveAs } from "file-saver"; // For saving files
-import JsPDF from "jspdf"; // For generating PDFs
-import * as XLSX from "xlsx"; // For generating Excel files
-import data from "./data.json"; // Import the JSON data
+import { saveAs } from "file-saver";
+import JsPDF from "jspdf"; 
+import * as XLSX from "xlsx"; 
+import data from "../../data/billingData.json"; 
 
 const Billing = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const isNonMobile = useMediaQuery("(min-width:768px)");
 
   const [subscriptions, setSubscriptions] = useState([]);
   const [billingHistory, setBillingHistory] = useState([]);
@@ -97,7 +99,12 @@ const Billing = () => {
   return (
     <Box m="20px">
       {/* HEADER */}
-      <Box display="flex" justifyContent="space-between" alignItems="center">
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        flexWrap="wrap"
+      >
         <Header title="BILLING" subtitle="Welcome to your Billing dashboard" />
         <Box>
           <Button
@@ -106,7 +113,8 @@ const Billing = () => {
               color: colors.grey[100],
               fontSize: "14px",
               fontWeight: "bold",
-              padding: "10px 20px",
+              padding: isNonMobile ? "10px 20px" : ".5em",
+              // marginBottom: isNonMobile ? "inherit" : "1.5em",
             }}
           >
             <DownloadOutlinedIcon sx={{ mr: "10px" }} />
@@ -125,7 +133,7 @@ const Billing = () => {
             sx={{
               display: "flex",
               flexWrap: "wrap",
-              justifyContent: "space-between",
+              justifyContent: "center",
               gap: "1em",
               margin: "2em 0",
             }}
@@ -135,8 +143,8 @@ const Billing = () => {
                 key={subscription.id}
                 sx={{
                   flexGrow: 1,
-                  minWidth: "320px",
-                  maxWidth: "360px",
+                  // minWidth: "320px",
+                  // maxWidth: "360px",
                   padding: "2em",
                   borderRadius: "16px",
                   backgroundColor: colors.primary[400],

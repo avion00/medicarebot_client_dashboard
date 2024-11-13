@@ -17,7 +17,7 @@ import "./phone-style.css";
 const EditProfile = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const isNonMobile = useMediaQuery("(min-width:600px)");
+  const isNonMobile = useMediaQuery("(min-width:768px)");
   const navigate = useNavigate();
 
   const handleFormSubmit = (values) => {
@@ -232,6 +232,7 @@ const EditProfile = () => {
                   gridColumn: "span 4",
                   display: "flex",
                   gap: "1em",
+                  flexWrap: isNonMobile? "nowrap" : "wrap"
                 }}
               >
                 <TextField

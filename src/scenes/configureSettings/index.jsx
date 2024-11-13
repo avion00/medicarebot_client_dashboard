@@ -8,10 +8,12 @@ import BackupIcon from "@mui/icons-material/Backup";
 import RestoreIcon from "@mui/icons-material/Restore";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { SnackbarContent } from "@mui/material";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const ConfigureSetting = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const isNonMobile = useMediaQuery("(min-width:768px)");
 
   const [apiUrl, setApiUrl] = useState("");
   const [emailNotifications, setEmailNotifications] = useState(true);
@@ -68,7 +70,7 @@ const ConfigureSetting = () => {
   return (
     <Box m="20px">
       {/* HEADER */}
-      <Box display="flex" justifyContent="space-between" alignItems="center">
+      <Box display="flex" justifyContent="space-between" alignItems="center" flexWrap="wrap">
         <Header
           title="CONFIGURE SETTINGS"
           subtitle="Configure your all settings"
@@ -76,11 +78,12 @@ const ConfigureSetting = () => {
         <Box>
           <Button
             sx={{
-              backgroundColor: colors.blueAccent[700],
+              backgroundColor: colors.greenAccent[700],
               color: colors.grey[100],
               fontSize: "14px",
               fontWeight: "bold",
-              padding: "10px 20px",
+              padding: isNonMobile ? "10px 20px" : ".5em",
+              marginBottom: isNonMobile ? "inherit" : "1.5em",
             }}
           >
             <DownloadOutlinedIcon sx={{ mr: "10px" }} />
@@ -171,8 +174,9 @@ const ConfigureSetting = () => {
               display: "flex",
               alignItems: "center",
               justifyContent: "start",
-              gap: "1.5em",
+              gap: "2.5em",
               padding: ".5em 0",
+              flexWrap: 'wrap'
             }}
           >
             <label
@@ -204,7 +208,6 @@ const ConfigureSetting = () => {
               className="notification-label"
               style={{
                 fontSize: "1em",
-                marginLeft: "1em",
                 cursor: "pointer",
                 display: "flex",
                 alignItems: "center",
@@ -313,7 +316,6 @@ const ConfigureSetting = () => {
                 Delete All Data
               </Button>
             </Box>
-            
           </div>
         </div>
       </Box>
@@ -325,7 +327,9 @@ const ConfigureSetting = () => {
         <SnackbarContent
           sx={{
             backgroundColor:
-              snackbarAction === "delete" ? colors.redAccent[700] : colors.greenAccent[700],
+              snackbarAction === "delete"
+                ? colors.redAccent[700]
+                : colors.greenAccent[700],
             color: colors.grey[100],
             fontWeight: "600",
             padding: ".4em 1em",

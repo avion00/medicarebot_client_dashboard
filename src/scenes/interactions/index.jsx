@@ -4,10 +4,13 @@ import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import Header from "../../components/Header";
 import { tokens } from "../../theme";
 import InteractionsDataJson from "../../data/interactionData.json";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const Interactions = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const isNonMobile = useMediaQuery("(min-width:768px)");
+  
 
   const [customerLogs, setCustomerLogs] = useState([]);
   const [chatHistories, setChatHistories] = useState([]);
@@ -32,14 +35,15 @@ const Interactions = () => {
 
   const renderTable = (title, data, columns) => (
     <Box
-      gridColumn="span 4"
-      gridRow="span 2"
+      gridColumn="span 1"
+      gridRow="span 1"
       backgroundColor={colors.primary[400]}
       overflow="auto"
       mt={3}
       sx={{
         flexGrow: "1",
-        width: "25%",
+        width: isNonMobile? "25%" : "100%",
+      
       }}
     >
       <Box
@@ -105,7 +109,12 @@ const Interactions = () => {
   return (
     <Box m="20px" mb="0">
       {/* HEADER */}
-      <Box display="flex" justifyContent="space-between" alignItems="center">
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        flexWrap="wrap"
+        alignItems="center"
+      >
         <Header
           title="INTERACTIONS MANAGEMENT"
           subtitle="Interactions Management Dashboard"
@@ -117,7 +126,8 @@ const Interactions = () => {
               color: colors.grey[100],
               fontSize: "14px",
               fontWeight: "bold",
-              padding: "10px 20px",
+              padding: isNonMobile ? "10px 20px" : ".5em",
+              // marginBottom: isNonMobile ? "inherit" : "1.5em",
             }}
           >
             <DownloadOutlinedIcon sx={{ mr: "10px" }} />
@@ -131,7 +141,8 @@ const Interactions = () => {
           display: "flex",
           gap: "1em",
           height: "100%",
-          maxHeight: '70dvh'
+          maxHeight: "70dvh",
+          flexWrap: 'wrap'
         }}
       >
         {/* Customer Logs */}

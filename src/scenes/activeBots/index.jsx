@@ -1,7 +1,7 @@
 import { Box, Button, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
-
+import useMediaQuery from "@mui/material/useMediaQuery";
 import React, { useEffect, useState } from "react";
 import botsData from "../../data/ActiveBotsData.json";
 import ViewListIcon from "@mui/icons-material/ViewList";
@@ -14,6 +14,8 @@ import AddIcon from "@mui/icons-material/Add";
 const ActiveBots = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const isNonMobile = useMediaQuery("(min-width:768px)");
+
 
   const [bots, setBots] = useState([]);
   const [showAll, setShowAll] = useState(false);
@@ -286,7 +288,12 @@ const ActiveBots = () => {
     <Box m="20px">
       {/* HEADER */}
 
-      <Box display="flex" justifyContent="space-between" alignItems="center">
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        flexWrap="wrap"
+      >
         <Header title="ACTIVE BOTS" subtitle="List of Active Bots" />
 
         <Box>
@@ -296,7 +303,8 @@ const ActiveBots = () => {
               color: colors.grey[100],
               fontSize: "14px",
               fontWeight: "bold",
-              padding: "10px 20px",
+              padding: isNonMobile ? "10px 20px" : ".5em",
+              marginBottom: isNonMobile ? "inherit" : "1.5em",
             }}
           >
             <AddIcon sx={{ mr: "10px" }} />

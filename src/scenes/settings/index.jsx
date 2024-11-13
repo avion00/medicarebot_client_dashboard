@@ -20,10 +20,12 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import Header from "../../components/Header";
 import { tokens } from "../../theme";
 import ExtensionIcon from "@mui/icons-material/Extension";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const Settings = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const isNonMobile = useMediaQuery("(min-width:768px)");
 
   const [configResponse, setConfigResponse] = useState("");
   const [advancedSettings, setAdvancedSettings] = useState({
@@ -179,7 +181,12 @@ const Settings = () => {
 
   return (
     <Box m="20px">
-      <Box display="flex" justifyContent="space-between" alignItems="center">
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        flexWrap="wrap"
+      >
         <Header title="CONFIGURE BOTS" subtitle="Set up and configure bots" />
 
         <Button
@@ -189,7 +196,8 @@ const Settings = () => {
             color: colors.grey[100],
             fontSize: "14px",
             fontWeight: "bold",
-            padding: "10px 20px",
+            padding: isNonMobile ? "10px 20px" : ".5em",
+            marginBottom: isNonMobile ? "inherit" : "1.5em",
             "&:hover": {
               backgroundColor: colors.primary[400],
             },
@@ -272,7 +280,13 @@ const Settings = () => {
         </Typography>
 
         <Box
-          sx={{ display: "flex", alignItems: "center", gap: "1em", mt: "1em" }}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: "1em",
+            mt: "1em",
+            flexWrap: isNonMobile? "nowrap" :  "wrap",
+          }}
         >
           <TextField
             label="Response Time (ms)"
@@ -282,7 +296,8 @@ const Settings = () => {
             value={advancedSettings.responseTime}
             onChange={handleInputChange}
             sx={{
-              width: "30%",
+              // width: "30%",
+              width: isNonMobile ? "30%" : "100%",
               backgroundColor: colors.primary[400],
               "& .MuiFilledInput-root": {
                 backgroundColor: colors.primary[400],
@@ -309,7 +324,8 @@ const Settings = () => {
           />
           <Autocomplete
             sx={{
-              width: "70%",
+              // width: "70%",
+              width: isNonMobile ? "70%" : "100%",
             }}
             multiple
             options={languageOptions}
@@ -467,7 +483,7 @@ const Settings = () => {
             variant="filled"
             type="text"
             name="uploadData"
-            value={crawlFileName} 
+            value={crawlFileName}
             InputProps={{
               readOnly: true,
               endAdornment: (
@@ -557,7 +573,7 @@ const Settings = () => {
               display: "flex",
               alignItems: "center",
               gap: ".2em",
-              marginLeft: "1em",
+              marginLeft: isNonMobile ? "1em" : 0,
             }}
           />
           <Button
@@ -620,7 +636,7 @@ const Settings = () => {
             variant="filled"
             type="text"
             name="avatar"
-            value={fileName} 
+            value={fileName}
             InputProps={{
               readOnly: true,
               endAdornment: (
@@ -706,13 +722,12 @@ const Settings = () => {
                     },
                   }}
                 >
-                 
                   <input
                     type="file"
                     hidden
                     name="icon"
-                    onChange={handleIconChange} 
-                    accept="image/*" 
+                    onChange={handleIconChange}
+                    accept="image/*"
                   />
                 </Button>
               ),
@@ -875,7 +890,7 @@ const Settings = () => {
               color: colors.grey[100],
             },
             "& textarea": {
-              fontFamily: "Inter, sans-serif", 
+              fontFamily: "Inter, sans-serif",
               color: "inherit",
             },
           }}
@@ -1003,7 +1018,7 @@ const Settings = () => {
               color: colors.grey[100],
             },
             "& textarea": {
-              fontFamily: "Inter, sans-serif", 
+              fontFamily: "Inter, sans-serif",
               color: "inherit",
             },
           }}
@@ -1101,11 +1116,15 @@ const Settings = () => {
           >
             Export Logs
           </Button>
-          <Box sx={{
-            width: '100%',
-            height: '200px',
-            backgroundColor: colors.primary[400]
-          }}>{activityLogs}</Box>
+          <Box
+            sx={{
+              width: "100%",
+              height: "200px",
+              backgroundColor: colors.primary[400],
+            }}
+          >
+            {activityLogs}
+          </Box>
         </div>
       </Box>
     </Box>

@@ -12,7 +12,7 @@ import { Box, Typography, useTheme } from "@mui/material";
 
 import data from "../data/ReportData.json";
 import { tokens } from "../theme";
-import { MarginOutlined } from "@mui/icons-material";
+// import { MarginOutlined } from "@mui/icons-material";
 
 
 const UserEngagement = () => {
@@ -21,7 +21,7 @@ const UserEngagement = () => {
   const colors = tokens(theme.palette.mode);
 
   return (
-    <div
+    <Box
       style={{
         color: colors.grey[100],
         minWidth: "300px",
@@ -65,7 +65,7 @@ const UserEngagement = () => {
           <Bar dataKey="newUsers" fill={colors.greenAccent[500]} />
         </BarChart>
       </ResponsiveContainer>
-    </div>
+    </Box>
   );
 };
 

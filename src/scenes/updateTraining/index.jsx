@@ -13,10 +13,12 @@ import React, { useState, useEffect } from "react";
 import trainingDataJson from "../../data/trainingData.json";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const isNonMobile = useMediaQuery("(min-width:768px)");
 
   const [trainingData, setTrainingData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -62,7 +64,12 @@ const Dashboard = () => {
   return (
     <Box m="20px">
       {/* HEADER */}
-      <Box display="flex" justifyContent="space-between" alignItems="center">
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        flexWrap="wrap"
+      >
         <Header title="UPDATE TRAINING" subtitle="Train your Bot" />
         <Box>
           <Button
@@ -72,7 +79,8 @@ const Dashboard = () => {
               color: colors.grey[100],
               fontSize: "14px",
               fontWeight: "bold",
-              padding: "10px 20px",
+              padding: isNonMobile ? "10px 20px" : ".5em",
+              marginBottom: isNonMobile ? "inherit" : "1.5em",
             }}
           >
             <AddIcon sx={{ mr: "10px" }} />
@@ -140,7 +148,7 @@ const Dashboard = () => {
             </Box>
           ))}
         </Box>
-        
+
         {isModalOpen && (
           <>
             <Box

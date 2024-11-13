@@ -5,10 +5,12 @@ import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import botsData from "../../data/ActiveBotsData.json"; // Import JSON file
 import RotateLeftIcon from "@mui/icons-material/RotateLeft";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const DeactivateBots = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const isNonMobile = useMediaQuery("(min-width:768px)");
 
   const [deactivatedBots, setDeactivatedBots] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
@@ -104,7 +106,7 @@ const DeactivateBots = () => {
   return (
     <Box m="20px">
       {/* HEADER */}
-      <Box display="flex" justifyContent="space-between" alignItems="center">
+      <Box display="flex" justifyContent="space-between" flexWrap="wrap" alignItems="center">
         <Header
           title="DEACTIVATE BOTS"
           subtitle="Manage your Deactivated Bots"
@@ -118,7 +120,7 @@ const DeactivateBots = () => {
               color: colors.grey[100],
               fontSize: "14px",
               fontWeight: "bold",
-              padding: "10px 20px",
+              padding: isNonMobile ? "10px 20px" : ".5em",
             }}
           >
             <RotateLeftIcon sx={{ mr: "10px" }} />
