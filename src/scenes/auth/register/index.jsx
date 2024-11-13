@@ -106,7 +106,7 @@ const Register = () => {
         alignItems: isNonMobile ? "inherit" : "center",
         flexDirection: isNonMobile ? "row" : "column",
         position: "relative",
-        marginTop: isNonMobile ? "0" : "3em",
+        paddingTop: isNonMobile ? "0" : "7em",
       }}
     >
       <Box
@@ -127,7 +127,7 @@ const Register = () => {
 
       <Box
         sx={{
-          width: "80%",
+          width: "90%",
           position: isNonMobile ? "sticky" : "relative",
           height: isNonMobile ? "100dvh" : "100%",
           top: "0",
@@ -148,8 +148,8 @@ const Register = () => {
       <Box
         m="20px"
         sx={{
-          marginTop: isNonMobile ? "10.4em" : "1em",
-          width: "80%",
+          paddingTop: isNonMobile ? "10.4em" : "0",
+          width: "90%",
           flexGrow: "1",
           display: "flex",
           alignItems: "center",

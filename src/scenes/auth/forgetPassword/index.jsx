@@ -31,13 +31,13 @@ const ForgetPassword = () => {
   const navigate = useNavigate();
 
   const handleFormSubmit = (values) => {
-    console.log(values);
     setIsSubmitting(true);
-    setShowNotification(true);
+
     setTimeout(() => {
-      setIsSubmitting(false); // Reset button loading state
-      navigate("/otp");
-    }, 2000);
+      setShowNotification(true);
+      setIsSubmitting(false);
+      setTimeout(() => navigate("/otp"), 1000);
+    }, 1000);
   };
 
   const handleCloseNotification = (event, reason) => {
@@ -61,7 +61,7 @@ const ForgetPassword = () => {
         alignItems: isNonMobile ? "inherit" : "center",
         flexDirection: isNonMobile ? "row" : "column",
         position: "relative",
-        marginTop: isNonMobile ? "0" : "3em",
+        paddingTop: isNonMobile ? "0" : "7em",
       }}
     >
       <Box style={{ position: "absolute", top: "3em", right: "3em" }}>
@@ -75,7 +75,7 @@ const ForgetPassword = () => {
       </Box>
       <Box
         sx={{
-          width: "80%",
+          width: "90%",
           position: isNonMobile ? "sticky" : "relative",
           height: isNonMobile ? "100dvh" : "100%",
           top: "0",
@@ -97,7 +97,7 @@ const ForgetPassword = () => {
       <Box
         m="20px"
         sx={{
-          width: "80%",
+          width: "90%",
           flexGrow: "1",
           display: "flex",
           alignItems: "center",
@@ -225,8 +225,8 @@ const ForgetPassword = () => {
           severity="success"
           variant="filled"
           sx={{
-            backgroundColor: colors.greenAccent[500],
-            color: "#fff",
+            backgroundColor: colors.greenAccent[700],
+            color: colors.greenAccent[200],
             fontWeight: "bold",
           }}
         >

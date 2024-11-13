@@ -57,7 +57,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         {isAuthPage ? (
-          <div className="auth-page" style={{ height: "100vh" }}>
+          <div className="auth-page" style={{ }}>
             <Routes>
               <Route path="/" element={<LogIn />} />
               <Route path="/register" element={<Register />} />

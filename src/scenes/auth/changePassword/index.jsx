@@ -214,16 +214,25 @@ const ChangePassword = () => {
       </Formik>
 
       {/* Snackbar for showing success message */}
+      
+
       <Snackbar
         open={openSnackbar}
         autoHideDuration={9000}
         onClose={() => setOpenSnackbar(false)}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }} // Position the Snackbar at the top center
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
         <Alert
           onClose={() => setOpenSnackbar(false)}
+          // variant="filled"
           severity="success"
-          sx={{ width: "100%" }}
+          sx={{
+            width: "90%",
+            backgroundColor: colors.greenAccent[700],
+            color: colors.greenAccent[200],
+            fontWeight: "600",
+            fontSize: "13px",
+          }}
         >
           You have successfully changed your password!
         </Alert>

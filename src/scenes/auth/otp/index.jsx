@@ -77,7 +77,7 @@ const OTPPage = () => {
         justifyContent: "center",
         minHeight: "100vh",
         p: 3,
-        bgcolor: theme.palette.background.default,
+        bgcolor: colors.primary[500],
       }}
     >
       <IconButton onClick={colorMode.toggleColorMode} sx={{ mb: 3 }}>
@@ -158,8 +158,8 @@ const OTPPage = () => {
                         maxLength: 1,
                         style: {
                           textAlign: "center",
-                          fontSize: "1.5em",
-                          width: "3rem",
+                          fontSize: isNonMobile ? "1.5em" : "1.2em",
+                          width:  isNonMobile ? "3em" : "1em",
                         },
                       }}
                       variant="outlined"
@@ -187,7 +187,7 @@ const OTPPage = () => {
               variant="contained"
               endIcon={
                 loading ? (
-                  <CircularProgress size={24} sx={{ color: "#fff" }} />
+                  <CircularProgress size={24} sx={{ color: colors.grey[100] }} />
                 ) : (
                   <ArrowForwardIcon />
                 )
@@ -214,9 +214,9 @@ const OTPPage = () => {
           sx={{
             backgroundColor:
               notificationType === "success"
-                ? colors.greenAccent[500]
+                ? colors.greenAccent[700]
                 : colors.redAccent[500],
-            color: "#fff",
+            color: colors.grey[100],
             fontWeight: "bold",
           }}
         >

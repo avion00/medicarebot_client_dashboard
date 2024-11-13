@@ -331,8 +331,7 @@ const ConfigureSetting = () => {
                 ? colors.redAccent[700]
                 : colors.greenAccent[700],
             color: colors.grey[100],
-            fontWeight: "600",
-            padding: ".4em 1em",
+            fontWeight: "bold",
           }}
           message={snackbarMessage}
         />

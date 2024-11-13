@@ -285,7 +285,7 @@ const Settings = () => {
             alignItems: "center",
             gap: "1em",
             mt: "1em",
-            flexWrap: isNonMobile? "nowrap" :  "wrap",
+            flexWrap: isNonMobile ? "nowrap" : "wrap",
           }}
         >
           <TextField
@@ -378,9 +378,9 @@ const Settings = () => {
             onClose={handleCloseSnackbar}
             severity="success"
             sx={{
-              backgroundColor: colors.greenAccent[600],
-              color: colors.grey[100],
-              fontWeight: "500",
+              backgroundColor: colors.greenAccent[700],
+              color: colors.greenAccent[200],
+              fontWeight: "bold",
             }}
           >
             {configResponse}

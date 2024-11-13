@@ -482,7 +482,11 @@ const AddBot = () => {
                 <Alert
                   onClose={handleSnackbarClose}
                   severity="success"
-                  sx={{ width: "100%" }}
+                  sx={{
+                    backgroundColor: colors.greenAccent[700],
+                    color: colors.greenAccent[200],
+                    fontWeight: "bold",
+                  }}
                 >
                   Congratulations, you have created bot name:{" "}
                   <strong>{values.botName}</strong>
