@@ -1,0 +1,25 @@
+.selected-flag{
+  width: 100% !important;
+  background: transparent !important;
+  text-align: center;
+  justify-content: center;
+  display: flex;
+}
+
+.country-list {
+  background: transparent !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.country:hover{
+  background-color: rgb(125, 125, 125, 0.4) !important;
+}
+
+.country.highlight{
+  background: transparent !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.arrow{
+  margin-left: .5em !important;
+}

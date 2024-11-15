@@ -19,6 +19,8 @@ import UpdateIcon from "@mui/icons-material/Update";
 import LayersIcon from "@mui/icons-material/Layers";
 import PaidIcon from "@mui/icons-material/Paid";
 import AddIcon from "@mui/icons-material/Add";
+import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
+import PaddingIcon from "@mui/icons-material/Padding";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -314,6 +316,27 @@ const Sidebar = ({ isSidebar }) => {
               title="Reports and Performance Analytics"
               to="/reports"
               icon={<AssessmentIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Typography
+              variant="h6"
+              color={colors.grey[300]}
+              sx={{ m: "15px 0 5px 20px" }}
+            >
+              CRM
+            </Typography>
+            <Item
+              title="Add CRM"
+              to="/add_crm"
+              icon={<PlaylistAddIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="View CRM"
+              to="/view_crm"
+              icon={<PaddingIcon />}
               selected={selected}
               setSelected={setSelected}
             />
