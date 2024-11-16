@@ -186,7 +186,6 @@ const AddCRM = () => {
             touched,
             handleBlur,
             handleChange,
-            setFieldValue,
             handleSubmit,
           }) => (
             <form onSubmit={handleSubmit}>
@@ -256,8 +255,6 @@ const AddCRM = () => {
                   >
                     <PhoneInput
                       country={"us"}
-                      value={values.phoneNumber}
-                      onChange={(phone) => setFieldValue("phoneNumber", phone)}
                       inputProps={{
                         name: "phone",
                         required: true,
@@ -265,7 +262,7 @@ const AddCRM = () => {
                       }}
                       containerStyle={{
                         width: `65%`,
-                        height: "52px",
+                        height: "100%",
                         border: "none",
                       }}
                       inputStyle={{
@@ -273,7 +270,6 @@ const AddCRM = () => {
                         marginLeft: "54%",
                         height: "52px",
                         padding: "10px",
-                        paddingLeft: "1.5em",
                         fontSize: "14px",
                         borderRadius: "0 .3em 0 0",
                         backgroundColor: colors.primary[400],
@@ -289,19 +285,6 @@ const AddCRM = () => {
                         borderBottom: `1px solid ${colors.primary[100]}`,
                       }}
                     />
-                    {touched.phoneNumber && errors.phoneNumber && (
-                      <Typography
-                        variant="caption"
-                        color="error"
-                        sx={{
-                          mt: 1,
-                          display: "block",
-                          fontSize: "0.75rem",
-                        }}
-                      >
-                        {errors.phoneNumber}
-                      </Typography>
-                    )}
                   </Box>
                   <TextField
                     fullWidth
@@ -746,7 +729,7 @@ const AddCRM = () => {
                   />
                 </Box>
               </Box>
-
+              
               <Box>
                 <Typography
                   variant="h3"
