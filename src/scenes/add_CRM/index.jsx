@@ -118,16 +118,20 @@ const AddCRM = () => {
     city: "",
     country: "",
     companyName: "",
-    industry: "",
     jobTitle: "",
     companySize: "",
+    industry: "",
     interest: "",
     budgetFrom: "",
     budgetTo: "",
     timelineToPurchase: "",
     preferredContactMethod: "",
-
-   
+    painPointsChallanges: "",
+    existingSolution: "",
+    howTheyFoundYou: "",
+    marketingCommunication: "",
+    preferredFrequency: "",
+    
   };
 
   const checkoutSchema = yup.object().shape({
