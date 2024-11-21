@@ -44,6 +44,12 @@ const AddBot = () => {
     const file = event.target.files[0];
     setSelectedImage(file ? file.name : "");
   };
+  const handleApiKeyChange = (event, handleChange) => {
+    handleChange(event);
+  };
+  const handleChannelChange = (event, handleChange) => {
+    handleChange(event);
+  };
 
   const handleStatusChange = (event, handleChange) => {
     handleChange(event);
@@ -80,6 +86,8 @@ const AddBot = () => {
   const initialValues = {
     botName: "",
     botImage: "",
+    apiKey:"",
+    channel: "",
     status: "",
     usageFrequency: "",
     responseAccuracy: "",
@@ -93,6 +101,8 @@ const AddBot = () => {
   const checkoutSchema = yup.object().shape({
     botName: yup.string().required("Bot Name is required"),
     botImage: yup.string().required("Bot Image is required"),
+    apiKey: yup.string().required("API key is required"),
+    channel: yup.string().required("Channel is required"),
   });
 
   return (
@@ -218,6 +228,60 @@ const AddBot = () => {
                     },
                   }}
                 />
+                <TextField
+                  fullWidth
+                  variant="filled"
+                  type="text"
+                  label="API Key"
+                  onBlur={handleBlur}
+                  onChange={(e) => handleApiKeyChange(e, handleChange)}
+                  value={values.apiKey}
+                  name="apiKey"
+                  error={!!touched.apiKey && !!errors.apiKey}
+                  helperText={touched.apiKey && errors.apiKey}
+                  sx={{
+                    gridColumn: "span 2",
+                    "& .MuiFormLabel-root.Mui-focused": {
+                      color: colors.blueAccent[500],
+                      fontWeight: "bold",
+                    },
+                  }}
+                />
+                <FormControl
+                  fullWidth
+                  variant="filled"
+                  sx={{
+                    gridColumn: "span 2",
+                    "& .MuiFormLabel-root.Mui-focused": {
+                      color: colors.blueAccent[500],
+                      fontWeight: "bold",
+                    },
+                  }}
+                >
+                  <InputLabel id="channel" sx={{ color: colors.primary[100] }}>
+                    Channel
+                  </InputLabel>
+                  <Select
+                    labelId="channel"
+                    id="channel"
+                    value={values.channel}
+                    name="channel"
+                    onChange={(e) => handleChannelChange(e, handleChange)}
+                    onBlur={handleBlur}
+                    error={!!touched.channel && !!errors.channel}
+                  >
+                    <MenuItem value="Telegram">Telegram</MenuItem>
+                    <MenuItem value="Webchat">Webchat</MenuItem>
+                    <MenuItem value="Messanger">Messanger</MenuItem>
+                    <MenuItem value="Whatsapp">Whatsapp</MenuItem>
+                    <MenuItem value="Email">Email</MenuItem>
+                  </Select>
+                  {touched.channel && errors.channel && (
+                    <Box color="red" mt="4px" fontSize="11px" ml="1.5em">
+                      {errors.channel}
+                    </Box>
+                  )}
+                </FormControl>
 
                 <FormControl
                   fullWidth

@@ -177,7 +177,7 @@ const EditProfile = () => {
                     inputProps={{
                       name: "phone",
                       required: true,
-                      autoFocus: true,
+                      autoFocus: false,
                     }}
                     containerStyle={{
                       width: `65%`,
@@ -232,7 +232,7 @@ const EditProfile = () => {
                   gridColumn: "span 4",
                   display: "flex",
                   gap: "1em",
-                  flexWrap: isNonMobile? "nowrap" : "wrap"
+                  flexWrap: isNonMobile ? "nowrap" : "wrap",
                 }}
               >
                 <TextField
