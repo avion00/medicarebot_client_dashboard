@@ -36,7 +36,6 @@ import Select from "@mui/material/Select";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import "./phone-style.css";
-  import axios from "axios";
 
 const Register = () => {
   const theme = useTheme();
@@ -56,68 +55,25 @@ const Register = () => {
     event.preventDefault();
   };
 
-  // const handleFormSubmit = (values) => {
-  //   console.log(values);
-  //   navigate("/login");
-  //   setLoading(true);
-  //   setTimeout(() => {
-  //     if (values.otp.join("") === "123456") {
-  //       setNotificationType("success");
-  //       setNotificationMessage("OTP verified successfully!");
-  //       setShowNotification(true);
-  //       setLoading(false);
-  //       setTimeout(() => navigate("/newPassword"), 1500);
-  //     } else {
-  //       setNotificationType("error");
-  //       setNotificationMessage("Incorrect OTP. Please try again.");
-  //       setShowNotification(true);
-  //       setLoading(false);
-  //     }
-  //   }, 1000);
-  // };
-
-
-
-  const handleFormSubmit = async (values) => {
+  const handleFormSubmit = (values) => {
+    console.log(values);
+    navigate("/login");
     setLoading(true);
-    try {
-      // Replace 'YOUR_API_ENDPOINT' with the actual registration endpoint
-      const response = await axios.post("YOUR_API_ENDPOINT", {
-        firstName: values.firstName,
-        lastName: values.lastName,
-        username: values.username,
-        email: values.email,
-        phoneNumber: values.phoneNumber,
-        companyName: values.companyName,
-        city: values.city,
-        state: values.state,
-        country: values.country,
-        botUsage: values.botUsage,
-        password: values.password,
-      });
-
-      if (response.status === 200) {
-        // Successful registration
+    setTimeout(() => {
+      if (values.otp.join("") === "123456") {
         setNotificationType("success");
-        setNotificationMessage(
-          "Registration successful! Redirecting to login..."
-        );
+        setNotificationMessage("OTP verified successfully!");
         setShowNotification(true);
-        setTimeout(() => navigate("/login"), 1500);
+        setLoading(false);
+        setTimeout(() => navigate("/newPassword"), 1500);
       } else {
-        throw new Error("Registration failed. Please try again.");
+        setNotificationType("error");
+        setNotificationMessage("Incorrect OTP. Please try again.");
+        setShowNotification(true);
+        setLoading(false);
       }
-    } catch (error) {
-      setNotificationType("error");
-      setNotificationMessage(
-        error.response?.data?.message || "An error occurred. Please try again."
-      );
-      setShowNotification(true);
-    } finally {
-      setLoading(false);
-    }
+    }, 1000);
   };
-
   const handleCloseNotification = (event, reason) => {
     if (reason === "clickaway") return;
     setShowNotification(false);

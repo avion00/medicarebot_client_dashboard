@@ -43,33 +43,9 @@ const LogIn = () => {
     event.preventDefault();
   };
 
-  const handleFormSubmit = async (values, { setSubmitting }) => {
-    try {
-      const response = await fetch("https://app.medicarebot.live/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: values.username,
-          password: values.password,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Login failed.");
-      }
-
-      const data = await response.json();
-      console.log("Login successful:", data);
-      navigate("/dashboard"); // Redirect to dashboard
-    } catch (error) {
-      console.error("Error during login:", error.message);
-      alert(error.message || "An error occurred. Please try again later.");
-    } finally {
-      setSubmitting(false);
-    }
+  const handleFormSubmit = (values) => {
+    console.log(values);
+    navigate("/dashboard");
   };
 
   // const buttonStyles = {
@@ -176,7 +152,6 @@ const LogIn = () => {
               handleBlur,
               handleChange,
               handleSubmit,
-              isSubmitting,
             }) => (
               <form onSubmit={handleSubmit}>
                 <Box
@@ -193,13 +168,13 @@ const LogIn = () => {
                     fullWidth
                     variant="filled"
                     type="text"
-                    label="Username"
+                    label="Email"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    value={values.username}
-                    name="username"
-                    error={!!touched.username && !!errors.username}
-                    helperText={touched.username && errors.username}
+                    value={values.email}
+                    name="email"
+                    error={!!touched.email && !!errors.email}
+                    helperText={touched.email && errors.email}
                     sx={{
                       gridColumn: "span 4",
                       "& .MuiFormLabel-root.Mui-focused": {
@@ -319,10 +294,9 @@ const LogIn = () => {
                     color="secondary"
                     variant="contained"
                     startIcon={<LoginIcon />}
-                    disabled={isSubmitting}
                     sx={{ gridColumn: "span 4", width: "100%", padding: "1em" }}
                   >
-                    {isSubmitting ? "Logging in..." : "Continue"}
+                    Continue
                   </Button>
                 </Box>
 
@@ -408,12 +382,12 @@ const LogIn = () => {
 };
 
 const checkoutSchema = yup.object().shape({
-  username: yup.string().required("Invalid username").required("Required"),
+  email: yup.string().email("Invalid email").required("Required"),
   password: yup.string().required("Required"),
 });
 
 const initialValues = {
-  username: "",
+  email: "",
   password: "",
 };
 
