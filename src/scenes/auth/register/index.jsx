@@ -11,7 +11,7 @@ import {
   CircularProgress,
   // Divider,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -22,21 +22,20 @@ import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { useNavigate } from "react-router-dom";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 // import GoogleIcon from "@mui/icons-material/Google";
 // import TwitterIcon from "@mui/icons-material/Twitter";
 // import GitHubIcon from "@mui/icons-material/GitHub";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
+// import InputLabel from "@mui/material/InputLabel";
+// import MenuItem from "@mui/material/MenuItem";
+// import FormControl from "@mui/material/FormControl";
+// import Select from "@mui/material/Select";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import "./phone-style.css";
-  import axios from "axios";
+import axios from "axios";
 
 const Register = () => {
   const theme = useTheme();
@@ -52,60 +51,40 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
+
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
 
-  // const handleFormSubmit = (values) => {
-  //   console.log(values);
-  //   navigate("/login");
-  //   setLoading(true);
-  //   setTimeout(() => {
-  //     if (values.otp.join("") === "123456") {
-  //       setNotificationType("success");
-  //       setNotificationMessage("OTP verified successfully!");
-  //       setShowNotification(true);
-  //       setLoading(false);
-  //       setTimeout(() => navigate("/newPassword"), 1500);
-  //     } else {
-  //       setNotificationType("error");
-  //       setNotificationMessage("Incorrect OTP. Please try again.");
-  //       setShowNotification(true);
-  //       setLoading(false);
-  //     }
-  //   }, 1000);
-  // };
-
-
-
   const handleFormSubmit = async (values) => {
     setLoading(true);
     try {
-      // Replace 'YOUR_API_ENDPOINT' with the actual registration endpoint
-      const response = await axios.post("YOUR_API_ENDPOINT", {
-        firstName: values.firstName,
-        lastName: values.lastName,
-        username: values.username,
-        email: values.email,
-        phoneNumber: values.phoneNumber,
-        companyName: values.companyName,
-        city: values.city,
-        state: values.state,
-        country: values.country,
-        botUsage: values.botUsage,
-        password: values.password,
-      });
+      const response = await axios.post(
+        "https://app.medicarebot.live/register",
+        {
+          first_name: values.firstName,
+          last_name: values.lastName,
+          username: values.username,
+          email: values.email,
+          country_code: values.countryCode,
+          mobile_number: values.phoneNumber,
+          company_name: values.companyName,
+          city: values.city,
+          state: values.state,
+          country: values.country,
+          medicare_bot_usage: values.botUsage,
+          package: values.package,
+          password: values.password,
+        }
+      );
 
-      if (response.status === 200) {
-        // Successful registration
+      if (response.data.success) {
         setNotificationType("success");
-        setNotificationMessage(
-          "Registration successful! Redirecting to login..."
-        );
+        setNotificationMessage("Registration successful! Redirecting...");
         setShowNotification(true);
-        setTimeout(() => navigate("/login"), 1500);
+        setTimeout(() => navigate("/login"), 2000);
       } else {
-        throw new Error("Registration failed. Please try again.");
+        throw new Error(response.data.message || "Registration failed.");
       }
     } catch (error) {
       setNotificationType("error");
@@ -136,17 +115,19 @@ const Register = () => {
     lastName: "",
     username: "",
     email: "",
+    countryCode: "+977",
     phoneNumber: "",
     companyName: "",
     city: "",
     state: "",
     country: "",
-    botUsage: "", // Change this to match the form field name
+    botUsage: "",
+    package: "",
     password: "",
     confirmPassword: "",
   };
 
-  const checkoutSchema = yup.object().shape({
+  const validationSchema = yup.object().shape({
     firstName: yup.string().required("First Name is required"),
     lastName: yup.string().required("Last Name is required"),
     username: yup.string().required("Username is required"),
@@ -156,7 +137,8 @@ const Register = () => {
     city: yup.string().required("City is required"),
     state: yup.string().required("State is required"),
     country: yup.string().required("Country is required"),
-    botUsage: yup.string().required("Bot usage is required"), // Make sure to validate botUsage
+    botUsage: yup.string().required("Bot usage is required"),
+    package: yup.string().required("Package is required"),
     password: yup
       .string()
       .required("Password is required")
@@ -259,17 +241,17 @@ const Register = () => {
           </Box>
 
           <Formik
-            onSubmit={handleFormSubmit}
             initialValues={initialValues}
-            validationSchema={checkoutSchema}
+            validationSchema={validationSchema}
+            onSubmit={handleFormSubmit}
           >
             {({
               values,
+              handleChange,
+              handleBlur,
+              handleSubmit,
               errors,
               touched,
-              handleBlur,
-              handleChange,
-              handleSubmit,
             }) => (
               <form onSubmit={handleSubmit}>
                 <Box
@@ -369,10 +351,17 @@ const Register = () => {
                     >
                       <PhoneInput
                         country={"us"}
+                        value={values.phoneNumber}
+                        onChange={(value) =>
+                          handleChange({
+                            target: { name: "phoneNumber", value },
+                          })
+                        }
+                        onBlur={handleBlur}
+                        name="phoneNumber"
                         inputProps={{
                           name: "phone",
                           required: true,
-                          autoFocus: false,
                         }}
                         containerStyle={{
                           width: `65%`,
@@ -401,25 +390,6 @@ const Register = () => {
                         }}
                       />
                     </Box>
-                    {/* <TextField
-                      fullWidth
-                      variant="filled"
-                      type="text"
-                      label="Phone number"
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      value={values.phoneNumber}
-                      name="phoneNumber"
-                      error={!!touched.phoneNumber && !!errors.phoneNumber}
-                      helperText={touched.phoneNumber && errors.phoneNumber}
-                      sx={{
-                        gridColumn: "span 3",
-                        "& .MuiFormLabel-root.Mui-focused": {
-                          color: colors.blueAccent[500],
-                          fontWeight: "bold",
-                        },
-                      }}
-                    /> */}
                   </Box>
 
                   <TextField
@@ -510,7 +480,7 @@ const Register = () => {
                     />
                   </Box>
 
-                  <FormControl
+                  {/* <FormControl
                     fullWidth
                     variant="filled"
                     sx={{
@@ -545,12 +515,51 @@ const Register = () => {
                         {errors.botUsage}
                       </Box>
                     ) : null}{" "}
-                  </FormControl>
+                  </FormControl> */}
 
                   <TextField
                     fullWidth
                     variant="filled"
+                    type="text"
+                    label="Bot Usage"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.botUsage}
+                    name="botUsage"
+                    error={!!touched.botUsage && !!errors.botUsage}
+                    helperText={touched.botUsage && errors.botUsage}
+                    sx={{
+                      gridColumn: "span 2",
+                      "& .MuiFormLabel-root.Mui-focused": {
+                        color: colors.blueAccent[500],
+                        fontWeight: "bold",
+                      },
+                    }}
+                  />
+                  <TextField
+                    fullWidth
+                    variant="filled"
+                    type="text"
+                    label="Package"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.package}
+                    name="package"
+                    error={!!touched.package && !!errors.package}
+                    helperText={touched.package && errors.package}
+                    sx={{
+                      gridColumn: "span 2",
+                      "& .MuiFormLabel-root.Mui-focused": {
+                        color: colors.blueAccent[500],
+                        fontWeight: "bold",
+                      },
+                    }}
+                  />
+
+                  <TextField
                     type={showPassword ? "text" : "password"}
+                    fullWidth
+                    variant="filled"
                     label="Password"
                     onBlur={handleBlur}
                     onChange={handleChange}
@@ -583,7 +592,7 @@ const Register = () => {
                   <TextField
                     fullWidth
                     variant="filled"
-                    type={showPassword ? "text" : "password"}
+                    type="password"
                     label="Confirm Password"
                     onBlur={handleBlur}
                     onChange={handleChange}
@@ -676,15 +685,6 @@ const Register = () => {
                   </Box>
                 </Box>
                 <Box display="flex" justifyContent="end" mt="20px">
-                  {/* <Button
-                    type="submit"
-                    color="secondary"
-                    variant="contained"
-                    startIcon={<LoginIcon />}
-                    sx={{ gridColumn: "span 4", width: "100%", padding: "1em" }}
-                  >
-                    Continue
-                  </Button> */}
                   <Button
                     type="submit"
                     color="secondary"
@@ -702,7 +702,9 @@ const Register = () => {
                     disabled={loading}
                     sx={{ mt: 3, width: "100%", py: 1.5 }}
                   >
-                    {loading ? "Registering..." : "Register"}
+                    {loading
+                      ? `Registering...`
+                      : "Register"}
                   </Button>
                 </Box>
 
@@ -789,22 +791,14 @@ const Register = () => {
 
       <Snackbar
         open={showNotification}
-        autoHideDuration={4000}
+        autoHideDuration={6000}
         onClose={handleCloseNotification}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
         <Alert
           onClose={handleCloseNotification}
           severity={notificationType}
-          variant="filled"
-          sx={{
-            backgroundColor:
-              notificationType === "success"
-                ? colors.greenAccent[700]
-                : colors.redAccent[500],
-            color: colors.grey[100],
-            fontWeight: "bold",
-          }}
+          sx={{ width: "100%" }}
         >
           {notificationMessage}
         </Alert>
