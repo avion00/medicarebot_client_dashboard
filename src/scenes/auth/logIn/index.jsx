@@ -350,6 +350,8 @@ const LogIn = () => {
                   </Button>
                 </Box>
                 {/* Horizontal line and centered text */}
+                {/* Horizontal line and centered textadf */}
+
                 {/* <Box
                   sx={{
                     display: "flex",
