@@ -18,9 +18,17 @@ const ConfigureSetting = () => {
   const [apiUrl, setApiUrl] = useState("");
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [smsNotifications, setSmsNotifications] = useState(false);
-  const [backupStatus, setBackupStatus] = useState("");
-  const [restoreStatus, setRestoreStatus] = useState("");
-  const [deleteStatus, setDeleteStatus] = useState("");
+
+
+  // const [backupStatus, setBackupStatus] = useState("");
+  // const [restoreStatus, setRestoreStatus] = useState("");
+  // const [deleteStatus, setDeleteStatus] = useState("");
+  
+  // above code is actual code
+
+  const [ setBackupStatus] = useState("");
+  const [ setRestoreStatus] = useState("");
+  const [ setDeleteStatus] = useState("");
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
