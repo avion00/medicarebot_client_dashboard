@@ -26,9 +26,9 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import LoginIcon from "@mui/icons-material/Login";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import GoogleIcon from "@mui/icons-material/Google";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import GitHubIcon from "@mui/icons-material/GitHub";
+// import GoogleIcon from "@mui/icons-material/Google";
+// import TwitterIcon from "@mui/icons-material/Twitter";
+// import GitHubIcon from "@mui/icons-material/GitHub";
 
 // Initial values for Formik
 const initialValues = {
@@ -64,41 +64,55 @@ const LogIn = () => {
     setShowNotification(false);
   };
 
-  const handleFormSubmit = async (values, { setSubmitting }) => {
-    try {
-      const response = await fetch("https://app.medicarebot.live/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          username: values.username,
-          password: values.password,
-        }),
-      });
+ const handleFormSubmit = async (values, { setSubmitting }) => {
+   try {
+     const response = await fetch("https://app.medicarebot.live/login", {
+       method: "POST",
+       headers: {
+         "Content-Type": "application/json",
+         Accept: "application/json",
+       },
+       body: JSON.stringify({
+         username: values.username,
+         password: values.password,
+       }),
+     });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Invalid credentials");
-      }
+     if (!response.ok) {
+       const errorData = await response.json();
+       throw new Error(errorData.message || "Invalid credentials");
+     }
 
-      const data = await response.json();
-      document.cookie = `authToken=${data.token};path=/;secure`;
-      localStorage.setItem("authToken", data.token);
+     const data = await response.json();
 
-      navigate("/dashboard");
-    } catch (error) {
-      console.error("Error during login:", error.message);
-      setNotificationType("error");
-      setNotificationMessage(
-        error.message || "An error occurred. Please try again later."
-      );
-      setShowNotification(true);
-    } finally {
-      setSubmitting(false);
-    }
-  };
+     // Show success notification with the server message and token
+     setNotificationType("success");
+     setNotificationMessage(
+       `Login Successful: ${data.message}`
+     );
+
+     setShowNotification(true);
+
+     // Store token in cookies and local storage
+     document.cookie = `authToken=${data.token};path=/;secure`;
+     localStorage.setItem("authToken", data.token);
+
+     // Wait for 1 minute before navigating
+     setTimeout(() => {
+       navigate("/dashboard");
+     }, 1000); // 60 seconds
+   } catch (error) {
+     console.error("Error during login:", error.message);
+     setNotificationType("error");
+     setNotificationMessage(
+       error.message || "An error occurred. Please try again later."
+     );
+     setShowNotification(true);
+   } finally {
+     setSubmitting(false);
+   }
+ };
+
 
   // const buttonStyles = {
   //   flexGrow: 1,
@@ -350,7 +364,6 @@ const LogIn = () => {
                   </Button>
                 </Box>
                 {/* Horizontal line and centered text */}
-                {/* Horizontal line and centered textadf */}
 
                 {/* <Box
                   sx={{
@@ -434,6 +447,7 @@ const LogIn = () => {
         open={showNotification}
         autoHideDuration={6000}
         onClose={handleCloseNotification}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
         <Alert onClose={handleCloseNotification} severity={notificationType}>
           {notificationMessage}
