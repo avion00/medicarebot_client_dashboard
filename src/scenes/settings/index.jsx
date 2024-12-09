@@ -66,6 +66,9 @@ const Settings = () => {
   const [analyticsData] = useState("");
   const [feedbackList] = useState("");
   const [activityLogs] = useState("");
+  const [loadingSnippet, setLoadingSnippet] = useState(false);
+  const [snippetData, setSnippetData] = useState("");
+  const [summaryId, setSummaryId] = useState(null);
 
   const [crawlSettings, setCrawlSettings] = useState({
     websiteURL: "",
@@ -97,7 +100,7 @@ const Settings = () => {
   const startCrawling = async () => {
     setLoading(true);
 
-    const token = localStorage.getItem("authToken"); // Retrieve token from localStorage or a similar method
+    const token = localStorage.getItem("authToken");
 
     if (!token) {
       setSnackbarMessage("Authorization token is missing. Please log in.");
@@ -124,6 +127,9 @@ const Settings = () => {
       if (response.data.message === "Crawling completed") {
         setSnackbarMessage("Crawling completed successfully!");
         setSnackbarSeverity("success");
+
+        // Set summary_id dynamically from response
+        setSummaryId(response.data.summary_id);
       } else {
         setSnackbarMessage("An error occurred while crawling.");
         setSnackbarSeverity("error");
@@ -139,12 +145,52 @@ const Settings = () => {
     }
   };
 
-  const customizeBot = () => {
-    // Handle bot customization
+  const fetchSnippet = async (summaryId) => {
+    setLoadingSnippet(true);
+    const token = localStorage.getItem("authToken");
+
+    if (!token) {
+      setSnackbarMessage("Authorization token is missing. Please log in.");
+      setSnackbarSeverity("error");
+      setOpenSnackbar(true);
+      setLoadingSnippet(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `https://app.medicarebot.live/generate_snippet/${summaryId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setSnippetData(data.snippet); // Assuming the server returns a "snippet" field
+        setSnackbarMessage("Snippet fetched successfully!");
+        setSnackbarSeverity("success");
+      } else {
+        const errorData = await response.json();
+        setSnackbarMessage(
+          errorData.message || "An error occurred while fetching the snippet."
+        );
+        setSnackbarSeverity("error");
+      }
+    } catch (error) {
+      setSnackbarMessage("Unable to fetch snippet. Please try again.");
+      setSnackbarSeverity("error");
+    } finally {
+      setOpenSnackbar(true);
+      setLoadingSnippet(false);
+    }
   };
 
-  const generateCode = () => {
-    // Handle code generation
+  const customizeBot = () => {
+    // Handle bot customization
   };
 
   const fetchAnalytics = () => {
@@ -195,7 +241,7 @@ const Settings = () => {
     setFeedback(e.target.value);
   };
 
-  // customise bot, here okey
+  // customise bot, here okeyloadingSnippet
   const [customizeSettings, setCustomizeSettings] = useState("");
   const [fileName, setFileName] = useState("Choose a file...");
 
@@ -875,11 +921,7 @@ const Settings = () => {
       </Box>
 
       {/* Code Integration */}
-      <Box
-        sx={{
-          padding: ".5em 0",
-        }}
-      >
+      <Box>
         <Typography
           variant="h3"
           fontWeight="bold"
@@ -888,45 +930,23 @@ const Settings = () => {
         >
           Code Integration
         </Typography>
-        <TextField
-          label="Custom Platform"
-          placeholder="Enter custom platform (e.g., WordPress)"
-          multiline
-          rows={10}
-          variant="outlined"
+        <Box
           sx={{
+            height: "200px",
+            overflow: "auto",
+            padding: "1em",
+            m: "1em 0",
             width: "100%",
-            margin: "1.5em 0",
             backgroundColor: colors.primary[400],
-            "& .MuiOutlinedInput-root": {
-              "& fieldset": {
-                borderColor: colors.primary[400],
-              },
-              "&:hover fieldset": {
-                borderColor: colors.greenAccent[700],
-                borderRadius: "0",
-              },
-              "&.Mui-focused fieldset": {
-                borderColor: colors.greenAccent[700],
-                borderRadius: "0",
-              },
-            },
-            "& .MuiInputLabel-root": {
-              color: colors.grey[100],
-              fontWeight: "bold",
-            },
-            "& .MuiInputLabel-root.Mui-focused": {
-              color: colors.grey[100],
-            },
-            "& textarea": {
-              fontFamily: "Inter, sans-serif",
-              color: "inherit",
-            },
           }}
-        />
+        >
+          {snippetData ||
+            "No snippet fetched yet. Click a button to fetch one."}
+        </Box>
 
         <Button
-          onClick={generateCode}
+          onClick={() => fetchSnippet(summaryId)}
+          disabled={!summaryId || loadingSnippet}
           color="secondary"
           variant="outlined"
           style={{
@@ -934,7 +954,7 @@ const Settings = () => {
             marginRight: "8px",
           }}
         >
-          Generate Code Snippet
+          {loadingSnippet ? "Generating..." : " Generate Code Snippet"}
         </Button>
       </Box>
 
@@ -952,7 +972,7 @@ const Settings = () => {
         >
           Bot Analytics
         </Typography>
-        <div
+        <Box
           style={{
             display: "flex",
             flexWrap: "wrap",
@@ -987,7 +1007,7 @@ const Settings = () => {
           >
             Export Analytics
           </Button>
-        </div>
+        </Box>
         <Box
           sx={{
             height: "200px",
