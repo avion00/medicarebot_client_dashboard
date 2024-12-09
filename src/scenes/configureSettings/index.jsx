@@ -19,11 +19,9 @@ const ConfigureSetting = () => {
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [smsNotifications, setSmsNotifications] = useState(false);
 
-
   // const [backupStatus, setBackupStatus] = useState("");
   // const [restoreStatus, setRestoreStatus] = useState("");
   // const [deleteStatus, setDeleteStatus] = useState("");
-  
   // above code is actual code
 
   const [ setBackupStatus] = useState("");

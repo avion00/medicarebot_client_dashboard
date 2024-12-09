@@ -21,7 +21,6 @@ import Header from "../../components/Header";
 import { tokens } from "../../theme";
 import ExtensionIcon from "@mui/icons-material/Extension";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import axios from "axios";
 
 const Settings = () => {
   const theme = useTheme();
@@ -75,16 +74,15 @@ const Settings = () => {
   });
 
   const [crawlFileName, setCrawlFileName] = useState("Choose a file...");
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
-  const [loading, setLoading] = useState(false);
+
   const handleCrawlDataUpload = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
-      setCrawlFileName(selectedFile.name);
-      setCrawlSettings({ ...crawlSettings, uploadData: selectedFile });
+      setCrawlFileName(selectedFile.name); 
+      setCrawlSettings({ ...crawlSettings, uploadData: selectedFile }); 
     } else {
-      setCrawlFileName("Choose a file...");
+      setCrawlFileName("Choose a file..."); 
+
     }
   };
 
@@ -94,49 +92,8 @@ const Settings = () => {
   });
   const [feedback, setFeedback] = useState("");
 
-  const startCrawling = async () => {
-    setLoading(true);
-
-    const token = localStorage.getItem("authToken"); // Retrieve token from localStorage or a similar method
-
-    if (!token) {
-      setSnackbarMessage("Authorization token is missing. Please log in.");
-      setSnackbarSeverity("error");
-      setOpenSnackbar(true);
-      setLoading(false);
-      return;
-    }
-
-    try {
-      const response = await axios.post(
-        "https://app.medicarebot.live/crawl",
-        {
-          base_url: crawlSettings.websiteURL,
-          include_sitemap: crawlSettings.includeSitemap,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.data.message === "Crawling completed") {
-        setSnackbarMessage("Crawling completed successfully!");
-        setSnackbarSeverity("success");
-      } else {
-        setSnackbarMessage("An error occurred while crawling.");
-        setSnackbarSeverity("error");
-      }
-    } catch (error) {
-      setSnackbarMessage(
-        error.response?.data?.message || "An error occurred. Please try again."
-      );
-      setSnackbarSeverity("error");
-    } finally {
-      setOpenSnackbar(true);
-      setLoading(false);
-    }
+  const startCrawling = () => {
+    // Handle website crawling
   };
 
   const customizeBot = () => {
@@ -312,6 +269,123 @@ const Settings = () => {
             ))}
           </Select>
         </FormControl>
+
+        <Typography
+          variant="h4"
+          fontWeight="bold"
+          mt={5}
+          color={colors.grey[100]}
+        >
+          Advanced Bot Settings
+        </Typography>
+
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: "1em",
+            mt: "1em",
+            flexWrap: isNonMobile ? "nowrap" : "wrap",
+          }}
+        >
+          <TextField
+            label="Response Time (ms)"
+            variant="filled"
+            type="number"
+            name="responseTime"
+            value={advancedSettings.responseTime}
+            onChange={handleInputChange}
+            sx={{
+              // width: "30%",
+              width: isNonMobile ? "30%" : "100%",
+              backgroundColor: colors.primary[400],
+              "& .MuiFilledInput-root": {
+                backgroundColor: colors.primary[400],
+                color: colors.grey[100],
+                "&.Mui-focused": {
+                  backgroundColor: colors.primary[400],
+                  borderColor: colors.grey[100],
+                },
+                "&:hover": {
+                  backgroundColor: colors.primary[400],
+                },
+              },
+              "& .MuiInputLabel-root": {
+                color: colors.grey[100],
+                "&.Mui-focused": {
+                  color: colors.grey[100],
+                  fontWeight: "bold",
+                },
+              },
+              "& .MuiInputBase-input": {
+                color: colors.grey[100],
+              },
+            }}
+          />
+          <Autocomplete
+            sx={{
+              // width: "70%",
+              width: isNonMobile ? "70%" : "100%",
+            }}
+            multiple
+            options={languageOptions}
+            value={advancedSettings.supportedLanguages}
+            onChange={(event, newValue) =>
+              setAdvancedSettings({
+                ...advancedSettings,
+                supportedLanguages: newValue,
+              })
+            }
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                variant="filled"
+                label="Supported Languages"
+                placeholder="Add languages"
+                sx={{
+                  backgroundColor: colors.primary[400],
+                  "& .MuiFilledInput-root": {
+                    backgroundColor: colors.primary[400],
+                  },
+                  "& .Mui-focused": {
+                    backgroundColor: colors.primary[400],
+                    color: colors.grey[100],
+                  },
+                  "& .MuiInputLabel-root": {
+                    color: colors.grey[100],
+                    "&.Mui-focused": {
+                      color: colors.grey[100],
+                      backgroundColor: colors.primary[400],
+                      fontWeight: "bold",
+                    },
+                  },
+                  "& .MuiInputBase-input": {
+                    color: colors.grey[100],
+                  },
+                }}
+              />
+            )}
+          />
+        </Box>
+
+        <Snackbar
+          open={openSnackbar}
+          autoHideDuration={4000}
+          onClose={handleCloseSnackbar}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <Alert
+            onClose={handleCloseSnackbar}
+            severity="success"
+            sx={{
+              backgroundColor: colors.greenAccent[700],
+              color: colors.greenAccent[200],
+              fontWeight: "bold",
+            }}
+          >
+            {configResponse}
+          </Alert>
+        </Snackbar>
       </Box>
 
       <Box>
@@ -336,7 +410,7 @@ const Settings = () => {
           <TextField
             label="Enter Website URL"
             variant="filled"
-            type="url"
+            type="text"
             name="websiteURL"
             value={crawlSettings.websiteURL}
             onChange={(e) =>
@@ -370,6 +444,40 @@ const Settings = () => {
             }}
           />
 
+          <TextField
+            label="Crawl Depth"
+            variant="filled"
+            type="number"
+            name="depth"
+            value={crawlSettings.depth}
+            onChange={handleCrawlSettingChange}
+            sx={{
+              width: "200px",
+              flexGrow: "1",
+              backgroundColor: colors.primary[400],
+              "& .MuiFilledInput-root": {
+                backgroundColor: colors.primary[400],
+                color: colors.grey[100],
+                "&.Mui-focused": {
+                  backgroundColor: colors.primary[400],
+                  borderColor: colors.grey[100],
+                },
+                "&:hover": {
+                  backgroundColor: colors.primary[400],
+                },
+              },
+              "& .MuiInputLabel-root": {
+                color: colors.grey[100],
+                "&.Mui-focused": {
+                  color: colors.grey[100],
+                  fontWeight: "bold",
+                },
+              },
+              "& .MuiInputBase-input": {
+                color: colors.grey[100],
+              },
+            }}
+          />
           <TextField
             label="Upload Data Files"
             variant="filled"
@@ -476,11 +584,9 @@ const Settings = () => {
               borderRadius: "20px",
               marginRight: "8px",
             }}
-            disabled={loading}
           >
-            {loading ? "Crawling..." : "Start Crawling"}
+            Start Crawling
           </Button>
-
           <Button
             onClick={saveCrawlingSettings}
             variant="outlined"
@@ -499,141 +605,6 @@ const Settings = () => {
           </Button>
 
           <p>{crawlingStatus}</p>
-        </Box>
-      </Box>
-
-      <Box>
-        <Typography
-          variant="h4"
-          fontWeight="bold"
-          mt={5}
-          color={colors.grey[100]}
-        >
-          Advanced Bot Settings
-        </Typography>
-
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: "1em",
-            mt: "1em",
-            flexWrap: isNonMobile ? "nowrap" : "wrap",
-          }}
-        >
-          <TextField
-            label="Response Time (ms)"
-            variant="filled"
-            type="number"
-            name="responseTime"
-            value={advancedSettings.responseTime}
-            onChange={handleInputChange}
-            sx={{
-              width: isNonMobile ? "30%" : "100%",
-              backgroundColor: colors.primary[400],
-              "& .MuiFilledInput-root": {
-                backgroundColor: colors.primary[400],
-                color: colors.grey[100],
-                "&.Mui-focused": {
-                  backgroundColor: colors.primary[400],
-                  borderColor: colors.grey[100],
-                },
-                "&:hover": {
-                  backgroundColor: colors.primary[400],
-                },
-              },
-              "& .MuiInputLabel-root": {
-                color: colors.grey[100],
-                "&.Mui-focused": {
-                  color: colors.grey[100],
-                  fontWeight: "bold",
-                },
-              },
-              "& .MuiInputBase-input": {
-                color: colors.grey[100],
-              },
-            }}
-          />
-          <TextField
-            label="Crawl Depth"
-            variant="filled"
-            type="number"
-            name="depth"
-            value={crawlSettings.depth}
-            onChange={handleCrawlSettingChange}
-            sx={{
-              width: isNonMobile ? "30%" : "100%",
-              flexGrow: "1",
-              backgroundColor: colors.primary[400],
-              "& .MuiFilledInput-root": {
-                backgroundColor: colors.primary[400],
-                color: colors.grey[100],
-                "&.Mui-focused": {
-                  backgroundColor: colors.primary[400],
-                  borderColor: colors.grey[100],
-                },
-                "&:hover": {
-                  backgroundColor: colors.primary[400],
-                },
-              },
-              "& .MuiInputLabel-root": {
-                color: colors.grey[100],
-                "&.Mui-focused": {
-                  color: colors.grey[100],
-                  fontWeight: "bold",
-                },
-              },
-              "& .MuiInputBase-input": {
-                color: colors.grey[100],
-              },
-            }}
-          />
-
-          <Autocomplete
-            sx={{
-              // width: "70%",
-              width: isNonMobile ? "30%" : "100%",
-            }}
-            multiple
-            options={languageOptions}
-            value={advancedSettings.supportedLanguages}
-            onChange={(event, newValue) =>
-              setAdvancedSettings({
-                ...advancedSettings,
-                supportedLanguages: newValue,
-              })
-            }
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                variant="filled"
-                label="Supported Languages"
-                placeholder="Add languages"
-                sx={{
-                  backgroundColor: colors.primary[400],
-                  "& .MuiFilledInput-root": {
-                    backgroundColor: colors.primary[400],
-                  },
-                  "& .Mui-focused": {
-                    backgroundColor: colors.primary[400],
-                    color: colors.grey[100],
-                  },
-                  "& .MuiInputLabel-root": {
-                    color: colors.grey[100],
-                    "&.Mui-focused": {
-                      color: colors.grey[100],
-                      backgroundColor: colors.primary[400],
-                      fontWeight: "bold",
-                    },
-                  },
-                  "& .MuiInputBase-input": {
-                    color: colors.grey[100],
-                  },
-                }}
-              />
-            )}
-          />
         </Box>
       </Box>
 
@@ -1156,20 +1127,6 @@ const Settings = () => {
           </Box>
         </div>
       </Box>
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity={snackbarSeverity}
-          sx={{ width: "100%" }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
     </Box>
   );
 };

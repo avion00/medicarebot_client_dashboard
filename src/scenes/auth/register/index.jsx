@@ -73,7 +73,7 @@ const Register = () => {
           state: values.state,
           country: values.country,
           medicare_bot_usage: values.botUsage,
-          package: values.package,
+          package: "basic",
           password: values.password,
         }
       );
@@ -122,7 +122,6 @@ const Register = () => {
     state: "",
     country: "",
     botUsage: "",
-    package: "",
     password: "",
     confirmPassword: "",
   };
@@ -138,7 +137,7 @@ const Register = () => {
     state: yup.string().required("State is required"),
     country: yup.string().required("Country is required"),
     botUsage: yup.string().required("Bot usage is required"),
-    package: yup.string().required("Package is required"),
+    // package: yup.string().required("Package is required"),
     password: yup
       .string()
       .required("Password is required")
@@ -529,26 +528,7 @@ const Register = () => {
                     error={!!touched.botUsage && !!errors.botUsage}
                     helperText={touched.botUsage && errors.botUsage}
                     sx={{
-                      gridColumn: "span 2",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="Package"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.package}
-                    name="package"
-                    error={!!touched.package && !!errors.package}
-                    helperText={touched.package && errors.package}
-                    sx={{
-                      gridColumn: "span 2",
+                      gridColumn: "span 4",
                       "& .MuiFormLabel-root.Mui-focused": {
                         color: colors.blueAccent[500],
                         fontWeight: "bold",
