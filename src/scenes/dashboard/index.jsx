@@ -68,16 +68,25 @@ const Dashboard = () => {
         alignItems="center"
         flexWrap="wrap"
       >
-        <Header title="DASHBOARD" subtitle="Welcome to your Medicare Bot dashboard" />
+        <Header
+          title="DASHBOARD"
+          subtitle="Welcome to your Medicare Bot dashboard"
+        />
 
         <Box>
           <Button
             sx={{
-              backgroundColor: colors.greenAccent[700],
-              color: colors.grey[100],
+              background: "linear-gradient(45deg, #062994, #0E72E1)",
+              // color: colors.grey[100],
+              color: "#fff",
+
               fontSize: "14px",
               fontWeight: "bold",
-              padding: isNonMobile ? "10px 20px" : ".5em"
+              padding: isNonMobile ? "10px 20px" : ".5em",
+              transition: "all 0.5s ease",
+              "&:hover": {
+                opacity: ".7",
+              },
             }}
             onClick={toggleCustomizeView}
           >
@@ -96,7 +105,7 @@ const Dashboard = () => {
         <FormControl
           fullWidth
           sx={{
-            marginTop: isNonMobile ? "0": '1em',
+            marginTop: isNonMobile ? "0" : "1em",
             marginBottom: "1em",
             transition: "all .3s ease",
             "& .MuiOutlinedInput-root": {
@@ -119,7 +128,7 @@ const Dashboard = () => {
           <InputLabel
             id="demo-simple-select-label"
             sx={{
-              color: colors.greenAccent[400],
+              color: colors.blueAccent[400],
               fontWeight: "bold",
               backgroundColor: colors.primary[400],
               fontSize: "15px",
@@ -141,7 +150,7 @@ const Dashboard = () => {
             onChange={handleBotSelectionChange}
             sx={{
               // width: "30%",
-              width: isNonMobile ? '30%' : "100%",
+              width: isNonMobile ? "30%" : "100%",
               "& .MuiOutlinedInput-notchedOutline": {
                 borderColor: colors.primary[300],
               },
@@ -169,7 +178,7 @@ const Dashboard = () => {
                 <Card
                   sx={{
                     backgroundColor: colors.primary[400],
-                    borderRadius: "0",
+                    borderRadius: ".5em",
                     boxShadow: "none",
                   }}
                 >
@@ -178,7 +187,7 @@ const Dashboard = () => {
                       variant="h5"
                       gutterBottom
                       sx={{
-                        padding: isNonMobile? "1em" : "1em 0",
+                        padding: isNonMobile ? "1em" : "1em 0",
                         fontWeight: "600",
                         borderBottom: `1px solid ${colors.grey[600]}`,
                       }}

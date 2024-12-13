@@ -19,6 +19,8 @@ import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import LoginIcon from "@mui/icons-material/Login";
 import { useNavigate, Link } from "react-router-dom";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
+import CircularProgress from "@mui/material/CircularProgress"; // Import CircularProgress
+import axios from "axios";
 
 const ForgetPassword = () => {
   const theme = useTheme();
@@ -27,17 +29,32 @@ const ForgetPassword = () => {
   const isNonMobile = useMediaQuery("(min-width:768px)");
 
   const [showNotification, setShowNotification] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false); // New state for button loading
+  const [notificationMessage, setNotificationMessage] = useState("");
+  const [notificationType, setNotificationType] = useState("success"); // Track type
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
-  const handleFormSubmit = (values) => {
+  const handleFormSubmit = async (values) => {
     setIsSubmitting(true);
-
-    setTimeout(() => {
+    try {
+      const response = await axios.post(
+        "https://app.medicarebot.live/request_password_reset",
+        {
+          email: values.email,
+        }
+      );
+      setNotificationMessage(response.data.message);
+      setNotificationType("success"); // Set type to success
       setShowNotification(true);
+    } catch (error) {
+      setNotificationMessage(
+        error.response?.data?.message || "An error occurred. Please try again."
+      );
+      setNotificationType("error"); // Set type to error
+      setShowNotification(true);
+    } finally {
       setIsSubmitting(false);
-      setTimeout(() => navigate("/otp"), 1000);
-    }, 1000);
+    }
   };
 
   const handleCloseNotification = (event, reason) => {
@@ -188,15 +205,22 @@ const ForgetPassword = () => {
                     type="submit"
                     color="secondary"
                     variant="contained"
-                    startIcon={<LoginIcon />}
+                    startIcon={
+                      isSubmitting ? (
+                        <CircularProgress size={20} color="inherit" />
+                      ) : (
+                        <LoginIcon />
+                      )
+                    }
                     sx={{ gridColumn: "span 4", width: "100%", padding: "1em" }}
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? "Sending OTP..." : "Continue"}
+                    {isSubmitting ? "Sending Email..." : "Continue"}
                   </Button>
                   <Button
                     color="primary"
                     variant="contained"
+                    onClick={() => navigate("/Login")}
                     startIcon={<KeyboardBackspaceIcon />}
                     sx={{
                       gridColumn: "span 4",
@@ -222,16 +246,21 @@ const ForgetPassword = () => {
       >
         <Alert
           onClose={handleCloseNotification}
-          severity="success"
+          severity={notificationType === "success" ? "success" : "error"}
           variant="filled"
           sx={{
-            backgroundColor: colors.greenAccent[700],
-            color: colors.greenAccent[200],
+            backgroundColor:
+              notificationType === "success"
+                ? colors.greenAccent[700]
+                : colors.redAccent[700],
+            color:
+              notificationType === "success"
+                ? colors.greenAccent[200]
+                : colors.redAccent[200],
             fontWeight: "bold",
           }}
         >
-          A verification OTP has been sent to your email. Please verify your
-          email.
+          {notificationMessage}
         </Alert>
       </Snackbar>
     </Box>

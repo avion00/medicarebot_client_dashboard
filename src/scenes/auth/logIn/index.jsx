@@ -158,6 +158,7 @@ const LogIn = () => {
         }}
       >
         <Box>
+          <Box></Box>
           <Header
             title="WELCOME TO MEDICARE BOT"
             subtitle="Please Login to continue"
@@ -351,14 +352,26 @@ const LogIn = () => {
                   </Box>
                 </Box>
 
-                <Box display="flex" justifyContent="end" mt="20px">
+                <Box display="flex" justifyContent="start" mt="20px" >
                   <Button
                     type="submit"
                     color="secondary"
                     variant="contained"
                     startIcon={<LoginIcon />}
                     disabled={isSubmitting}
-                    sx={{ gridColumn: "span 4", width: "100%", padding: "1em" }}
+                    sx={{
+                      background: "linear-gradient(45deg, #062994, #0E72E1)",
+                      // color: colors.grey[100],
+                      color: "#fff",
+                      width: isNonMobile ? '50%' : "100%",
+                      fontSize: "14px",
+                      fontWeight: "bold",
+                      padding: isNonMobile ? "10px 20px" : ".5em",
+                      transition: "all 0.5s ease",
+                      "&:hover": {
+                        opacity: ".7",
+                      },
+                    }}
                   >
                     {isSubmitting ? "Logging in..." : "Log In"}
                   </Button>
@@ -445,9 +458,9 @@ const LogIn = () => {
       {/* Notification Snackbar */}
       <Snackbar
         open={showNotification}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
         autoHideDuration={6000}
         onClose={handleCloseNotification}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
         <Alert onClose={handleCloseNotification} severity={notificationType}>
           {notificationMessage}

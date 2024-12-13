@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState } from "react";
 import {
   Box,
   Button,
@@ -8,10 +8,7 @@ import {
   InputAdornment,
   Snackbar,
   CircularProgress,
-  Alert,
-  FormGroup,
-  FormControlLabel,
-  Checkbox,
+  Alert
 } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -19,7 +16,7 @@ import Header from "../../../components/Header";
 import { tokens, ColorModeContext } from "../../../theme";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
@@ -31,89 +28,25 @@ const NewPassword = () => {
   const colorMode = useContext(ColorModeContext);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [errorSnackbar, setErrorSnackbar] = useState(false);
-  const [remember, setRemember] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false); // For handling button text and animation
+  const [openSnackbar, setOpenSnackbar] = useState(false); // For Snackbar notification
   const navigate = useNavigate();
-  const location = useLocation();
-  const [token, setToken] = useState(null);
-
-  useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const extractedToken = queryParams.get("token");
-    if (extractedToken) {
-      localStorage.setItem("resetToken", extractedToken);
-      setToken(extractedToken);
-    }
-  }, [location.search]);
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleClickShowConfirmPassword = () =>
     setShowConfirmPassword(!showConfirmPassword);
 
- const handleFormSubmit = async (values) => {
-  console.log("upper token", token)
-  console.log("rest token", token);
-  
-
-   const storedToken = localStorage.getItem("resetToken");
-   console.log("upper token", token);
-   console.log("store token", storedToken);
-   if (!storedToken) {
-     setErrorSnackbar(true);
-     return;
-   }
-   setIsSubmitting(true);
-
-   try {
-     const response = await fetch("https://app.medicarebot.live/newPassword", {
-       method: "POST",
-       headers: {
-         "Content-Type": "application/json",
-       },
-       body: JSON.stringify({
-         token: storedToken,
-         new_password: values.password,
-       }),
-     });
-     console.log("try token", token);
-     console.log("try store token", storedToken);
-
-     const result = await response.json();
-
-     if (response.ok) {
-       if (remember) {
-         localStorage.setItem(
-           "userDetails",
-           JSON.stringify({
-             password: values.password,
-           })
-         );
-       }
-       setOpenSnackbar(true);
-       setTimeout(() => {
-         localStorage.removeItem("resetToken");
-         navigate("/login");
-       }, 1500);
-     } else {
-       setErrorSnackbar(true);
-       alert(result.message || "Password reset failed.");
-     }
-   } catch (error) {
-     console.error("Error:", error);
-     setErrorSnackbar(true);
-     console.log("catch token", token);
-     console.log("catch token", storedToken);
-   } finally {
-     setIsSubmitting(false);
-   }
- };
-
+  const handleFormSubmit = (values) => {
+    setIsSubmitting(true);
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setOpenSnackbar(true); 
+      setTimeout(() => navigate("/login"), 1500); 
+    }, 2000);
+  };
 
   const handleSnackbarClose = () => {
     setOpenSnackbar(false);
-    setErrorSnackbar(false);
   };
 
   return (
@@ -280,30 +213,6 @@ const NewPassword = () => {
                       }}
                     />
                   </Box>
-                  <Box mt="1em">
-                    <FormGroup>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={remember}
-                            onChange={(e) => setRemember(e.target.checked)}
-                            sx={{
-                              color: colors.blueAccent[100],
-                              "&.Mui-checked": {
-                                color: colors.blueAccent[100],
-                              },
-                            }}
-                          />
-                        }
-                        label={
-                          <span style={{ color: colors.blueAccent[100] }}>
-                            Remember
-                          </span>
-                        }
-                        sx={{ color: colors.blueAccent[200] }}
-                      />
-                    </FormGroup>
-                  </Box>
                   <Box mt="20px">
                     <Button
                       type="submit"
@@ -311,8 +220,8 @@ const NewPassword = () => {
                       variant="contained"
                       disabled={isSubmitting}
                       style={{
-                        padding: " .8em 2em",
-                        fontWeight: "700",
+                        padding: ' .8em 2em',
+                        fontWeight: '700',
                       }}
                     >
                       {isSubmitting ? (
@@ -340,26 +249,15 @@ const NewPassword = () => {
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
         <Alert
-          onClose={handleSnackbarClose}
-          severity="success"
-          sx={{ width: "100%" }}
+          variant="filled"
+          sx={{
+            backgroundColor: colors.greenAccent[700],
+            color: colors.greenAccent[200],
+            fontWeight: "600",
+            fontSize: "13px",
+          }}
         >
           Password changed successfully!
-        </Alert>
-      </Snackbar>
-
-      <Snackbar
-        open={errorSnackbar}
-        autoHideDuration={8000}
-        onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-      >
-        <Alert
-          onClose={handleSnackbarClose}
-          severity="error"
-          sx={{ width: "100%" }}
-        >
-          Reset link expired or invalid. Try again.
         </Alert>
       </Snackbar>
     </Box>
@@ -369,17 +267,19 @@ const NewPassword = () => {
 const passwordSchema = yup.object().shape({
   password: yup
     .string()
-    .required("Password is required")
-    .min(8, "Password must be at least 8 characters long"),
+    .min(6, "Password must be at least 6 characters long")
+    .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .matches(/[0-9]/, "Password must contain at least one number")
+    .matches(/[@#$%&]/, "Password must contain at least one symbol (@#$%&)")
+    .required("Required"),
   confirmPassword: yup
     .string()
-    .required("Confirm Password is required")
-    .oneOf([yup.ref("password"), null], "Passwords must match"),
+    .oneOf([yup.ref("password")], "Passwords must match")
+    .required("Required"),
 });
 
 const initialValues = {
   password: "",
   confirmPassword: "",
 };
-
 export default NewPassword;

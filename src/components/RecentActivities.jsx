@@ -18,10 +18,10 @@ const RecentActivities = ({ activities }) => {
     <Card
       sx={{
         backgroundColor: colors.primary[400],
-        borderRadius: "0",
+        borderRadius: ".5em",
         boxShadow: "none",
         height: "400px",
-        overflowY: 'auto',
+        overflowY: "auto",
       }}
     >
       <CardContent>
@@ -31,11 +31,11 @@ const RecentActivities = ({ activities }) => {
           sx={{
             padding: "1em",
             fontWeight: "600",
-            borderBottom: `1px solid ${colors.grey[600]}`
+            borderBottom: `1px solid ${colors.grey[600]}`,
           }}
         >
           Recent Activities
-          </Typography>
+        </Typography>
         <List>
           {activities.map((activity, index) => (
             <ListItem key={index}>

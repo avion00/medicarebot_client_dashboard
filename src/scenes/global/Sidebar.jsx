@@ -105,8 +105,17 @@ const Sidebar = ({ isSidebar }) => {
                     fontWeight: "700",
                   }}
                 >
-                  MEDICAREBOT
+                  <img
+                    style={{
+                      objectFit: "cover",
+                      width: "100%",
+                      height: "100%",
+                    }}
+                    src="/Medicare-Logo.png"
+                    alt="Medicare bot logo"
+                  />
                 </Typography>
+
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                   <MenuOutlinedIcon />
                 </IconButton>
@@ -138,10 +147,10 @@ const Sidebar = ({ isSidebar }) => {
                 >
                   John OM
                 </Typography>
-                <Typography variant="h5" color={colors.greenAccent[300]}>
+                <Typography variant="h5" color={colors.blueAccent[400]}>
                   johndeo_503
                 </Typography>
-                <Typography variant="h6" color={colors.blueAccent[300]}>
+                <Typography variant="h6" color={colors.primary[100]}>
                   online
                 </Typography>
               </Box>
@@ -168,7 +177,7 @@ const Sidebar = ({ isSidebar }) => {
               setSelected={setSelected}
             />
             <SubMenu
-              title="Bot Management"
+              title="Manage Bot"
               icon={<ManageAccountsIcon />}
               style={{
                 color: colors.grey[100],
@@ -292,28 +301,28 @@ const Sidebar = ({ isSidebar }) => {
             </SubMenu>
 
             <Item
-              title="Settings Management"
+              title="Settings Manage"
               to="/settings"
               icon={<SettingsIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
-              title="Interactions Management"
+              title="Interactions Manage"
               to="/interactions"
               icon={<LayersIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
-              title="Billing Management"
+              title="Billing Manage"
               to="/billing"
               icon={<PaidIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
-              title="Reports and Performance Analytics"
+              title="Reports & Performance Analytics"
               to="/reports"
               icon={<AssessmentIcon />}
               selected={selected}

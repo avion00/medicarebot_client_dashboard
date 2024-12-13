@@ -35,11 +35,10 @@ import AddBot from "./scenes/addBot/index";
 import AddCRM from "./scenes/add_CRM/index";
 import ViewCRM from "./scenes/view_CRM/index";
 
-
 function App() {
   const [theme, colorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
-    const isNonMobile = useMediaQuery("(min-width:768px)");
+  const isNonMobile = useMediaQuery("(min-width:768px)");
 
   const location = useLocation();
 
@@ -49,10 +48,8 @@ function App() {
     location.pathname === "/register" ||
     location.pathname === "/forgetPassword" ||
     location.pathname === "/logIn" ||
-    location.pathname === "/otp"||
+    location.pathname === "/otp" ||
     location.pathname === "/newPassword";
-    
-    
 
   return (
     <ColorModeContext.Provider value={colorMode}>
