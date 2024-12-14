@@ -12,6 +12,7 @@ import {
   FormControlLabel,
   Checkbox,
   // Divider
+  Typography
 } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -157,8 +158,38 @@ const LogIn = () => {
           justifyContent: "center",
         }}
       >
-        <Box>
-          <Box></Box>
+        <Box
+          sx={{
+            marginTop: "-5em",
+            paddingLeft: isNonMobile ? "2em" : "0",
+            // width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: isNonMobile ? "undefined" : "center",
+          }}
+        >
+          <Typography
+            variant="h3"
+            sx={{
+              textAlign: "center",
+              width: "200px",
+              alignItems: "center",
+              alignContent: "center",
+              marginTop: isNonMobile ? "0" : "2em",
+              marginLeft: "-.5em",
+              marginBottom: ".5em",
+            }}
+          >
+            <img
+              style={{
+                objectFit: "cover",
+                width: "100%",
+                height: "100%",
+              }}
+              src="/Medicare-Logo.png"
+              alt="Medicare bot logo"
+            />
+          </Typography>
           <Header
             title="WELCOME TO MEDICARE BOT"
             subtitle="Please Login to continue"
@@ -352,7 +383,7 @@ const LogIn = () => {
                   </Box>
                 </Box>
 
-                <Box display="flex" justifyContent="start" mt="20px" >
+                <Box display="flex" justifyContent="start" mt="20px">
                   <Button
                     type="submit"
                     color="secondary"
@@ -363,10 +394,10 @@ const LogIn = () => {
                       background: "linear-gradient(45deg, #062994, #0E72E1)",
                       // color: colors.grey[100],
                       color: "#fff",
-                      width: isNonMobile ? '50%' : "100%",
+                      width: isNonMobile ? "50%" : "100%",
                       fontSize: "14px",
                       fontWeight: "bold",
-                      padding: isNonMobile ? "10px 20px" : ".5em",
+                      padding: "10px 20px",
                       transition: "all 0.5s ease",
                       "&:hover": {
                         opacity: ".7",

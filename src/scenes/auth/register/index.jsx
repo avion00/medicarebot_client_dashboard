@@ -8,6 +8,7 @@ import {
   InputAdornment,
   Snackbar,
   Alert,
+  Typography,
   CircularProgress,
   // Divider,
 } from "@mui/material";
@@ -156,7 +157,7 @@ const Register = () => {
         alignItems: isNonMobile ? "inherit" : "center",
         flexDirection: isNonMobile ? "row" : "column",
         position: "relative",
-        paddingTop: isNonMobile ? "0" : "7em",
+        paddingTop: isNonMobile ? "0" : "5.5em",
       }}
     >
       <Box
@@ -189,10 +190,41 @@ const Register = () => {
           justifyContent: "center",
         }}
       >
-        <Header
-          title="WELCOME TO MEDICARE BOT"
-          subtitle="Please Register to continue"
-        />
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: isNonMobile ? "undefined" : "center",
+            padding: isNonMobile ? "1.5em" : "0",
+          }}
+        >
+          <Typography
+            variant="h3"
+            sx={{
+              textAlign: "center",
+              width: "200px",
+              alignItems: "center",
+              justifyContent: "center",
+              // marginTop: isNonMobile ? "0" : "2em",
+              marginLeft: "-.5em",
+              marginBottom: ".5em",
+            }}
+          >
+            <img
+              style={{
+                objectFit: "cover",
+                width: "100%",
+                height: "100%",
+              }}
+              src="/Medicare-Logo.png"
+              alt="Medicare bot logo"
+            />
+          </Typography>
+          <Header
+            title="WELCOME TO MEDICARE BOT"
+            subtitle="Please Register to continue"
+          />
+        </Box>
       </Box>
 
       <Box
@@ -664,7 +696,7 @@ const Register = () => {
                     </Box>
                   </Box>
                 </Box>
-                <Box display="flex" justifyContent="end" mt="20px">
+                <Box display="flex" justifyContent="start" mt="20px">
                   <Button
                     type="submit"
                     color="secondary"
@@ -680,11 +712,21 @@ const Register = () => {
                       )
                     }
                     disabled={loading}
-                    sx={{ mt: 3, width: "100%", py: 1.5 }}
+                    sx={{
+                      background: "linear-gradient(45deg, #062994, #0E72E1)",
+                      // color: colors.grey[100],
+                      color: "#fff",
+                      width: isNonMobile ? "50%" : "100%",
+                      fontSize: "14px",
+                      fontWeight: "bold",
+                      padding: "10px 20px",
+                      transition: "all 0.5s ease",
+                      "&:hover": {
+                        opacity: ".7",
+                      },
+                    }}
                   >
-                    {loading
-                      ? `Registering...`
-                      : "Register"}
+                    {loading ? `Registering...` : "Register"}
                   </Button>
                 </Box>
 
