@@ -21,6 +21,7 @@ import PaidIcon from "@mui/icons-material/Paid";
 import AddIcon from "@mui/icons-material/Add";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import PaddingIcon from "@mui/icons-material/Padding";
+import AlignHorizontalLeftIcon from "@mui/icons-material/AlignHorizontalLeft";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -194,6 +195,25 @@ const Sidebar = ({ isSidebar }) => {
               }}
             >
               <MenuItem
+                icon={<AlignHorizontalLeftIcon />}
+                onClick={() => setSelected("All Bots")}
+                style={{
+                  marginBottom: ".5em",
+                  color: selected === "All Bots" ? "#6870fa" : colors.grey[100],
+                }}
+              >
+                <Link
+                  to="/allBots"
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    fontSize: "13px",
+                  }}
+                >
+                  All Bots
+                </Link>
+              </MenuItem>
+              <MenuItem
                 icon={<AddIcon />}
                 onClick={() => setSelected("Add Bots")}
                 style={{
@@ -308,7 +328,7 @@ const Sidebar = ({ isSidebar }) => {
               setSelected={setSelected}
             />
             <Item
-              title="Interactions Manage"
+              title="Chat Logs"
               to="/interactions"
               icon={<LayersIcon />}
               selected={selected}
@@ -333,7 +353,7 @@ const Sidebar = ({ isSidebar }) => {
               color={colors.grey[300]}
               sx={{ m: "15px 0 5px 20px" }}
             >
-              CRM
+              Partners Hub
             </Typography>
             <Item
               title="Add CRM"

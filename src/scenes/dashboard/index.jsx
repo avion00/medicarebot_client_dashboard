@@ -1,73 +1,25 @@
 import { Box, Button, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
-import Header from "../../components/Header";
-import LineChart from "../../components/LineChart";
-import TuneIcon from "@mui/icons-material/Tune";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import useMediaQuery from "@mui/material/useMediaQuery";
+// import { RecentActivityData } from "../../data/mockData";
+import { BotPerformanceData } from "../../data/botPerformData";
+import { RecentActivityData } from "../../data/RecentActivityData";
 
-import React, { useState, useEffect } from "react";
-import {
-  Grid,
-  Card,
-  CardContent,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-} from "@mui/material";
-import {
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
-import RecentActivities from "../../components/RecentActivities";
-import CustomizeGraph from "../../components/CustomizeGraph";
-import BotPerformanceData from "../../data/botPerformanceData.json";
+import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import Header from "../../components/Header";
+import StatBox from "../../components/StatBox";
+import SmartToyIcon from "@mui/icons-material/SmartToy";
+import LayersIcon from "@mui/icons-material/Layers";
+
 
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const isNonMobile = useMediaQuery("(min-width:768px)");
-
-  const [bots, setBots] = useState([]);
-  const [selectedBotId, setSelectedBotId] = useState(1);
-  const [selectedBotData, setSelectedBotData] = useState({});
-  const [customizing, setCustomizing] = useState(false);
-
-  useEffect(() => {
-    setBots(BotPerformanceData.bots || []);
-  }, []);
-
-  // Update the selected bot's data when a new bot is selected
-  useEffect(() => {
-    const selectedBot = bots.find((bot) => bot.id === selectedBotId);
-    if (selectedBot) {
-      setSelectedBotData(selectedBot);
-    }
-  }, [selectedBotId, bots]);
-
-  const handleBotSelectionChange = (event) => {
-    setSelectedBotId(event.target.value);
-  };
-
-  const toggleCustomizeView = () => {
-    setCustomizing(!customizing);
-  };
 
   return (
     <Box m="20px">
       {/* HEADER */}
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        flexWrap="wrap"
-      >
+      <Box display="flex" justifyContent="space-between" alignItems="center">
         <Header
           title="DASHBOARD"
           subtitle="Welcome to your Medicare Bot dashboard"
@@ -79,175 +31,442 @@ const Dashboard = () => {
               background: "linear-gradient(45deg, #062994, #0E72E1)",
               // color: colors.grey[100],
               color: "#fff",
-
+              // width: isNonMobile ? "50%" : "100%",
               fontSize: "14px",
               fontWeight: "bold",
-              padding: isNonMobile ? "10px 20px" : ".5em",
+              padding: "10px 20px",
               transition: "all 0.5s ease",
               "&:hover": {
                 opacity: ".7",
               },
             }}
-            onClick={toggleCustomizeView}
           >
-            {customizing ? (
-              <ArrowBackIcon sx={{ mr: "8px" }} />
-            ) : (
-              <TuneIcon sx={{ mr: "8px" }} />
-            )}
-            {customizing
-              ? "Back to Dashboard"
-              : `Customize ${selectedBotData?.name}'s Graph`}
+            <DownloadOutlinedIcon sx={{ mr: "10px" }} />
+            Download Reports
           </Button>
         </Box>
       </Box>
-      <Box mt="1em">
-        <FormControl
-          fullWidth
-          sx={{
-            marginTop: isNonMobile ? "0" : "1em",
-            marginBottom: "1em",
-            transition: "all .3s ease",
-            "& .MuiOutlinedInput-root": {
-              "& fieldset": {
-                borderColor: colors.grey[600],
-              },
-              "&:hover fieldset": {
-                borderColor: colors.greenAccent[700],
-              },
-              "&.Mui-focused fieldset": {
-                borderColor: colors.greenAccent[700],
-                borderWidth: "1px",
-              },
-              "&.MuiOutlinedInput-notchedOutline": {
-                borderColor: colors.primary[300],
-              },
-            },
-          }}
+
+      {/* GRID & CHARTS */}
+      <Box
+        display="grid"
+        gridTemplateColumns="repeat(12, 1fr)"
+        gridAutoRows="140px"
+        gap="20px"
+      >
+        {/* ROW 1 */}
+        <Box
+          gridColumn="span 4"
+          backgroundColor={colors.primary[400]}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          borderRadius="8px"
         >
-          <InputLabel
-            id="demo-simple-select-label"
-            sx={{
-              color: colors.blueAccent[400],
-              fontWeight: "bold",
-              backgroundColor: colors.primary[400],
-              fontSize: "15px",
-              margin: ".1em",
-              padding: "0 .5em",
-              "&.Mui-focused": {
-                color: colors.primary[100],
-              },
-            }}
-          >
-            Select a Bot
-          </InputLabel>
+          <StatBox
+            title="121"
+            subtitle="Active Bots"
+            progress="0.5"
+            increase="+14%"
+            icon={
+              <SmartToyIcon
+                sx={{ color: colors.blueAccent[400], fontSize: "26px" }}
+              />
+            }
+          />
+        </Box>
+        <Box
+          gridColumn="span 4"
+          backgroundColor={colors.primary[400]}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          borderRadius="8px"
+        >
+          <StatBox
+            title="431,225"
+            subtitle="Total Interactions"
+            progress="0.750"
+            increase="+21%"
+            icon={
+              <LayersIcon
+                sx={{ color: colors.blueAccent[400], fontSize: "26px" }}
+              />
+            }
+          />
+        </Box>
+        <Box
+          gridColumn="span 4"
+          backgroundColor={colors.primary[400]}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          borderRadius="8px"
+        >
+          <StatBox
+            title="32,441"
+            subtitle="Customer Satisfaction"
+            progress="0.90"
+            increase="+90%"
+            icon={
+              <PersonAddIcon
+                sx={{ color: colors.blueAccent[400], fontSize: "26px" }}
+              />
+            }
+          />
+        </Box>
 
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            label="Select a Bot"
-            value={selectedBotId}
-            onChange={handleBotSelectionChange}
-            sx={{
-              // width: "30%",
-              width: isNonMobile ? "30%" : "100%",
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: colors.primary[300],
-              },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: colors.greenAccent[700],
-              },
-              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: colors.greenAccent[700],
-                borderWidth: "2px",
-              },
-            }}
-          >
-            {bots.map((bot) => (
-              <MenuItem key={bot.id} value={bot.id}>
-                {bot.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        {/* ROW 2 */}
 
-        {!customizing ? (
-          <>
-            <Grid container spacing={4}>
-              <Grid item xs={12} md={8}>
-                <Card
+        <Box
+          gridColumn="span 6"
+          gridRow="span 2"
+          backgroundColor={colors.primary[400]}
+          overflow="auto"
+        >
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            borderBottom={`4px solid ${colors.primary[500]}`}
+            colors={colors.grey[100]}
+            p="15px"
+          >
+            <Typography color={colors.grey[100]} variant="h5" fontWeight="600">
+              Recent Activity Feed
+            </Typography>
+            <Typography color={colors.grey[100]} variant="h6" fontWeight="600">
+              <Box
+                sx={{
+                  cursor: "pointer",
+                  "&:hover": {
+                    opacity: 0.5,
+                    textDecoration: "underline",
+                  },
+                }}
+              >
+                View All Activity
+              </Box>
+            </Typography>
+          </Box>
+          {RecentActivityData.map((data, i) => (
+            <Box
+              key={`${data.txId}-${i}`}
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              borderBottom={`4px solid ${colors.primary[500]}`}
+              p="15px"
+            >
+              <Box>
+                <Typography
+                  color={colors.blueAccent[400]}
+                  variant="h5"
+                  fontWeight="500"
+                >
+                  {data.txId} : {data.botName}
+                </Typography>
+                <Typography
+                  variant="h6"
+                  fontWeight="400"
+                  color={colors.grey[300]}
+                >
+                  {data.date} {data.time}
+                </Typography>
+              </Box>
+            </Box>
+          ))}
+        </Box>
+
+        <Box
+          gridColumn="span 6"
+          gridRow="span 2"
+          backgroundColor={colors.primary[400]}
+          overflow="auto"
+        >
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            borderBottom={`4px solid ${colors.primary[500]}`}
+            colors={colors.grey[100]}
+            p="15px"
+          >
+            <Typography color={colors.grey[100]} variant="h5" fontWeight="600">
+              Bot Performance Summary
+            </Typography>
+            <Typography color={colors.grey[100]} variant="h6" fontWeight="600">
+              <Box
+                sx={{
+                  cursor: "pointer",
+                  "&:hover": {
+                    opacity: 0.5,
+                    textDecoration: "underline",
+                  },
+                }}
+              >
+                View Detailed Report
+              </Box>
+            </Typography>
+          </Box>
+
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            borderBottom={`4px solid ${colors.primary[500]}`}
+            p="15px"
+          >
+            <Box textAlign="left" flex={1}>
+              <Typography
+                color={colors.grey[100]}
+                variant="h5"
+                fontWeight="500"
+              >
+                Bot Name
+              </Typography>
+            </Box>
+            <Box
+              fontWeight="500"
+              fontSize="16px"
+              textAlign="center"
+              flex={1}
+              color={colors.grey[100]}
+            >
+              Interactions
+            </Box>
+            <Box
+              textAlign="center"
+              fontWeight="500"
+              fontSize="16px"
+              flex={1}
+              borderRadius="4px"
+            >
+              Usage
+            </Box>
+          </Box>
+
+          {BotPerformanceData.map((data, i) => (
+            <Box
+              key={`${data.botName}-${i}`}
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              borderBottom={`4px solid ${colors.primary[500]}`}
+              p="15px"
+            >
+              <Box textAlign="left" flex={1}>
+                <Typography
+                  color={colors.blueAccent[400]}
+                  variant="h5"
+                  fontWeight="600"
+                >
+                  {data.botName}
+                </Typography>
+              </Box>
+              <Box textAlign="center" flex={1} color={colors.grey[100]}>
+                {data.interactions}
+              </Box>
+              <Box textAlign="center" flex={1}>
+                {data.usage}
+              </Box>
+            </Box>
+          ))}
+        </Box>
+
+        {/* ROW 3 */}
+
+        <Box
+          gridColumn="span 4"
+          gridRow="span 2"
+          backgroundColor={colors.primary[400]}
+          overflow="auto"
+        >
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            flexDirection="column"
+            borderBottom={`4px solid ${colors.primary[500]}`}
+            colors={colors.grey[100]}
+            p="15px"
+          >
+            <Typography color={colors.grey[100]} variant="h5" fontWeight="600">
+              Plan Usage Overview
+            </Typography>
+            <Typography color={colors.grey[400]} variant="h6" fontWeight="600">
+              Conversation
+            </Typography>
+          </Box>
+          <Box
+            gridColumn="span 4"
+            gridRow="span 2"
+            backgroundColor={colors.primary[400]}
+          >
+            <Box
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+              mt="25px"
+            >
+              {/* Dynamic Progress Circle */}
+              <Box
+                sx={{
+                  background: `radial-gradient(${
+                    colors.primary[400]
+                  } 55%, transparent 56%),
+              conic-gradient(transparent 0deg ${
+                (3500 / 5000) * 360
+              }deg, ${"#ccc"} ${(3500 / 5000) * 360}deg 360deg),
+              ${colors.blueAccent[400]}`,
+                  borderRadius: "50%",
+                  width: "125px",
+                  height: "125px",
+                }}
+              />
+              <Typography
+                variant="h5"
+                color={colors.blueAccent[500]}
+                sx={{ mt: "15px" }}
+              >
+                3,500/5,000
+              </Typography>
+              <Typography variant="h6" color={colors.grey[300]}>
+                Conversation Circular Progress Meter
+              </Typography>
+            </Box>
+          </Box>
+        </Box>
+
+        <Box
+          gridColumn="span 4"
+          gridRow="span 2"
+          backgroundColor={colors.primary[400]}
+          overflow="auto"
+        >
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            flexDirection="column"
+            borderBottom={`4px solid ${colors.primary[500]}`}
+            colors={colors.grey[100]}
+            p="15px"
+          >
+            <Typography color={colors.grey[100]} variant="h5" fontWeight="600">
+              Plan Usage Overview
+            </Typography>
+            <Typography color={colors.grey[400]} variant="h6" fontWeight="600">
+              Time Remaining
+            </Typography>
+          </Box>
+          <Box
+            gridColumn="span 4"
+            gridRow="span 2"
+            backgroundColor={colors.primary[400]}
+          >
+            <Box
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+              mt="25px"
+            >
+              {/* Dynamic Progress Circle */}
+              <Box
+                sx={{
+                  background: `radial-gradient(${
+                    colors.primary[400]
+                  } 55%, transparent 56%),
+              conic-gradient(transparent 0deg ${
+                (12 / 30) * 360
+              }deg, ${"#ccc"} ${(12 / 30) * 360}deg 360deg),
+              ${colors.blueAccent[400]}`,
+                  borderRadius: "50%",
+                  width: "125px",
+                  height: "125px",
+                }}
+              />
+              <Typography
+                variant="h5"
+                color={colors.blueAccent[500]}
+                sx={{ mt: "15px" }}
+              >
+                12/30 days
+              </Typography>
+              <Typography variant="h6" color={colors.grey[300]}>
+                Time Remaining Circular Progress Meter
+              </Typography>
+            </Box>
+          </Box>
+        </Box>
+
+        <Box
+          gridColumn="span 4"
+          gridRow="span 2"
+          backgroundColor={colors.primary[400]}
+          overflow="auto"
+        >
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            borderBottom={`4px solid ${colors.primary[500]}`}
+            colors={colors.grey[100]}
+            p="15px"
+          >
+            <Typography color={colors.grey[100]} variant="h5" fontWeight="600">
+              Quick Actions
+            </Typography>
+          </Box>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            // borderBottom={`4px solid ${colors.primary[500]}`}
+            p="15px"
+          >
+            <Box>
+              <Typography
+                color={colors.blueAccent[500]}
+                variant="h5"
+                fontWeight="600"
+              >
+                <Box
                   sx={{
-                    backgroundColor: colors.primary[400],
-                    borderRadius: ".5em",
-                    boxShadow: "none",
+                    cursor: "pointer",
+                    "&:hover": {
+                      textDecoration: "underline",
+                      opacity: 0.5,
+                    },
                   }}
                 >
-                  <CardContent>
-                    <Typography
-                      variant="h5"
-                      gutterBottom
-                      sx={{
-                        padding: isNonMobile ? "1em" : "1em 0",
-                        fontWeight: "600",
-                        borderBottom: `1px solid ${colors.grey[600]}`,
-                      }}
-                    >
-                      Bots Performance Overview
-                    </Typography>
-                    {/* Check if performanceData exists before rendering */}
-                    {selectedBotData?.performanceData ? (
-                      <ResponsiveContainer width="100%" height={300}>
-                        <LineChart data={selectedBotData.performanceData}>
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis dataKey="name" />
-                          <YAxis />
-                          <Tooltip
-                            contentStyle={{
-                              backgroundColor: colors.blueAccent[700],
-                              border: `1px solid ${colors.grey[700]}`,
-                              borderRadius: ".5em",
-                              fontSize: "12px",
-                              color: colors.grey[100],
-                            }}
-                            itemStyle={{ color: colors.textPrimary }}
-                          />
-                          <Legend />
-                          <Line
-                            type="monotone"
-                            dataKey="responses"
-                            stroke="red"
-                            activeDot={{ r: 8 }}
-                          />
-                          <Line
-                            type="monotone"
-                            dataKey="successRate"
-                            stroke="red"
-                          />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    ) : (
-                      <Typography>
-                        No performance data available for this bot.
-                      </Typography>
-                    )}
-                  </CardContent>
-                </Card>
-              </Grid>
+                  Add Bot
+                </Box>
+              </Typography>
+            </Box>
 
-              {/* Recent Activities */}
-              <Grid item xs={12} md={4}>
-                <RecentActivities
-                  activities={selectedBotData?.recentActivities || []}
-                />
-              </Grid>
-            </Grid>
-          </>
-        ) : (
-          <CustomizeGraph
-            onBack={toggleCustomizeView}
-            botData={selectedBotData}
-          />
-        )}
+            <Box
+              sx={{
+                cursor: "pointer",
+                "&:hover": {
+                  textDecoration: "underline",
+                  opacity: 0.5,
+                },
+              }}
+            >
+              View Reports
+            </Box>
+            <Box
+              sx={{
+                cursor: "pointer",
+                "&:hover": {
+                  textDecoration: "underline",
+                  opacity: 0.5,
+                },
+              }}
+            >
+              Contact Support
+            </Box>
+          </Box>
+        </Box>
       </Box>
     </Box>
   );

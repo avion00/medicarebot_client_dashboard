@@ -34,6 +34,7 @@ import Reports from "./scenes/reports/index";
 import AddBot from "./scenes/addBot/index";
 import AddCRM from "./scenes/add_CRM/index";
 import ViewCRM from "./scenes/view_CRM/index";
+import AllBots from "./scenes/allBots/index";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -115,6 +116,7 @@ function App() {
                 <Route path="/billing" element={<Billing />} />
                 <Route path="/reports" element={<Reports />} />
                 <Route path="/addBot" element={<AddBot />} />
+                <Route path="/allBots" element={<AllBots/>}/>
                 <Route path="/add_crm" element={<AddCRM />} />
                 <Route path="/view_crm" element={<ViewCRM />} />
               </Routes>
