@@ -1,4 +1,4 @@
-import React,  { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Box,
   Button,
@@ -8,6 +8,7 @@ import {
   Alert,
   IconButton,
   Typography,
+  InputBase,
 } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -19,13 +20,14 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import AddIcon from "@mui/icons-material/Add";
 import UploadIcon from "@mui/icons-material/Upload";
 import KeyboardTabIcon from "@mui/icons-material/KeyboardTab";
-
-
-
-
+import SyncIcon from "@mui/icons-material/Sync";
+import BlockIcon from "@mui/icons-material/Block";
+import SearchIcon from "@mui/icons-material/Search";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import SendIcon from '@mui/icons-material/Send';
+import initialData from './data.json'; 
 
 const steps = [
   { id: 1, label: "Bot Details", content: "Please fill out the form" },
@@ -39,21 +41,12 @@ const steps = [
   { id: 5, label: "Advanced Settings", content: "Please fill dfdfdf the form" },
 
   { id: 6, label: "Test Your Bot", content: "Provide additional details" },
-  { id: 7, label: "Step 7", content: "Upload images", inputType: "image" },
-  { id: 8, label: "Step 8", content: "Upload sound", inputType: "audio" },
 ];
-
-
-
-
-
-
 
 const AddBot = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [selectedImage, setSelectedImage] = useState("");
 
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate();
@@ -82,61 +75,54 @@ const AddBot = () => {
     handleChange(event);
   };
 
-   const handleExpectedOutcomeChange = (event, handleChange) => {
-     handleChange(event);
-   };
+  const handleExpectedOutcomeChange = (event, handleChange) => {
+    handleChange(event);
+  };
 
-   const handleExpectedAchieveChange = (event, handleChange) => {
-     handleChange(event);
-   };
+  const handleExpectedAchieveChange = (event, handleChange) => {
+    handleChange(event);
+  };
 
-
-
- 
   
 
-  const handleBotImageUpload = (event) => {
-    const file = event.target.files[0];
-    setSelectedImage(file ? file.name : "");
-  };
   const handleApiKeyChange = (event, handleChange) => {
     handleChange(event);
   };
+
+  const handleCallbackURLChange = (event, handleChange) => {
+    handleChange(event);
+  };
+
+  const handleStartURLChange = (event, handleChange) => {
+    handleChange(event);
+  };
+
+  const handleDepthChange = (event, handleChange) => {
+    handleChange(event);
+  };
+
+  const handleFocusKeywordsChange = (event, handleChange) => {
+    handleChange(event);
+  };
+
   const handleChannelChange = (event, handleChange) => {
     handleChange(event);
   };
 
-  const handleStatusChange = (event, handleChange) => {
-    handleChange(event);
-  };
 
-  const handleUsageFrequencyChange = (event, handleChange) => {
-    handleChange(event);
-  };
 
-  const handleResponseAccuracyChange = (event, handleChange) => {
-    handleChange(event);
-  };
 
   const handleLanguageSupportChange = (event, handleChange) => {
     handleChange(event);
   };
 
-  const handlePerformanceScoreChange = (event, handleChange) => {
-    handleChange(event);
-  };
 
   const handleResponseTimeChange = (event, handleChange) => {
     handleChange(event);
   };
 
-  const handleAverageLengthChange = (event, handleChange) => {
-    handleChange(event);
-  };
 
-  const handleTotalInteractionsChange = (event, handleChange) => {
-    handleChange(event);
-  };
+
 
   const initialValues = {
     botName: "",
@@ -160,37 +146,9 @@ const AddBot = () => {
     channel: yup.string().required("Channel is required"),
   });
 
+  const [currentStep, setCurrentStep] = useState(1);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
- const [currentStep, setCurrentStep] = useState(1);
-
-  // Step 1 Inputs (Multiple fields)
-  const [formDataStep1, setFormDataStep1] = useState({
-    textInput: "",
-    textArea: "",
-    numberInput: "",
-    imageInput: null,
-  });
-
-  // Step 2 Inputs (Multiple fields)
-  const [formDataStep2, setFormDataStep2] = useState({
-    additionalText: "",
-    additionalNumber: "",
-    additionalCheckbox: false,
-  });
 
   const handleNext = () => {
     if (currentStep < steps.length) setCurrentStep(currentStep + 1);
@@ -200,188 +158,190 @@ const AddBot = () => {
     if (currentStep > 1) setCurrentStep(currentStep - 1);
   };
 
-  const handleSubmit = () => {
-    // Handle form submission logic
-    alert("Form Submitted!");
-    console.log({ formDataStep1, formDataStep2 });
+
+
+  const [imageOne, setImageOne] = useState(null);
+  const [isDraggingOne, setIsDraggingOne] = useState(false);
+
+  const [imageTwo, setImageTwo] = useState(null);
+  const [isDraggingTwo, setIsDraggingTwo] = useState(false);
+
+  const [imageThree, setImageThree] = useState(null);
+  const [isDraggingThree, setIsDraggingThree] = useState(false);
+
+  const [attachDocuments, setAttachDocuments] = useState("");
+  const [uploadKnowledgeBase, setUploadKnowledgeBase] = useState("");
+  const [uploadOptionalDocument, setUploadOptionalDocument] = useState("");
+
+  // document wala ho yo, bujhis,  knowledge base, wala
+  const handleattachDocumentsChange = (event) => {
+    const file = event.target.files[0];
+    setAttachDocuments(file ? file.name : "");
   };
 
-  // Handling changes in Step 1
-  const handleChangeStep1 = (e) => {
-    const { name, value, type, files, checked } = e.target;
-    setFormDataStep1((prevState) => ({
-      ...prevState,
-      [name]: type === "file" ? files : type === "checkbox" ? checked : value,
-    }));
+  const handleuploadKnowledgeBaseChange = (event) => {
+    const file = event.target.files[0];
+    setUploadKnowledgeBase(file ? file.name : "");
   };
 
-  // Handling changes in Step 2
-  const handleChangeStep2 = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormDataStep2((prevState) => ({
-      ...prevState,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+  const handleuploadOptionalDocumentChange = (event) => {
+    const file = event.target.files[0];
+    setUploadOptionalDocument(file ? file.name : "");
   };
 
+  // three avatar wala image k handle gar
+  const handleFileOneChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => setImageOne(reader.result); // Get image as a base64 string
+      reader.readAsDataURL(file);
+    }
+  };
 
+  const handleDragOneOver = (event) => {
+    event.preventDefault();
+    setIsDraggingOne(true);
+  };
 
+  const handleDragOneLeave = () => {
+    setIsDraggingOne(false);
+  };
 
+  const handleDropOne = (event) => {
+    event.preventDefault();
+    setIsDraggingOne(false);
+    const file = event.dataTransfer.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => setImageOne(reader.result);
+      reader.readAsDataURL(file);
+    }
+  };
 
+  const handleClickOne = () => {
+    document.getElementById("imageInputOne").click();
+  };
 
-const [imageOne, setImageOne] = useState(null);
-const [isDraggingOne, setIsDraggingOne] = useState(false);
+  const handleFileTwoChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => setImageTwo(reader.result); // Get image as a base64 string
+      reader.readAsDataURL(file);
+    }
+  };
 
-const [imageTwo, setImageTwo] = useState(null);
-const [isDraggingTwo, setIsDraggingTwo] = useState(false);
+  const handleDragTwoOver = (event) => {
+    event.preventDefault();
+    setIsDraggingTwo(true);
+  };
 
-const [imageThree, setImageThree] = useState(null);
-const [isDraggingThree, setIsDraggingThree] = useState(false);
+  const handleDragTwoLeave = () => {
+    setIsDraggingTwo(false);
+  };
 
-const [attachDocuments, setAttachDocuments] = useState("");
-const [uploadKnowledgeBase, setuploadKnowledgeBase] = useState("");
-  
-// document wala ho yo, bujhis,  knowledge base, wala
-const handleattachDocumentsChange = (event) => {
-  const file = event.target.files[0];
-  setAttachDocuments(file ? file.name : "");
-};
+  const handleDropTwo = (event) => {
+    event.preventDefault();
+    setIsDraggingTwo(false);
+    const file = event.dataTransfer.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => setImageTwo(reader.result); // Get image as a base64 string
+      reader.readAsDataURL(file);
+    }
+  };
 
-const handleuploadKnowledgeBaseChange = (event) => {
-  const file = event.target.files[0];
-  setuploadKnowledgeBase(file ? file.name : "");
-};
+  const handleClickTwo = () => {
+    document.getElementById("imageInputTwo").click();
+  };
 
+  const handleFileThreeChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => setImageThree(reader.result); // Get image as a base64 string
+      reader.readAsDataURL(file);
+    }
+  };
 
+  const handleDragThreeOver = (event) => {
+    event.preventDefault();
+    setIsDraggingThree(true);
+  };
 
+  const handleDragThreeLeave = () => {
+    setIsDraggingThree(false);
+  };
 
-// three avatar wala image k handle gar
-const handleFileOneChange = (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = () => setImageOne(reader.result); // Get image as a base64 string
-    reader.readAsDataURL(file);
-  }
-};
+  const handleDropThree = (event) => {
+    event.preventDefault();
+    setIsDraggingThree(false);
+    const file = event.dataTransfer.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => setImageThree(reader.result); // Get image as a base64 string
+      reader.readAsDataURL(file);
+    }
+  };
 
-const handleDragOneOver = (event) => {
-  event.preventDefault();
-  setIsDraggingOne(true);
-};
+  const handleClickThree = () => {
+    document.getElementById("imageInputThree").click();
+  };
 
-const handleDragOneLeave = () => {
-  setIsDraggingOne(false);
-};
+  // Load the initial conversation from the data.json file
+  useEffect(() => {
+    setConversation(initialData);
+  }, []);
 
-const handleDropOne = (event) => {
-  event.preventDefault();
-  setIsDraggingOne(false);
-  const file = event.dataTransfer.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = () => setImageOne(reader.result);
-    reader.readAsDataURL(file);
-  }
-};
+  // State for storing the conversation
+  const [conversation, setConversation] = useState([
+    { sender: "bot", message: "Hello! How can I help you today?" },
+  ]);
 
-const handleClickOne = () => {
-  document.getElementById("imageInputOne").click();
-};
+  // State for storing the new message input by the user
+  const [newMessage, setNewMessage] = useState("");
 
+  // Ref for the conversation box to handle auto-scrolling
+  const conversationEndRef = useRef(null);
 
+  // Handle the message input change
+  const handleInputChange = (e) => {
+    setNewMessage(e.target.value);
+  };
 
+  // Handle sending the message
+  const handleSendMessage = () => {
+    if (newMessage.trim()) {
+      // Add the user's message to the conversation
+      const updatedConversation = [
+        ...conversation,
+        { sender: "user", message: newMessage },
+      ];
 
+      // Simulate bot response (you can replace this with more dynamic responses)
+      const botResponse = "This is a bot's reply.";
+      updatedConversation.push({ sender: "bot", message: botResponse });
 
+      // Update the conversation state
+      setConversation(updatedConversation);
 
+      // Clear the input field
+      setNewMessage("");
+    }
+  };
 
+  // Handle 'Enter' key press to send message
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter" && newMessage.trim()) {
+      handleSendMessage();
+    }
+  };
 
-
-
-const handleFileTwoChange = (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = () => setImageTwo(reader.result); // Get image as a base64 string
-    reader.readAsDataURL(file);
-  }
-};
-
-const handleDragTwoOver = (event) => {
-  event.preventDefault();
-  setIsDraggingTwo(true);
-};
-
-const handleDragTwoLeave = () => {
-  setIsDraggingTwo(false);
-};
-
-const handleDropTwo = (event) => {
-  event.preventDefault();
-  setIsDraggingTwo(false);
-  const file = event.dataTransfer.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = () => setImageTwo(reader.result); // Get image as a base64 string
-    reader.readAsDataURL(file);
-  }
-};
-
-const handleClickTwo = () => {
-  document.getElementById("imageInputTwo").click();
-};
-
-
-
-
-
-
-
-
-
-const handleFileThreeChange = (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = () => setImageThree(reader.result); // Get image as a base64 string
-    reader.readAsDataURL(file);
-  }
-};
-
-const handleDragThreeOver = (event) => {
-  event.preventDefault();
-  setIsDraggingThree(true);
-};
-
-const handleDragThreeLeave = () => {
-  setIsDraggingThree(false);
-};
-
-const handleDropThree = (event) => {
-  event.preventDefault();
-  setIsDraggingThree(false);
-  const file = event.dataTransfer.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = () => setImageThree(reader.result); // Get image as a base64 string
-    reader.readAsDataURL(file);
-  }
-};
-
-const handleClickThree = () => {
-  document.getElementById("imageInputThree").click();
-};
-
-
-
-
-
-
-
-
-
-
-
+  // Auto-scroll to the bottom of the conversation whenever it updates
+  useEffect(() => {
+    conversationEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [conversation]);
 
   return (
     <Box m="20px">
@@ -405,7 +365,7 @@ const handleClickThree = () => {
                 style={{
                   backgroundColor:
                     currentStep === step.id
-                      ? colors.blueAccent[300]
+                      ? colors.blueAccent[100]
                       : colors.primary[500],
                   border: `2px solid ${colors.grey[400]}`,
                   width: "50px",
@@ -426,14 +386,14 @@ const handleClickThree = () => {
                   sx={{
                     position: "absolute",
                     left: "0em",
-                    width: "50px",
-                    height: "2px",
+                    width: "40px",
+                    height: "4px",
                     backgroundColor:
                       currentStep >= step.id + 1
                         ? colors.blueAccent[400]
-                        : colors.grey[200], // Fixed this line
+                        : "#dae6fe",
                     marginTop: "-1.9em",
-                    marginLeft: "3.8em",
+                    marginLeft: "4.2em",
                   }}
                 />
               )}
@@ -1151,6 +1111,113 @@ const handleClickThree = () => {
                     }}
                   />
 
+                  <Typography
+                    gridColumn="span 4"
+                    varient="h6"
+                    mt="-1.5em"
+                    ml="5px"
+                    color={colors.grey[300]}
+                  >
+                    Allowed format: PDF, Docx, txt, csv
+                  </Typography>
+
+                  <TextField
+                    gridColumn="span 2"
+                    label="Upload"
+                    variant="filled"
+                    type="text"
+                    name="uploadOptionalDocument"
+                    value={uploadOptionalDocument}
+                    InputProps={{
+                      readOnly: true,
+                      endAdornment: (
+                        <Button
+                          variant="contained"
+                          component="label"
+                          sx={{
+                            backgroundColor: "transparent",
+                            color: "white",
+                            textTransform: "none",
+                            boxShadow: "none",
+                            width: "100%",
+                            height: "100%",
+                            position: "absolute",
+                            top: "0",
+                            left: "0",
+                            "&:hover": {
+                              backgroundColor: "transparent",
+                            },
+                          }}
+                        >
+                          <input
+                            type="file"
+                            hidden
+                            name="botImage"
+                            onChange={(e) => {
+                              handleuploadOptionalDocumentChange(e);
+                              handleChange(e);
+                            }}
+                          />
+                        </Button>
+                      ),
+                    }}
+                    onBlur={handleBlur}
+                    error={
+                      !!touched.uploadOptionalDocument &&
+                      !!errors.uploadOptionalDocument
+                    }
+                    helperText={
+                      touched.uploadOptionalDocument &&
+                      errors.uploadOptionalDocument
+                    }
+                    sx={{
+                      position: "relative",
+                      width: "100%",
+                      flexGrow: "1",
+                      gridColumn: "span 2",
+                      "& .MuiFormLabel-root.Mui-focused": {
+                        color: colors.blueAccent[500],
+                        fontWeight: "bold",
+                      },
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: colors.primary[400],
+                        color: colors.grey[100],
+                      },
+                    }}
+                  />
+
+                  <Typography
+                    gridColumn="span 4"
+                    varient="h6"
+                    mt="-1.5em"
+                    ml="5px"
+                    color={colors.grey[300]}
+                  >
+                    Optional: Upload files to seed the bot’s response and
+                    knowledge base
+                  </Typography>
+                </Box>
+              )}
+
+              {currentStep === 5 && (
+                <Box
+                  display="grid"
+                  rowGap="8px"
+                  columnGap="30px"
+                  gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                  sx={{
+                    "& > div": {
+                      gridColumn: isNonMobile ? undefined : "span 4",
+                    },
+                  }}
+                >
+                  <Typography
+                    fontWeight="bold"
+                    gridColumn="span 4"
+                    varient="h6"
+                  >
+                    API Integration (Optional)
+                  </Typography>
                   <TextField
                     fullWidth
                     variant="filled"
@@ -1171,11 +1238,59 @@ const handleClickThree = () => {
                     }}
                   />
 
+                  <TextField
+                    fullWidth
+                    variant="filled"
+                    type="text"
+                    label="Callback URL"
+                    onBlur={handleBlur}
+                    onChange={(e) => handleCallbackURLChange(e, handleChange)}
+                    value={values.callbackURL}
+                    name="callbackURL"
+                    error={!!touched.callbackURL && !!errors.callbackURL}
+                    helperText={touched.callbackURL && errors.callbackURL}
+                    sx={{
+                      gridColumn: "span 2",
+                      "& .MuiFormLabel-root.Mui-focused": {
+                        color: colors.blueAccent[500],
+                        fontWeight: "bold",
+                      },
+                    }}
+                  />
+
+                  <Typography
+                    fontWeight="bold"
+                    gridColumn="span 4"
+                    varient="h6"
+                    mt="1.25em"
+                  >
+                    API Integration (Optional)
+                  </Typography>
+                  <TextField
+                    fullWidth
+                    variant="filled"
+                    type="text"
+                    label="Start URL"
+                    onBlur={handleBlur}
+                    onChange={(e) => handleStartURLChange(e, handleChange)}
+                    value={values.startURL}
+                    name="startURL"
+                    error={!!touched.startURL && !!errors.startURL}
+                    helperText={touched.startURL && errors.startURL}
+                    sx={{
+                      gridColumn: "span 2",
+                      "& .MuiFormLabel-root.Mui-focused": {
+                        color: colors.blueAccent[500],
+                        fontWeight: "bold",
+                      },
+                    }}
+                  />
+
                   <FormControl
                     fullWidth
                     variant="filled"
                     sx={{
-                      gridColumn: "span 1",
+                      gridColumn: "span 2",
                       "& .MuiFormLabel-root.Mui-focused": {
                         color: colors.blueAccent[500],
                         fontWeight: "bold",
@@ -1183,88 +1298,42 @@ const handleClickThree = () => {
                     }}
                   >
                     <InputLabel id="status" sx={{ color: colors.primary[100] }}>
-                      Status
+                      Depth
                     </InputLabel>
                     <Select
-                      labelId="status"
-                      id="status"
-                      value={values.status}
-                      name="status"
-                      onChange={(e) => handleStatusChange(e, handleChange)}
+                      labelId="depth"
+                      id="depth"
+                      value={values.depth}
+                      name="depth"
+                      onChange={(e) => handleDepthChange(e, handleChange)}
                       onBlur={handleBlur}
-                      error={!!touched.status && !!errors.status}
+                      error={!!touched.depth && !!errors.depth}
                     >
-                      <MenuItem value="Active">Active</MenuItem>
-                      <MenuItem value="Inactive">Inactive</MenuItem>
+                      <MenuItem value="Low">Low</MenuItem>
+                      <MenuItem value="Medium">Medium</MenuItem>
+                      <MenuItem value="High">High</MenuItem>
                     </Select>
-                    {touched.status && errors.status && (
+                    {touched.depth && errors.depth && (
                       <Box color="red" mt="4px" fontSize="11px" ml="1.5em">
-                        {errors.status}
+                        {errors.depth}
                       </Box>
                     )}
                   </FormControl>
-                  <FormControl
-                    fullWidth
-                    variant="filled"
-                    sx={{
-                      gridColumn: "span 1",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  >
-                    <InputLabel
-                      id="usage-frequency"
-                      sx={{ color: colors.primary[100] }}
-                    >
-                      Usage Frequency
-                    </InputLabel>
-                    <Select
-                      labelId="usage-frequency"
-                      id="usage"
-                      onBlur={handleBlur}
-                      onChange={(e) =>
-                        handleUsageFrequencyChange(e, handleChange)
-                      }
-                      value={values.usageFrequency}
-                      name="usageFrequency"
-                      error={
-                        !!touched.usageFrequency && !!errors.usageFrequency
-                      }
-                      helperText={
-                        touched.usageFrequency && errors.usageFrequency
-                      }
-                    >
-                      <MenuItem value="high">High</MenuItem>
-                      <MenuItem value="medium">Medium</MenuItem>
-                      <MenuItem value="low">Low</MenuItem>
-                    </Select>
-                    {touched.status && errors.status && (
-                      <Box color="red" mt="4px" fontSize="11px" ml="1.5em">
-                        {errors.status}
-                      </Box>
-                    )}
-                  </FormControl>
+
                   <TextField
                     fullWidth
                     variant="filled"
-                    type="number"
-                    label="Response Accuracy"
+                    type="text"
+                    label="Keywords to focus on (Optional)"
                     onBlur={handleBlur}
-                    onChange={(e) =>
-                      handleResponseAccuracyChange(e, handleChange)
-                    }
-                    value={values.responseAccuracy}
-                    name="responseAccuracy"
-                    error={
-                      !!touched.responseAccuracy && !!errors.responseAccuracy
-                    }
-                    helperText={
-                      touched.responseAccuracy && errors.responseAccuracy
-                    }
+                    onChange={(e) => handleFocusKeywordsChange(e, handleChange)}
+                    value={values.focusKeywords}
+                    name="focusKeywords"
+                    error={!!touched.focusKeywords && !!errors.focusKeywords}
+                    helperText={touched.focusKeywords && errors.focusKeywords}
                     sx={{
-                      gridColumn: "span 1",
+                      gridColumn: "span 4",
+                      mt: "30px",
                       "& .MuiFormLabel-root.Mui-focused": {
                         color: colors.blueAccent[500],
                         fontWeight: "bold",
@@ -1272,98 +1341,18 @@ const handleClickThree = () => {
                     }}
                   />
 
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="number"
-                    label="Performance Score"
-                    onBlur={handleBlur}
-                    onChange={(e) =>
-                      handlePerformanceScoreChange(e, handleChange)
-                    }
-                    value={values.performanceScore}
-                    name="performanceScore"
-                    error={
-                      !!touched.performanceScore && !!errors.performanceScore
-                    }
-                    helperText={
-                      touched.performanceScore && errors.performanceScore
-                    }
-                    sx={{
-                      gridColumn: "span 1",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="number"
-                    label="Response Time"
-                    onBlur={handleBlur}
-                    onChange={(e) => handleResponseTimeChange(e, handleChange)}
-                    value={values.responseTime}
-                    name="responseTime"
-                    error={!!touched.responseTime && !!errors.responseTime}
-                    helperText={touched.responseTime && errors.responseTime}
-                    sx={{
-                      gridColumn: "span 1",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="number"
-                    label="Average Length"
-                    onBlur={handleBlur}
-                    onChange={(e) => handleAverageLengthChange(e, handleChange)}
-                    value={values.averageLength}
-                    name="averageLength"
-                    error={!!touched.averageLength && !!errors.averageLength}
-                    helperText={touched.averageLength && errors.averageLength}
-                    sx={{
-                      gridColumn: "span 1",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="number"
-                    label="Total Interactions"
-                    onBlur={handleBlur}
-                    onChange={(e) =>
-                      handleTotalInteractionsChange(e, handleChange)
-                    }
-                    value={values.totalInteractions}
-                    name="totalInteractions"
-                    error={
-                      !!touched.totalInteractions && !!errors.totalInteractions
-                    }
-                    helperText={
-                      touched.totalInteractions && errors.totalInteractions
-                    }
-                    sx={{
-                      gridColumn: "span 1",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
+                  <Typography
+                    gridColumn="span 4"
+                    varient="h6"
+                    color={colors.grey[400]}
+                  >
+                    Optional: Specify a URL and crawl depth to populate the
+                    dynamic content for the bot.
+                  </Typography>
                 </Box>
               )}
 
-              {currentStep === 5 && (
+              {currentStep === 6 && (
                 <Box
                   display="grid"
                   gap="30px"
@@ -1374,290 +1363,223 @@ const handleClickThree = () => {
                     },
                   }}
                 >
-                  {/* <TextField
-                  label="Bot Image"
-                  variant="filled"
-                  type="text"
-                  name="botImage"
-                  value={selectedImage}
-                  InputProps={{
-                    readOnly: true,
-                    endAdornment: (
-                      <Button
-                        variant="contained"
-                        component="label"
-                        sx={{
-                          backgroundColor: "transparent",
-                          color: "white",
-                          textTransform: "none",
-                          boxShadow: "none",
-                          width: "100%",
-                          height: "100%",
-                          position: "absolute",
-                          top: "0",
-                          left: "0",
-                          "&:hover": {
-                            backgroundColor: "transparent",
-                          },
-                        }}
-                      >
-                        <input
-                          type="file"
-                          hidden
-                          name="botImage"
-                          onChange={(e) => {
-                            handleBotImageUpload(e);
-                            handleChange(e);
-                          }}
-                        />
-                      </Button>
-                    ),
-                  }}
-                  onBlur={handleBlur}
-                  error={!!touched.botImage && !!errors.botImage}
-                  helperText={touched.botImage && errors.botImage}
-                  sx={{
-                    position: "relative",
-                    width: "100%",
-                    flexGrow: "1",
-                    gridColumn: "span 2",
-                    "& .MuiFormLabel-root.Mui-focused": {
-                      color: colors.blueAccent[500],
-                      fontWeight: "bold",
-                    },
-                    "& .MuiFilledInput-root": {
-                      backgroundColor: colors.primary[400],
-                      color: colors.grey[100],
-                    },
-                  }}
-                /> */}
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="API Key"
-                    onBlur={handleBlur}
-                    onChange={(e) => handleApiKeyChange(e, handleChange)}
-                    value={values.apiKey}
-                    name="apiKey"
-                    error={!!touched.apiKey && !!errors.apiKey}
-                    helperText={touched.apiKey && errors.apiKey}
-                    sx={{
-                      gridColumn: "span 2",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-
-                  <FormControl
-                    fullWidth
-                    variant="filled"
-                    sx={{
-                      gridColumn: "span 1",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
+                  <Typography
+                    gridColumn="span 4"
+                    varient="h6"
+                    color={colors.grey[200]}
                   >
-                    <InputLabel id="status" sx={{ color: colors.primary[100] }}>
-                      Status
-                    </InputLabel>
-                    <Select
-                      labelId="status"
-                      id="status"
-                      value={values.status}
-                      name="status"
-                      onChange={(e) => handleStatusChange(e, handleChange)}
-                      onBlur={handleBlur}
-                      error={!!touched.status && !!errors.status}
-                    >
-                      <MenuItem value="Active">Active</MenuItem>
-                      <MenuItem value="Inactive">Inactive</MenuItem>
-                    </Select>
-                    {touched.status && errors.status && (
-                      <Box color="red" mt="4px" fontSize="11px" ml="1.5em">
-                        {errors.status}
-                      </Box>
-                    )}
-                  </FormControl>
-                  <FormControl
-                    fullWidth
-                    variant="filled"
-                    sx={{
-                      gridColumn: "span 1",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
+                    Test with sample question to stimulate the user interaction.{" "}
+                  </Typography>
+
+                  <Box
+                    gridColumn="span 2"
+                    position="relative"
+                    backgroundColor={colors.primary[400]}
                   >
-                    <InputLabel
-                      id="usage-frequency"
-                      sx={{ color: colors.primary[100] }}
-                    >
-                      Usage Frequency
-                    </InputLabel>
-                    <Select
-                      labelId="usage-frequency"
-                      id="usage"
-                      onBlur={handleBlur}
-                      onChange={(e) =>
-                        handleUsageFrequencyChange(e, handleChange)
-                      }
-                      value={values.usageFrequency}
-                      name="usageFrequency"
-                      error={
-                        !!touched.usageFrequency && !!errors.usageFrequency
-                      }
-                      helperText={
-                        touched.usageFrequency && errors.usageFrequency
-                      }
-                    >
-                      <MenuItem value="high">High</MenuItem>
-                      <MenuItem value="medium">Medium</MenuItem>
-                      <MenuItem value="low">Low</MenuItem>
-                    </Select>
-                    {touched.status && errors.status && (
-                      <Box color="red" mt="4px" fontSize="11px" ml="1.5em">
-                        {errors.status}
-                      </Box>
-                    )}
-                  </FormControl>
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="number"
-                    label="Response Accuracy"
-                    onBlur={handleBlur}
-                    onChange={(e) =>
-                      handleResponseAccuracyChange(e, handleChange)
-                    }
-                    value={values.responseAccuracy}
-                    name="responseAccuracy"
-                    error={
-                      !!touched.responseAccuracy && !!errors.responseAccuracy
-                    }
-                    helperText={
-                      touched.responseAccuracy && errors.responseAccuracy
-                    }
-                    sx={{
-                      gridColumn: "span 1",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="number"
-                    label="Performance Score"
-                    onBlur={handleBlur}
-                    onChange={(e) =>
-                      handlePerformanceScoreChange(e, handleChange)
-                    }
-                    value={values.performanceScore}
-                    name="performanceScore"
-                    error={
-                      !!touched.performanceScore && !!errors.performanceScore
-                    }
-                    helperText={
-                      touched.performanceScore && errors.performanceScore
-                    }
-                    sx={{
-                      gridColumn: "span 1",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="number"
-                    label="Response Time"
-                    onBlur={handleBlur}
-                    onChange={(e) => handleResponseTimeChange(e, handleChange)}
-                    value={values.responseTime}
-                    name="responseTime"
-                    error={!!touched.responseTime && !!errors.responseTime}
-                    helperText={touched.responseTime && errors.responseTime}
-                    sx={{
-                      gridColumn: "span 1",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="number"
-                    label="Average Length"
-                    onBlur={handleBlur}
-                    onChange={(e) => handleAverageLengthChange(e, handleChange)}
-                    value={values.averageLength}
-                    name="averageLength"
-                    error={!!touched.averageLength && !!errors.averageLength}
-                    helperText={touched.averageLength && errors.averageLength}
-                    sx={{
-                      gridColumn: "span 1",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="number"
-                    label="Total Interactions"
-                    onBlur={handleBlur}
-                    onChange={(e) =>
-                      handleTotalInteractionsChange(e, handleChange)
-                    }
-                    value={values.totalInteractions}
-                    name="totalInteractions"
-                    error={
-                      !!touched.totalInteractions && !!errors.totalInteractions
-                    }
-                    helperText={
-                      touched.totalInteractions && errors.totalInteractions
-                    }
-                    sx={{
-                      gridColumn: "span 1",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-                </Box>
-              )}
-
-              {currentStep === 8 && (
-                <Box>
-                  <Box display="flex" justifyContent="start" mt="2em">
-                    <Button
-                      type="submit"
-                      color="secondary"
-                      variant="outlined"
-                      style={{
-                        borderRadius: "20px",
-                        marginRight: "8px",
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        background: "linear-gradient(45deg, #062994, #0E72E1)",
+                        padding: "1em",
                       }}
                     >
-                      <AddIcon sx={{ mr: ".5em" }} />
-                      Create New Bot
-                    </Button>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "flex-start",
+                          gap: "1em",
+                        }}
+                      >
+                        {/* Box with the Image */}
+                        <Box sx={{ display: "flex", alignItems: "center" }}>
+                          <img
+                            src={`../../assets/user.png`}
+                            alt="Logo"
+                            style={{
+                              width: "50px",
+                              height: "50px",
+                              borderRadius: "50%", // Optional, for a circular image
+                              objectFit: "cover", // Ensures the image doesn't get distorted
+                            }}
+                          />
+                        </Box>
+
+                        {/* Typography Section */}
+                        <Box
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Typography
+                            variant="h5"
+                            lineHeight="1.2"
+                            fontWeight="bold"
+                            color="#ccc"
+                          >
+                            Web Chatbot
+                          </Typography>
+                          <Typography
+                            variant="h6"
+                            lineHeight="1.2"
+                            color="#79898D"
+                          >
+                            Test Bot
+                          </Typography>
+                        </Box>
+                      </Box>
+
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "1em",
+                          justifyContent: "flex-end",
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          <SearchIcon />
+                        </Box>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          <MoreVertIcon />
+                        </Box>
+                      </Box>
+                    </Box>
+
+                    <Box
+                      sx={{
+                        height: "400px",
+                        overflow: "auto",
+                        marginBottom: "5em",
+                        padding: "1em",
+                        borderBottom: `1px solid ${colors.grey[700]}`,
+                      }}
+                    >
+                      <Typography
+                        sx={{
+                          textAlign: "center",
+                        }}
+                        variant="h6"
+                        color={colors.grey[500]}
+                      >
+                        12 Oct, 2024
+                      </Typography>
+                      {conversation.map((msg, index) => (
+                        <Box
+                          key={index}
+                          sx={{
+                            display: "flex",
+                            justifyContent:
+                              msg.sender === "user" ? "flex-end" : "flex-start",
+                            marginBottom: "1em",
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              maxWidth: "52%",
+
+                              backgroundColor:
+                                msg.sender === "user" ? "#c2d5fe" : "#cbe1e5",
+                              borderRadius:
+                                msg.sender === "user"
+                                  ? " 8px 8px 0 8px"
+                                  : "8px 8px 8px 0",
+                              padding: ".5em 1em",
+                              color: "#000",
+                              display: "flex",
+                              flexDirection: "column",
+                            }}
+                          >
+                            <Typography
+                              sx={{
+                                fontSize: "13px",
+                              }}
+                              variant="body1"
+                            >
+                              {msg.message}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      ))}
+
+                      {/* This element is used for auto-scrolling to the bottom */}
+                      <div ref={conversationEndRef} />
+                    </Box>
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        bottom: "1em",
+                        width: "100%",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: ".5em",
+                        padding: "0 1.5em",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          width: " 100%",
+                        }}
+                      >
+                        <Box
+                          display="flex"
+                          flex="1"
+                          borderRadius="25px"
+                          flexGrow="grow"
+                          sx={{
+                            border: `2px solid white`,
+                            backgroundColor: "#f4f4f5",
+                            "&:focus-within": {
+                              backgroundColor: "white", 
+                            },
+                          }}
+                        >
+                          <InputBase
+                            sx={{
+                              ml: 2,
+                              mr: 2,
+
+                              flexGrow: "grow",
+                              p: ".5em",
+                              color: "#000",
+                              width: "100%",
+                            }}
+                            placeholder="Start Writing Here"
+                            value={newMessage}
+                            onChange={handleInputChange}
+                            onKeyPress={handleKeyPress}
+                          />
+                        </Box>
+                      </Box>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          backgroundColor: "#f4f4f5",
+                          padding: ".5em",
+                          borderRadius: "50%",
+                          cursor: "pointer"
+                        }}
+                        onClick={handleSendMessage}
+                      >
+                        <SendIcon sx={{ color: "#000", rotate: "-45deg" }} />
+                      </Box>
+                    </Box>
                   </Box>
                 </Box>
               )}
@@ -1711,13 +1633,88 @@ const handleClickThree = () => {
                   </Box>
                 )}
                 {currentStep === steps.length && (
-                  <Button
-                    variant="contained"
-                    color="success"
-                    onClick={handleSubmit}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      flexWrap: "wrap",
+                      gap: "1em",
+                      height: "100%",
+                    }}
                   >
-                    Submit
-                  </Button>
+                    {/* Save & Activate Button */}
+                    <Button
+                      variant="contained"
+                      color="success"
+                      onClick={handleSubmit}
+                      startIcon={<KeyboardTabIcon />}
+                      sx={{
+                        background: "linear-gradient(45deg, #4caf50, #81c784)", // Green gradient
+                        color: "#fff",
+                        fontSize: "14px",
+                        fontWeight: "bold",
+                        padding: "10px 2em",
+                        mb: isNonMobile ? "0em" : "1em",
+                        transition: "all 0.5s ease",
+                        "&:hover": {
+                          background:
+                            "linear-gradient(45deg, #388e3c, #66bb6a)", // Darker hover effect
+                          opacity: 0.9,
+                        },
+                      }}
+                    >
+                      Save & Activate
+                    </Button>
+
+                    {/* Save as Draft Button */}
+                    <Button
+                      variant="contained"
+                      color="warning"
+                      onClick={handleSubmit}
+                      startIcon={<SyncIcon />}
+                      sx={{
+                        background: "linear-gradient(45deg, #ff9800, #ffc107)", // Orange gradient
+                        color: "#fff",
+                        fontSize: "14px",
+                        fontWeight: "bold",
+                        padding: "10px 2em",
+                        mb: isNonMobile ? "0em" : "1em",
+                        transition: "all 0.5s ease",
+                        "&:hover": {
+                          background:
+                            "linear-gradient(45deg, #f57c00, #ffa000)", // Darker hover effect
+                          opacity: 0.9,
+                        },
+                      }}
+                    >
+                      Save as Draft
+                    </Button>
+
+                    {/* Cancel Button */}
+                    <Button
+                      variant="contained"
+                      color="error"
+                      onClick={handleSubmit}
+                      startIcon={<BlockIcon />}
+                      sx={{
+                        background: "linear-gradient(45deg, #f44336, #e57373)", // Red gradient
+                        color: "#fff",
+                        fontSize: "14px",
+                        fontWeight: "bold",
+                        padding: "10px 2em",
+                        mb: isNonMobile ? "0em" : "1em",
+                        transition: "all 0.5s ease",
+                        "&:hover": {
+                          background:
+                            "linear-gradient(45deg, #d32f2f, #ef5350)", // Darker hover effect
+                          opacity: 0.9,
+                        },
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </Box>
                 )}
               </Box>
 
@@ -1739,7 +1736,7 @@ const handleClickThree = () => {
                     fontWeight: "bold",
                   }}
                 >
-                  Congratulations, you have created bot name:{" "}
+                  Congratulations, you have created bot name:
                   <strong>{values.botName}</strong>
                 </Alert>
               </Snackbar>
