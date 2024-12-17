@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
-import { CRMData } from "../../data/viewCRMData"; // Ensure this is the correct path
+import { CRMData } from "../../data/viewCRMData";
 import Header from "../../components/Header";
 import { useTheme } from "@mui/material";
 

@@ -351,7 +351,10 @@ const Sidebar = ({ isSidebar }) => {
             <Typography
               variant="h6"
               color={colors.grey[300]}
-              sx={{ m: "15px 0 5px 20px" }}
+              sx={{
+                margin: isCollapsed ? " 0 1em" : "15px 0 5px 20px",
+                textAlign: isCollapsed ? "center" : "left",
+              }}
             >
               Partners Hub
             </Typography>

@@ -3,6 +3,7 @@ import { tokens } from "../../theme";
 // import { RecentActivityData } from "../../data/mockData";
 import { BotPerformanceData } from "../../data/botPerformData";
 import { RecentActivityData } from "../../data/RecentActivityData";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
@@ -15,11 +16,18 @@ import LayersIcon from "@mui/icons-material/Layers";
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-
+  const isNonMobile = useMediaQuery("(min-width:768px)");
+  const isMobile = useMediaQuery("(min-width:521px)");
+  
   return (
     <Box m="20px">
       {/* HEADER */}
-      <Box display="flex" justifyContent="space-between" alignItems="center">
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        flexWrap="wrap"
+      >
         <Header
           title="DASHBOARD"
           subtitle="Welcome to your Medicare Bot dashboard"
@@ -35,6 +43,7 @@ const Dashboard = () => {
               fontSize: "14px",
               fontWeight: "bold",
               padding: "10px 20px",
+              mb: isNonMobile ? "0em" : "1em",
               transition: "all 0.5s ease",
               "&:hover": {
                 opacity: ".7",
@@ -56,7 +65,7 @@ const Dashboard = () => {
       >
         {/* ROW 1 */}
         <Box
-          gridColumn="span 4"
+          gridColumn={isNonMobile ? "span 4" : isMobile ? "span 6" : "span 12"}
           backgroundColor={colors.primary[400]}
           display="flex"
           alignItems="center"
@@ -76,7 +85,7 @@ const Dashboard = () => {
           />
         </Box>
         <Box
-          gridColumn="span 4"
+          gridColumn={isNonMobile ? "span 4" : isMobile ? "span 6" : "span 12"}
           backgroundColor={colors.primary[400]}
           display="flex"
           alignItems="center"
@@ -96,7 +105,7 @@ const Dashboard = () => {
           />
         </Box>
         <Box
-          gridColumn="span 4"
+          gridColumn={isNonMobile ? "span 4" : isMobile ? "span 12" : "span 12"}
           backgroundColor={colors.primary[400]}
           display="flex"
           alignItems="center"
@@ -119,7 +128,7 @@ const Dashboard = () => {
         {/* ROW 2 */}
 
         <Box
-          gridColumn="span 6"
+          gridColumn={isNonMobile ? "span 6" : "span 12"}
           gridRow="span 2"
           backgroundColor={colors.primary[400]}
           overflow="auto"
@@ -128,7 +137,7 @@ const Dashboard = () => {
             display="flex"
             justifyContent="space-between"
             alignItems="center"
-            borderBottom={`4px solid ${colors.primary[500]}`}
+            borderBottom={`2px solid ${colors.primary[500]}`}
             colors={colors.grey[100]}
             p="15px"
           >
@@ -155,7 +164,7 @@ const Dashboard = () => {
               display="flex"
               justifyContent="space-between"
               alignItems="center"
-              borderBottom={`4px solid ${colors.primary[500]}`}
+              borderBottom={`2px solid ${colors.primary[500]}`}
               p="15px"
             >
               <Box>
@@ -179,7 +188,7 @@ const Dashboard = () => {
         </Box>
 
         <Box
-          gridColumn="span 6"
+          gridColumn={isNonMobile ? "span 6" : "span 12"}
           gridRow="span 2"
           backgroundColor={colors.primary[400]}
           overflow="auto"
@@ -188,7 +197,7 @@ const Dashboard = () => {
             display="flex"
             justifyContent="space-between"
             alignItems="center"
-            borderBottom={`4px solid ${colors.primary[500]}`}
+            borderBottom={`2px solid ${colors.primary[500]}`}
             colors={colors.grey[100]}
             p="15px"
           >
@@ -214,7 +223,7 @@ const Dashboard = () => {
             display="flex"
             justifyContent="space-between"
             alignItems="center"
-            borderBottom={`4px solid ${colors.primary[500]}`}
+            borderBottom={`2px solid ${colors.primary[500]}`}
             p="15px"
           >
             <Box textAlign="left" flex={1}>
@@ -252,7 +261,7 @@ const Dashboard = () => {
               display="flex"
               justifyContent="space-between"
               alignItems="center"
-              borderBottom={`4px solid ${colors.primary[500]}`}
+              borderBottom={`2px solid ${colors.primary[500]}`}
               p="15px"
             >
               <Box textAlign="left" flex={1}>
@@ -277,7 +286,7 @@ const Dashboard = () => {
         {/* ROW 3 */}
 
         <Box
-          gridColumn="span 4"
+          gridColumn={isNonMobile ? "span 4" : isMobile ? "span 6" : "span 12"}
           gridRow="span 2"
           backgroundColor={colors.primary[400]}
           overflow="auto"
@@ -286,7 +295,7 @@ const Dashboard = () => {
             display="flex"
             justifyContent="space-between"
             flexDirection="column"
-            borderBottom={`4px solid ${colors.primary[500]}`}
+            borderBottom={`2px solid ${colors.primary[500]}`}
             colors={colors.grey[100]}
             p="15px"
           >
@@ -338,7 +347,7 @@ const Dashboard = () => {
         </Box>
 
         <Box
-          gridColumn="span 4"
+          gridColumn={isNonMobile ? "span 4" : isMobile ? "span 6" : "span 12"}
           gridRow="span 2"
           backgroundColor={colors.primary[400]}
           overflow="auto"
@@ -347,7 +356,7 @@ const Dashboard = () => {
             display="flex"
             justifyContent="space-between"
             flexDirection="column"
-            borderBottom={`4px solid ${colors.primary[500]}`}
+            borderBottom={`2px solid ${colors.primary[500]}`}
             colors={colors.grey[100]}
             p="15px"
           >
@@ -399,7 +408,7 @@ const Dashboard = () => {
         </Box>
 
         <Box
-          gridColumn="span 4"
+          gridColumn={isNonMobile ? "span 4" : isMobile ? "span 12" : "span 12"}
           gridRow="span 2"
           backgroundColor={colors.primary[400]}
           overflow="auto"
@@ -408,9 +417,9 @@ const Dashboard = () => {
             display="flex"
             justifyContent="space-between"
             alignItems="center"
-            borderBottom={`4px solid ${colors.primary[500]}`}
+            borderBottom={`2px solid ${colors.primary[500]}`}
             colors={colors.grey[100]}
-            p="15px"
+            p= "  24px 15px"
           >
             <Typography color={colors.grey[100]} variant="h5" fontWeight="600">
               Quick Actions
@@ -420,7 +429,7 @@ const Dashboard = () => {
             display="flex"
             justifyContent="space-between"
             alignItems="center"
-            // borderBottom={`4px solid ${colors.primary[500]}`}
+            // borderBottom={`2px solid ${colors.primary[500]}`}
             p="15px"
           >
             <Box>

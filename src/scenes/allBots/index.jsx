@@ -1,38 +1,125 @@
-import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  Button,
+  Typography,
+  useTheme,
+  IconButton,
+  InputBase,
+} from "@mui/material";
 import { tokens } from "../../theme";
-import { mockTransactions } from "../../data/mockData";
-import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
-import EmailIcon from "@mui/icons-material/Email";
-import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import TrafficIcon from "@mui/icons-material/Traffic";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { DataGrid } from "@mui/x-data-grid";
 import Header from "../../components/Header";
-import LineChart from "../../components/LineChart";
-import GeographyChart from "../../components/GeographyChart";
-import BarChart from "../../components/BarChart";
-import StatBox from "../../components/StatBox";
-import ProgressCircle from "../../components/ProgressCircle";
+import { AllBotData } from "../../data/allBotData";
+import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+
 const AllBots = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const isNonMobile = useMediaQuery("(min-width: 768px)"); // For screens >= 768px
+  const isTab = useMediaQuery("(min-width: 1200px)"); // For screens >= 1200px (Tablet and larger)
+  const isSmallTab = useMediaQuery("(min-width: 961px)"); // For screens >= 961px (Tablet and larger)
+
+  // Event Handlers
+  const handleEdit = (id) => {
+    console.log("Edit clicked for ID:", id);
+    // Add your logic for editing the bot here
+  };
+
+  const handleView = (id) => {
+    console.log("View clicked for ID:", id);
+    // Add your logic for viewing the bot details here
+  };
+
+  // DataGrid Columns
+  const columns = [
+    { field: "id", headerName: "ID", flex: 0.25 },
+    {
+      field: "botName",
+      headerName: "Bot Name",
+      flex: 1,
+      cellClassName: "bot-name-column--cell",
+    },
+    {
+      field: "channel",
+      headerName: "Channel",
+      flex: 1,
+    },
+    {
+      field: "status",
+      headerName: "Status",
+      flex: 1,
+    },
+    {
+      field: "lastInteraction",
+      headerName: "Last Interaction",
+      flex: 1,
+      renderCell: (params) => (
+        <Typography color={colors.greenAccent[500]}>
+          {params.row.lastInteraction}
+        </Typography>
+      ),
+    },
+    {
+      field: "action",
+      headerName: "Action",
+      flex: 0.75,
+      renderCell: (params) => (
+        <Box display="flex" gap=".5em">
+          <IconButton
+            onClick={() => handleEdit(params.row.id)}
+            aria-label="edit"
+            sx={{ color: colors.grey[200] }}
+          >
+            <EditIcon />
+          </IconButton>
+          <IconButton
+            onClick={() => handleView(params.row.id)}
+            aria-label="view"
+            sx={{ color: colors.grey[200] }}
+          >
+            <VisibilityIcon />
+          </IconButton>
+        </Box>
+      ),
+    },
+  ];
+
+  // JSON Data
+  const data = {
+    totalBots: 910,
+    activeBots: 512,
+  };
+
+  // Calculate Progress
+  const progressPercentage = (data.activeBots / data.totalBots) * 100;
+  const progressAngle = (progressPercentage / 100) * 360;
 
   return (
     <Box m="20px">
       {/* HEADER */}
-      <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Header title="ALL BOTS OVERVIEW" subtitle="View your all boards" />
-
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        flexWrap="wrap"
+      >
+        <Header
+          title="ALL BOTS OVERVIEW"
+          subtitle="Welcome to All Bots Overview"
+        />
         <Box>
           <Button
             sx={{
               background: "linear-gradient(45deg, #062994, #0E72E1)",
-              // color: colors.grey[100],
               color: "#fff",
-              // width: isNonMobile ? "50%" : "100%",
               fontSize: "14px",
               fontWeight: "bold",
               padding: "10px 20px",
+              mb: isNonMobile ? "0em" : "1em",
               transition: "all 0.5s ease",
               "&:hover": {
                 opacity: ".7",
@@ -40,7 +127,7 @@ const AllBots = () => {
             }}
           >
             <AddIcon sx={{ mr: "10px" }} />
-            Add New Bots
+            Add New Bot
           </Button>
         </Box>
       </Box>
@@ -49,237 +136,280 @@ const AllBots = () => {
       <Box
         display="grid"
         gridTemplateColumns="repeat(12, 1fr)"
-        gridAutoRows="140px"
-        gap="20px"
+        gridTemplateRows="140px"
+        columnGap="20px"
       >
         {/* ROW 1 */}
-        <Box
-          gridColumn="span 3"
-          backgroundColor={colors.primary[400]}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <StatBox
-            title="12,361"
-            subtitle="Emails Sent"
-            progress="0.75"
-            increase="+14%"
-            icon={
-              <EmailIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-              />
-            }
-          />
-        </Box>
-        <Box
-          gridColumn="span 3"
-          backgroundColor={colors.primary[400]}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <StatBox
-            title="431,225"
-            subtitle="Sales Obtained"
-            progress="0.50"
-            increase="+21%"
-            icon={
-              <PointOfSaleIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-              />
-            }
-          />
-        </Box>
-        <Box
-          gridColumn="span 3"
-          backgroundColor={colors.primary[400]}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <StatBox
-            title="32,441"
-            subtitle="New Clients"
-            progress="0.30"
-            increase="+5%"
-            icon={
-              <PersonAddIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-              />
-            }
-          />
-        </Box>
-        <Box
-          gridColumn="span 3"
-          backgroundColor={colors.primary[400]}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <StatBox
-            title="1,325,134"
-            subtitle="Traffic Received"
-            progress="0.80"
-            increase="+43%"
-            icon={
-              <TrafficIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-              />
-            }
-          />
-        </Box>
 
-        {/* ROW 2 */}
         <Box
-          gridColumn="span 8"
+          gridColumn={
+            isTab
+              ? "span 4"
+              : isSmallTab
+              ? "span 6"
+              : isNonMobile
+              ? "span 8"
+              : "span 12"
+          }
           gridRow="span 2"
           backgroundColor={colors.primary[400]}
-        >
-          <Box
-            mt="25px"
-            p="0 30px"
-            display="flex "
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Box>
-              <Typography
-                variant="h5"
-                fontWeight="600"
-                color={colors.grey[100]}
-              >
-                Revenue Generated
-              </Typography>
-              <Typography
-                variant="h3"
-                fontWeight="bold"
-                color={colors.greenAccent[500]}
-              >
-                $59,342.32
-              </Typography>
-            </Box>
-            <Box>
-              <IconButton>
-                <DownloadOutlinedIcon
-                  sx={{ fontSize: "26px", color: colors.greenAccent[500] }}
-                />
-              </IconButton>
-            </Box>
-          </Box>
-          <Box height="250px" m="-20px 0 0 0">
-            <LineChart isAllBots={true} />
-          </Box>
-        </Box>
-        <Box
-          gridColumn="span 4"
-          gridRow="span 2"
-          backgroundColor={colors.primary[400]}
+          borderRadius="8px"
           overflow="auto"
         >
           <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            borderBottom={`4px solid ${colors.primary[500]}`}
-            colors={colors.grey[100]}
-            p="15px"
-          >
-            <Typography color={colors.grey[100]} variant="h5" fontWeight="600">
-              Recent Transactions
-            </Typography>
-          </Box>
-          {mockTransactions.map((transaction, i) => (
-            <Box
-              key={`${transaction.txId}-${i}`}
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              borderBottom={`4px solid ${colors.primary[500]}`}
-              p="15px"
-            >
-              <Box>
-                <Typography
-                  color={colors.greenAccent[500]}
-                  variant="h5"
-                  fontWeight="600"
-                >
-                  {transaction.txId}
-                </Typography>
-                <Typography color={colors.grey[100]}>
-                  {transaction.user}
-                </Typography>
-              </Box>
-              <Box color={colors.grey[100]}>{transaction.date}</Box>
-              <Box
-                backgroundColor={colors.greenAccent[500]}
-                p="5px 10px"
-                borderRadius="4px"
-              >
-                ${transaction.cost}
-              </Box>
-            </Box>
-          ))}
-        </Box>
-
-        {/* ROW 3 */}
-        <Box
-          gridColumn="span 4"
-          gridRow="span 2"
-          backgroundColor={colors.primary[400]}
-          p="30px"
-        >
-          <Typography variant="h5" fontWeight="600">
-            Campaign
-          </Typography>
-          <Box
+            // gridColumn="span 4"
+            gridRow="span 2"
             display="flex"
             flexDirection="column"
             alignItems="center"
-            mt="25px"
+            justifyContent="center"
+            position="relative"
+            p={{ xs: "20px", md: "30px" }}
           >
-            <ProgressCircle size="125" />
-            <Typography
-              variant="h5"
-              color={colors.greenAccent[500]}
-              sx={{ mt: "15px" }}
+            {/* Dynamic Progress Circle */}
+            <Box
+              sx={{
+                background: `conic-gradient(
+                  ${colors.blueAccent[400]} 0deg ${progressAngle}deg, 
+                  ${colors.redAccent[500]} ${progressAngle}deg 360deg
+                )`,
+                borderRadius: "50%",
+                width: "150px",
+                height: "150px",
+                position: "relative",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)", // Optional: to add depth
+                "&::after": {
+                  content: '""',
+                  position: "absolute",
+                  top: "20%",
+                  left: "20%",
+                  width: "60%",
+                  height: "60%",
+                  background: colors.primary[400],
+                  borderRadius: "50%",
+                },
+              }}
+            />
+
+            {/* Data Boxes */}
+            <Box
+              sx={{
+                position: "absolute",
+                bottom: "2em",
+                left: "2em",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                zIndex: "2",
+              }}
             >
-              $48,352 revenue generated
-            </Typography>
-            <Typography>Includes extra misc expenditures and costs</Typography>
+              <Typography
+                variant="h5"
+                color={colors.redAccent[500]}
+                fontWeight="bold"
+              >
+                {data.totalBots - data.activeBots}
+              </Typography>
+              <Typography
+                variant="h6"
+                color={colors.redAccent[500]}
+                fontWeight="medium"
+              >
+                Inactive Bots
+              </Typography>
+            </Box>
+
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                zIndex: "2",
+              }}
+            >
+              <Typography
+                variant="h5"
+                color={colors.grey[200]}
+                fontWeight="bold"
+              >
+                {data.totalBots}
+              </Typography>
+              <Typography
+                variant="h6"
+                color={colors.grey[200]}
+                fontWeight="medium"
+              >
+                Total Bots
+              </Typography>
+            </Box>
+
+            <Box
+              sx={{
+                position: "absolute",
+                right: "2em",
+                top: "2em",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                zIndex: "2",
+              }}
+            >
+              <Typography
+                variant="h5"
+                color={colors.blueAccent[400]}
+                fontWeight="bold"
+              >
+                {data.activeBots}
+              </Typography>
+              <Typography
+                variant="h6"
+                color={colors.blueAccent[400]}
+                fontWeight="medium"
+              >
+                Active Bots
+              </Typography>
+            </Box>
           </Box>
         </Box>
-        <Box
-          gridColumn="span 4"
-          gridRow="span 2"
+
+        {/* <Box
+          gridColumn={isNonMobile ? "span 4" : isMobile ? "span 6" : "span 12"}
           backgroundColor={colors.primary[400]}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          borderRadius="8px"
         >
-          <Typography
-            variant="h5"
-            fontWeight="600"
-            sx={{ padding: "30px 30px 0 30px" }}
-          >
-            Sales Quantity
-          </Typography>
-          <Box height="250px" mt="-20px">
-            <BarChart isAllBots={true} />
-          </Box>
+          <StatBox
+            title="855"
+            subtitle="Total Bots"
+            progress="0.81"
+            increase="+81%"
+            icon={
+              <SmartToyIcon
+                sx={{ color: colors.blueAccent[400], fontSize: "26px" }}
+              />
+            }
+          />
+        </Box> */}
+
+        {/* <Box
+          gridColumn={isNonMobile ? "span 4" : isMobile ? "span 6" : "span 12"}
+          backgroundColor={colors.primary[400]}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          borderRadius="8px"
+        >
+          <StatBox
+            title="540"
+            subtitle="Active Bots"
+            progress="0.750"
+            increase="+71%"
+            icon={
+              <DirectionsRunIcon
+                sx={{ color: colors.blueAccent[400], fontSize: "26px" }}
+              />
+            }
+          />
         </Box>
         <Box
-          gridColumn="span 4"
-          gridRow="span 2"
+          gridColumn={isNonMobile ? "span 4" : isMobile ? "span 12" : "span 12"}
           backgroundColor={colors.primary[400]}
-          padding="30px"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          borderRadius="8px"
         >
-          <Typography
-            variant="h5"
-            fontWeight="600"
-            sx={{ marginBottom: "15px" }}
+          <StatBox
+            title="354"
+            subtitle="Inactive Bots"
+            progress="0.37"
+            increase="+37%"
+            icon={
+              <HailIcon
+                sx={{ color: colors.redAccent[400], fontSize: "26px" }}
+              />
+            }
+          />
+        </Box> */}
+
+        {/* ROW 2 */}
+        <Box
+          gridColumn="span 12"
+          mt="20px"
+          backgroundColor={colors.primary[400]}
+        >
+          <Box>
+            <Box
+              display="flex"
+              backgroundColor={colors.grey[500]}
+              borderRadius="0px"
+              width="250px"
+              sx={{
+                width: "220px",
+                borderRadius: "25px",
+                margin: ".5em .5em .5em 3em",
+                backgroundColor: "#ccc",
+                border: `1px solid white`,
+                color: "#000",
+              }}
+            >
+              <InputBase
+                sx={{ ml: 2, flex: 1, color: "#000" }}
+                placeholder="Search"
+              />
+              <IconButton type="button" sx={{ p: 1 }}>
+                <SearchIcon sx={{ color: "#000" }} />
+              </IconButton>
+            </Box>
+          </Box>
+          <Box
+            gridColumn="span 12"
+            height="380px"
+            sx={{
+              "& .MuiDataGrid-root": {
+                border: "none",
+              },
+              "& .MuiDataGrid-cell": {
+                borderBottom: "none",
+              },
+              "& .name-column--cell": {
+                color: colors.greenAccent[300],
+              },
+              "& .MuiDataGrid-columnHeaders": {
+                backgroundColor: colors.primary[400],
+                borderBottom: `1px solid ${colors.grey[700]}`,
+                borderRadius: "0 !important",
+              },
+              "& .MuiDataGrid-virtualScroller": {
+                backgroundColor: colors.primary[400],
+              },
+              "& .MuiDataGrid-footerContainer": {
+                borderTop: `1px solid ${colors.grey[700]}`,
+                backgroundColor: colors.primary[400],
+                height: "40px !important",
+                minHeight: "40px !important",
+              },
+              "& .MuiCheckbox-root": {
+                color: `${colors.blueAccent[200]} !important`,
+              },
+            }}
           >
-            Geography Based Traffic
-          </Typography>
-          <Box height="200px">
-            <GeographyChart isAllBots={true} />
+            <DataGrid
+              checkboxSelection
+              rows={AllBotData}
+              columns={columns}
+              rowHeight={40}
+              headerHeight={40}
+            />
           </Box>
         </Box>
       </Box>
