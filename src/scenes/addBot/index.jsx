@@ -8,7 +8,7 @@ import {
   Alert,
   IconButton,
   Typography,
-  InputBase,
+  InputBase,Slider
 } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -117,7 +117,12 @@ const AddBot = () => {
   };
 
 
-  const handleResponseTimeChange = (event, handleChange) => {
+ const handleResponseTimeChange = (newValue, setFieldValue) => {
+   setFieldValue("responseTime", newValue); // Update Formik state
+ };
+
+
+  const handlePreTrainedTemplateChange = (event, handleChange) => {
     handleChange(event);
   };
 
@@ -134,7 +139,7 @@ const AddBot = () => {
     responseAccuracy: "",
     languageSupport: "",
     performanceScore: "",
-    responseTime: "",
+    responseTime: 1,
     averageLength: "",
     totalInteractions: "",
   };
@@ -407,7 +412,7 @@ const AddBot = () => {
 
         <Formik
           onSubmit={handleFormSubmit}
-          initialValues={initialValues}
+          initialValues={{ ...initialValues, responseTime: 1 }} // Merge initialValues with responseTime
           validationSchema={checkoutSchema}
         >
           {({
@@ -417,6 +422,7 @@ const AddBot = () => {
             handleBlur,
             handleChange,
             handleSubmit,
+            setFieldValue,
           }) => (
             <form onSubmit={handleSubmit}>
               {/* Conditional content based on step  ookey*/}
@@ -896,13 +902,20 @@ const AddBot = () => {
                     fullWidth
                     variant="filled"
                     type="number"
-                    label="Response Time"
+                    label="Pre-trained Template"
                     onBlur={handleBlur}
-                    onChange={(e) => handleResponseTimeChange(e, handleChange)}
-                    value={values.responseTime}
-                    name="responseTime"
-                    error={!!touched.responseTime && !!errors.responseTime}
-                    helperText={touched.responseTime && errors.responseTime}
+                    onChange={(e) =>
+                      handlePreTrainedTemplateChange(e, handleChange)
+                    }
+                    value={values.preTrainedTemplate}
+                    name="preTrainedTemplate"
+                    error={
+                      !!touched.preTrainedTemplate &&
+                      !!errors.preTrainedTemplate
+                    }
+                    helperText={
+                      touched.preTrainedTemplate && errors.preTrainedTemplate
+                    }
                     sx={{
                       gridColumn: "span 2",
                       "& .MuiFormLabel-root.Mui-focused": {
@@ -911,6 +924,83 @@ const AddBot = () => {
                       },
                     }}
                   />
+                  <Box sx={{ gridColumn: "span 1" }}></Box>
+
+                  <Box
+                    sx={{
+                      gridColumn: "span 2",
+                      display: "flex",
+                      flexDirection: "column",
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          mb: 1,
+                          color: colors.grey[400],
+                        }}
+                      >
+                        slow
+                      </Typography>
+                      <Typography
+                        variant="h5"
+                        sx={{
+                          mb: 1,
+                          color: colors.grey[200],
+                        }}
+                      >
+                        Response Time
+                      </Typography>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          mb: 1,
+                          color: colors.grey[400],
+                        }}
+                      >
+                        Response Time
+                      </Typography>
+                    </Box>
+                    <Slider
+                      value={values.responseTime}
+                      min={1}
+                      max={5}
+                      step={1}
+                      marks={[
+                        { value: 1, label: "1" },
+                        { value: 2, label: "2" },
+                        { value: 3, label: "3" },
+                        { value: 4, label: "4" },
+                        { value: 5, label: "5" },
+                      ]}
+                      onChange={(e, newValue) => {
+                        handleResponseTimeChange(newValue, setFieldValue);
+                      }}
+                      valueLabelDisplay="auto"
+                      sx={{
+                        color: colors.blueAccent[200],
+                        "& .MuiSlider-thumb": {
+                          "&:hover, &.Mui-focusVisible": {
+                            boxShadow:
+                              "0px 0px 0px 8px rgba(33, 150, 243, 0.16)",
+                          },
+                        },
+                      }}
+                    />
+                    {touched.responseTime && errors.responseTime && (
+                      <Typography variant="caption" color="error">
+                        {errors.responseTime}
+                      </Typography>
+                    )}
+                  </Box>
+                  
+                  <Box sx={{ gridColumn: "span 1" }}></Box>
 
                   <TextField
                     fullWidth
@@ -1545,7 +1635,7 @@ const AddBot = () => {
                             border: `2px solid white`,
                             backgroundColor: "#f4f4f5",
                             "&:focus-within": {
-                              backgroundColor: "white", 
+                              backgroundColor: "white",
                             },
                           }}
                         >
@@ -1573,7 +1663,7 @@ const AddBot = () => {
                           backgroundColor: "#f4f4f5",
                           padding: ".5em",
                           borderRadius: "50%",
-                          cursor: "pointer"
+                          cursor: "pointer",
                         }}
                         onClick={handleSendMessage}
                       >

@@ -11,7 +11,7 @@ import PrecisionManufacturingIcon from "@mui/icons-material/PrecisionManufacturi
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import PasswordIcon from "@mui/icons-material/Password";
-import SmartToyIcon from "@mui/icons-material/SmartToy";
+// import SmartToyIcon from "@mui/icons-material/SmartToy";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import SettingsIcon from "@mui/icons-material/Settings";
 import BlurOffIcon from "@mui/icons-material/BlurOff";
@@ -232,7 +232,7 @@ const Sidebar = ({ isSidebar }) => {
                   Add Bots
                 </Link>
               </MenuItem>
-              <MenuItem
+              {/* <MenuItem
                 icon={<SmartToyIcon />}
                 onClick={() => setSelected("Client Profile")}
                 style={{
@@ -253,7 +253,7 @@ const Sidebar = ({ isSidebar }) => {
                 >
                   Active Bots
                 </Link>
-              </MenuItem>
+              </MenuItem> */}
 
               <MenuItem
                 icon={<PrecisionManufacturingIcon />}
