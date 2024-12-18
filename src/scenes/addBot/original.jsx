@@ -552,7 +552,7 @@ const AddBot = () => {
                     fontWeight: "bold",
                   }}
                 >
-                  Congratulations, you have created bot name:{" "}
+                  Congratulations, you have created bot name:
                   <strong>{values.botName}</strong>
                 </Alert>
               </Snackbar>

@@ -8,14 +8,15 @@ import {
   Alert,
   IconButton,
   Typography,
-  InputBase,Slider
+  InputBase,
+  Slider,
 } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
 import { tokens } from "../../theme";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -26,8 +27,8 @@ import SyncIcon from "@mui/icons-material/Sync";
 import BlockIcon from "@mui/icons-material/Block";
 import SearchIcon from "@mui/icons-material/Search";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import SendIcon from '@mui/icons-material/Send';
-import initialData from './data.json'; 
+import SendIcon from "@mui/icons-material/Send";
+import initialData from "./data.json";
 
 const steps = [
   { id: 1, label: "Bot Details", content: "Please fill out the form" },
@@ -49,11 +50,11 @@ const AddBot = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const isNonMobile = useMediaQuery("(min-width:600px)");
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleFormSubmit = (values) => {
     setSnackbarOpen(true);
-    navigate("/addbot");
+    // navigate("/");
   };
 
   const handleSnackbarClose = () => {
@@ -83,8 +84,6 @@ const AddBot = () => {
     handleChange(event);
   };
 
-  
-
   const handleApiKeyChange = (event, handleChange) => {
     handleChange(event);
   };
@@ -109,29 +108,24 @@ const AddBot = () => {
     handleChange(event);
   };
 
-
-
-
   const handleLanguageSupportChange = (event, handleChange) => {
     handleChange(event);
   };
 
-
- const handleResponseTimeChange = (newValue, setFieldValue) => {
-   setFieldValue("responseTime", newValue); // Update Formik state
- };
-
+  const handleResponseTimeChange = (newValue, setFieldValue) => {
+    setFieldValue("responseTime", newValue); // Update Formik state
+  };
 
   const handlePreTrainedTemplateChange = (event, handleChange) => {
     handleChange(event);
   };
 
-
-
+  const startCrawling = () => {
+    // Handle website crawling
+  };
 
   const initialValues = {
     botName: "",
-    botImage: "",
     apiKey: "",
     channel: "",
     status: "",
@@ -140,8 +134,6 @@ const AddBot = () => {
     languageSupport: "",
     performanceScore: "",
     responseTime: 1,
-    averageLength: "",
-    totalInteractions: "",
   };
 
   const checkoutSchema = yup.object().shape({
@@ -153,8 +145,6 @@ const AddBot = () => {
 
   const [currentStep, setCurrentStep] = useState(1);
 
-
-
   const handleNext = () => {
     if (currentStep < steps.length) setCurrentStep(currentStep + 1);
   };
@@ -162,8 +152,6 @@ const AddBot = () => {
   const handlePrev = () => {
     if (currentStep > 1) setCurrentStep(currentStep - 1);
   };
-
-
 
   const [imageOne, setImageOne] = useState(null);
   const [isDraggingOne, setIsDraggingOne] = useState(false);
@@ -412,7 +400,7 @@ const AddBot = () => {
 
         <Formik
           onSubmit={handleFormSubmit}
-          initialValues={{ ...initialValues, responseTime: 1 }} // Merge initialValues with responseTime
+          initialValues={{ ...initialValues, responseTime: 1 }}
           validationSchema={checkoutSchema}
         >
           {({
@@ -898,24 +886,9 @@ const AddBot = () => {
                     )}
                   </FormControl>
 
-                  <TextField
+                  <FormControl
                     fullWidth
                     variant="filled"
-                    type="number"
-                    label="Pre-trained Template"
-                    onBlur={handleBlur}
-                    onChange={(e) =>
-                      handlePreTrainedTemplateChange(e, handleChange)
-                    }
-                    value={values.preTrainedTemplate}
-                    name="preTrainedTemplate"
-                    error={
-                      !!touched.preTrainedTemplate &&
-                      !!errors.preTrainedTemplate
-                    }
-                    helperText={
-                      touched.preTrainedTemplate && errors.preTrainedTemplate
-                    }
                     sx={{
                       gridColumn: "span 2",
                       "& .MuiFormLabel-root.Mui-focused": {
@@ -923,7 +896,39 @@ const AddBot = () => {
                         fontWeight: "bold",
                       },
                     }}
-                  />
+                  >
+                    <InputLabel
+                      id="language-support"
+                      sx={{ color: colors.primary[100] }}
+                    >
+                      Pre-trained Template
+                    </InputLabel>
+                    <Select
+                      labelId="Pre-trained Template"
+                      id="preTrainedTemplate"
+                      value={values.languageSupport}
+                      name="preTrainedTemplate"
+                      onChange={(e) =>
+                        handlePreTrainedTemplateChange(e, handleChange)
+                      }
+                      onBlur={handleBlur}
+                      error={
+                        !!touched.preTrainedTemplate &&
+                        !!errors.preTrainedTemplate
+                      }
+                    >
+                      <MenuItem value="FAQBot">FAQ Bot</MenuItem>
+                      <MenuItem value="lead-bot">Lead Bot</MenuItem>
+                      <MenuItem value="etc">etc</MenuItem>
+                    </Select>
+                    {touched.preTrainedTemplate &&
+                      errors.preTrainedTemplate && (
+                        <Box color="red" mt="4px" fontSize="11px" ml="1.5em">
+                          {errors.preTrainedTemplate}
+                        </Box>
+                      )}
+                  </FormControl>
+
                   <Box sx={{ gridColumn: "span 1" }}></Box>
 
                   <Box
@@ -999,7 +1004,7 @@ const AddBot = () => {
                       </Typography>
                     )}
                   </Box>
-                  
+
                   <Box sx={{ gridColumn: "span 1" }}></Box>
 
                   <TextField
@@ -1063,6 +1068,7 @@ const AddBot = () => {
                   />
                 </Box>
               )}
+
               {currentStep === 4 && (
                 <Box
                   display="grid"
@@ -1354,7 +1360,7 @@ const AddBot = () => {
                     varient="h6"
                     mt="1.25em"
                   >
-                    API Integration (Optional)
+                    Web Crawling (Optional)
                   </Typography>
                   <TextField
                     fullWidth
@@ -1430,6 +1436,18 @@ const AddBot = () => {
                       },
                     }}
                   />
+                  <Button
+                    onClick={startCrawling}
+                    color="secondary"
+                    variant="outlined"
+                    sx={{
+                      mt: "1em",
+                      borderRadius: "20px",
+                      marginRight: "8px",
+                    }}
+                  >
+                    Start Crawling
+                  </Button>
 
                   <Typography
                     gridColumn="span 4"
@@ -1737,6 +1755,7 @@ const AddBot = () => {
                     <Button
                       variant="contained"
                       color="success"
+                      // type="submit"
                       onClick={handleSubmit}
                       startIcon={<KeyboardTabIcon />}
                       sx={{
@@ -1810,7 +1829,7 @@ const AddBot = () => {
 
               <Snackbar
                 open={snackbarOpen}
-                autoHideDuration={3000}
+                autoHideDuration={6000}
                 onClose={handleSnackbarClose}
                 anchorOrigin={{
                   vertical: "top",
