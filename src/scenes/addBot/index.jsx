@@ -29,6 +29,15 @@ import SearchIcon from "@mui/icons-material/Search";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import SendIcon from "@mui/icons-material/Send";
 import initialData from "./data.json";
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogActions,
+} from "@mui/material";
+
 
 const steps = [
   { id: 1, label: "Bot Details", content: "Please fill out the form" },
@@ -48,18 +57,28 @@ const AddBot = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [SuccessBox, setSuccessBox] = useState(false);
 
   const isNonMobile = useMediaQuery("(min-width:600px)");
   // const navigate = useNavigate();
 
+
+
   const handleFormSubmit = (values) => {
     setSnackbarOpen(true);
     // navigate("/");
+    setSuccessBox(true);
   };
-
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
+ const handleSetSuccessBoxClose = () => {
+   setSuccessBox(false); // Close the dialog
+   setSnackbarOpen(false); // (Optional) Close the Snackbar if needed
+ };
+
+
+  
 
   const handleBotNameChange = (event, handleChange) => {
     handleChange(event);
@@ -113,7 +132,7 @@ const AddBot = () => {
   };
 
   const handleResponseTimeChange = (newValue, setFieldValue) => {
-    setFieldValue("responseTime", newValue); // Update Formik state
+    setFieldValue("responseTime", newValue); 
   };
 
   const handlePreTrainedTemplateChange = (event, handleChange) => {
@@ -187,7 +206,7 @@ const AddBot = () => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = () => setImageOne(reader.result); // Get image as a base64 string
+      reader.onload = () => setImageOne(reader.result);
       reader.readAsDataURL(file);
     }
   };
@@ -220,7 +239,7 @@ const AddBot = () => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = () => setImageTwo(reader.result); // Get image as a base64 string
+      reader.onload = () => setImageTwo(reader.result);
       reader.readAsDataURL(file);
     }
   };
@@ -240,7 +259,7 @@ const AddBot = () => {
     const file = event.dataTransfer.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = () => setImageTwo(reader.result); // Get image as a base64 string
+      reader.onload = () => setImageTwo(reader.result);
       reader.readAsDataURL(file);
     }
   };
@@ -253,7 +272,7 @@ const AddBot = () => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = () => setImageThree(reader.result); // Get image as a base64 string
+      reader.onload = () => setImageThree(reader.result); 
       reader.readAsDataURL(file);
     }
   };
@@ -273,7 +292,7 @@ const AddBot = () => {
     const file = event.dataTransfer.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = () => setImageThree(reader.result); // Get image as a base64 string
+      reader.onload = () => setImageThree(reader.result); 
       reader.readAsDataURL(file);
     }
   };
@@ -282,59 +301,55 @@ const AddBot = () => {
     document.getElementById("imageInputThree").click();
   };
 
-  // Load the initial conversation from the data.json file
   useEffect(() => {
     setConversation(initialData);
   }, []);
 
-  // State for storing the conversation
+  // Sthis tate for storing the conversation okey
   const [conversation, setConversation] = useState([
     { sender: "bot", message: "Hello! How can I help you today?" },
   ]);
 
-  // State for storing the new message input by the user
+  // yoo State for storing the new message input by the user
   const [newMessage, setNewMessage] = useState("");
 
-  // Ref for the conversation box to handle auto-scrolling
   const conversationEndRef = useRef(null);
 
-  // Handle the message input change
   const handleInputChange = (e) => {
     setNewMessage(e.target.value);
   };
 
-  // Handle sending the message
   const handleSendMessage = () => {
     if (newMessage.trim()) {
-      // Add the user's message to the conversation
       const updatedConversation = [
         ...conversation,
         { sender: "user", message: newMessage },
       ];
-
-      // Simulate bot response (you can replace this with more dynamic responses)
       const botResponse = "This is a bot's reply.";
       updatedConversation.push({ sender: "bot", message: botResponse });
-
-      // Update the conversation state
       setConversation(updatedConversation);
-
-      // Clear the input field
       setNewMessage("");
     }
   };
 
-  // Handle 'Enter' key press to send message
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter" && newMessage.trim()) {
-      handleSendMessage();
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault(); // Prevent the form from submitting
+      handleSendMessage(); // Call the function to send the message
     }
   };
 
-  // Auto-scroll to the bottom of the conversation whenever it updates
   useEffect(() => {
     conversationEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [conversation]);
+
+  const handleDraft = () => {
+    console.log("Draft saved!");
+  };
+
+  const handleCancel = () => {
+    console.log("Action canceled!");
+  };
 
   return (
     <Box m="20px">
@@ -648,7 +663,7 @@ const AddBot = () => {
                           }}
                         />
                       )}
-                      {/* Invisible input field */}
+                      {/* not seeing input field */}
                       <input
                         id="imageInputOne"
                         type="file"
@@ -726,7 +741,7 @@ const AddBot = () => {
                           }}
                         />
                       )}
-                      {/* Invisible input field */}
+                      {/* not seeing  input field */}
                       <input
                         id="imageInputTwo"
                         type="file"
@@ -805,7 +820,7 @@ const AddBot = () => {
                           }}
                         />
                       )}
-                      {/* Invisible input field */}
+                      {/*here also Invisible input field */}
                       <input
                         id="imageInputThree"
                         type="file"
@@ -1482,6 +1497,7 @@ const AddBot = () => {
                   <Box
                     gridColumn="span 2"
                     position="relative"
+                    mt="-1.5em"
                     backgroundColor={colors.primary[400]}
                   >
                     <Box
@@ -1501,7 +1517,6 @@ const AddBot = () => {
                           gap: "1em",
                         }}
                       >
-                        {/* Box with the Image */}
                         <Box sx={{ display: "flex", alignItems: "center" }}>
                           <img
                             src={`../../assets/user.png`}
@@ -1509,13 +1524,11 @@ const AddBot = () => {
                             style={{
                               width: "50px",
                               height: "50px",
-                              borderRadius: "50%", // Optional, for a circular image
-                              objectFit: "cover", // Ensures the image doesn't get distorted
+                              borderRadius: "50%",
+                              objectFit: "cover",
                             }}
                           />
                         </Box>
-
-                        {/* Typography Section */}
                         <Box
                           sx={{
                             display: "flex",
@@ -1612,21 +1625,14 @@ const AddBot = () => {
                               flexDirection: "column",
                             }}
                           >
-                            <Typography
-                              sx={{
-                                fontSize: "13px",
-                              }}
-                              variant="body1"
-                            >
-                              {msg.message}
-                            </Typography>
+                            <Typography variant="h6">{msg.message}</Typography>
                           </Box>
                         </Box>
                       ))}
 
-                      {/* This element is used for auto-scrolling to the bottom */}
                       <div ref={conversationEndRef} />
                     </Box>
+
                     <Box
                       sx={{
                         position: "absolute",
@@ -1661,7 +1667,6 @@ const AddBot = () => {
                             sx={{
                               ml: 2,
                               mr: 2,
-
                               flexGrow: "grow",
                               p: ".5em",
                               color: "#000",
@@ -1692,7 +1697,6 @@ const AddBot = () => {
                 </Box>
               )}
 
-              {/* Navigation Buttons */}
               <Box mt={4} display="flex" gap={2}>
                 {currentStep > 1 && (
                   <Box>
@@ -1751,15 +1755,14 @@ const AddBot = () => {
                       height: "100%",
                     }}
                   >
-                    {/* Save & Activate Button */}
                     <Button
                       variant="contained"
                       color="success"
-                      // type="submit"
+                      type="submit"
                       onClick={handleSubmit}
                       startIcon={<KeyboardTabIcon />}
                       sx={{
-                        background: "linear-gradient(45deg, #4caf50, #81c784)", // Green gradient
+                        background: "linear-gradient(45deg, #4caf50, #81c784)",
                         color: "#fff",
                         fontSize: "14px",
                         fontWeight: "bold",
@@ -1768,7 +1771,7 @@ const AddBot = () => {
                         transition: "all 0.5s ease",
                         "&:hover": {
                           background:
-                            "linear-gradient(45deg, #388e3c, #66bb6a)", // Darker hover effect
+                            "linear-gradient(45deg, #388e3c, #66bb6a)",
                           opacity: 0.9,
                         },
                       }}
@@ -1776,14 +1779,13 @@ const AddBot = () => {
                       Save & Activate
                     </Button>
 
-                    {/* Save as Draft Button */}
                     <Button
                       variant="contained"
                       color="warning"
-                      onClick={handleSubmit}
+                      onClick={handleDraft}
                       startIcon={<SyncIcon />}
                       sx={{
-                        background: "linear-gradient(45deg, #ff9800, #ffc107)", // Orange gradient
+                        background: "linear-gradient(45deg, #ff9800, #ffc107)",
                         color: "#fff",
                         fontSize: "14px",
                         fontWeight: "bold",
@@ -1792,7 +1794,7 @@ const AddBot = () => {
                         transition: "all 0.5s ease",
                         "&:hover": {
                           background:
-                            "linear-gradient(45deg, #f57c00, #ffa000)", // Darker hover effect
+                            "linear-gradient(45deg, #f57c00, #ffa000)",
                           opacity: 0.9,
                         },
                       }}
@@ -1800,14 +1802,13 @@ const AddBot = () => {
                       Save as Draft
                     </Button>
 
-                    {/* Cancel Button */}
                     <Button
                       variant="contained"
                       color="error"
-                      onClick={handleSubmit}
+                      onClick={handleCancel}
                       startIcon={<BlockIcon />}
                       sx={{
-                        background: "linear-gradient(45deg, #f44336, #e57373)", // Red gradient
+                        background: "linear-gradient(45deg, #f44336, #e57373)",
                         color: "#fff",
                         fontSize: "14px",
                         fontWeight: "bold",
@@ -1816,7 +1817,7 @@ const AddBot = () => {
                         transition: "all 0.5s ease",
                         "&:hover": {
                           background:
-                            "linear-gradient(45deg, #d32f2f, #ef5350)", // Darker hover effect
+                            "linear-gradient(45deg, #d32f2f, #ef5350)",
                           opacity: 0.9,
                         },
                       }}
@@ -1849,6 +1850,108 @@ const AddBot = () => {
                   <strong>{values.botName}</strong>
                 </Alert>
               </Snackbar>
+
+              <Dialog
+                open={SuccessBox}
+                onClose={handleSetSuccessBoxClose}
+                sx={{
+                  zIndex: 1300,
+                  "& .MuiDialog-paper": {
+                    borderRadius: "8px",
+                    padding: "24px",
+                    maxWidth: "420px",
+                    width: "100%",
+                    backgroundColor: colors.primary[500]
+                  },
+                }}
+              >
+                <DialogContent
+                  sx={{
+                    textAlign: "center",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: "80px",
+                      height: "80px",
+                      margin: "0 auto",
+                      borderRadius: "50%",
+                      background: "linear-gradient(45deg, #062994, #0E72E1)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <RocketLaunchIcon
+                      sx={{
+                        fontSize: "46px",
+                      }}
+                    />
+                  </Box>
+
+                  <Typography
+                    variant="h3"
+                    sx={{
+                      fontWeight: "bold",
+                      marginTop: "16px",
+                      color: colors.grey[100],
+                    }}
+                  >
+                    Congratulations!
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      marginTop: "12px",
+                      color: colors.grey[200],
+                    }}
+                  >
+                    Your Bot <strong f>{values.botName}</strong> Has been Created
+                    Successfully
+                  </Typography>
+
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      marginTop: "12px",
+                      color: colors.grey[200],
+                    }}
+                  >
+                    Now Let’s <strong>Integrate</strong> this bot into
+                    <strong> Your website or platform</strong>
+                  </Typography>
+                </DialogContent>
+
+                <DialogActions
+                  sx={{
+                    justifyContent: "center",
+                    marginTop: "16px",
+                  }}
+                >
+                  <Button
+                    onClick={handleSetSuccessBoxClose}
+                    variant="contained"
+                    color="primary"
+                    startIcon={<AccountTreeIcon />}
+                    sx={{
+                      background: "linear-gradient(45deg, #062994, #0E72E1)",
+                      textTransform: "capitalize",
+                      color: "#fff",
+                      // width: isNonMobile ? "50%" : "100%",
+                      fontSize: "14px",
+                      fontWeight: "bold",
+                      padding: "10px 20px",
+                      mb: isNonMobile ? "0em" : "1em",
+                      transition: "all 0.5s ease",
+                      "&:hover": {
+                        opacity: ".7",
+                      },
+                    }}
+                  >
+                    Let’s Integrate
+                  </Button>
+                </DialogActions>
+              </Dialog>
             </form>
           )}
         </Formik>
