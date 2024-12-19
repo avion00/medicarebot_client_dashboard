@@ -164,8 +164,8 @@ const AddCRM = () => {
           <Button
             type="submit"
             sx={{
-              backgroundColor: colors.greenAccent[700],
-              color: colors.grey[100],
+              background: "linear-gradient(45deg, #062994, #0E72E1)",
+              color: "#fff",
               fontSize: "14px",
               fontWeight: "bold",
               padding: "10px 20px",

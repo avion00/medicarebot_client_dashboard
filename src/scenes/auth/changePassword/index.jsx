@@ -92,129 +92,146 @@ const ChangePassword = () => {
                 "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
               }}
             >
-              <TextField
-                fullWidth
-                variant="filled"
-                type={showPassword ? "text" : "password"}
-                label="Old Password"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.oldpassword}
-                name="oldpassword"
-                error={!!touched.oldpassword && !!errors.oldpassword}
-                helperText={touched.oldpassword && errors.oldpassword}
+              <Box
                 sx={{
-                  gridColumn: "span 4",
-                  "& .MuiFormLabel-root.Mui-focused": {
-                    color: colors.blueAccent[500],
-                    fontWeight: "bold",
-                  },
+                  gridColumn: "span 2",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "30px",
                 }}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment
-                      position="end"
-                      style={{ marginRight: "1em" }}
-                    >
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
-                        edge="end"
+              >
+                <TextField
+                  fullWidth
+                  variant="filled"
+                  type={showPassword ? "text" : "password"}
+                  label="Old Password"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.oldpassword}
+                  name="oldpassword"
+                  error={!!touched.oldpassword && !!errors.oldpassword}
+                  helperText={touched.oldpassword && errors.oldpassword}
+                  sx={{
+                    gridColumn: "span 2",
+                    "& .MuiFormLabel-root.Mui-focused": {
+                      color: colors.blueAccent[500],
+                      fontWeight: "bold",
+                    },
+                  }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment
+                        position="end"
+                        style={{ marginRight: "1em" }}
                       >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
 
-              <TextField
-                fullWidth
-                variant="filled"
-                type={showPassword ? "text" : "password"}
-                label="New Password"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.newpassword}
-                name="newpassword"
-                error={!!touched.newpassword && !!errors.newpassword}
-                helperText={touched.newpassword && errors.newpassword}
-                sx={{
-                  gridColumn: "span 4",
-                  "& .MuiFormLabel-root.Mui-focused": {
-                    color: colors.blueAccent[500],
-                    fontWeight: "bold",
-                  },
-                }}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment
-                      position="end"
-                      style={{ marginRight: "1em" }}
-                    >
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
-                        edge="end"
+                <TextField
+                  fullWidth
+                  variant="filled"
+                  type={showPassword ? "text" : "password"}
+                  label="New Password"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.newpassword}
+                  name="newpassword"
+                  error={!!touched.newpassword && !!errors.newpassword}
+                  helperText={touched.newpassword && errors.newpassword}
+                  sx={{
+                    gridColumn: "span 2",
+                    "& .MuiFormLabel-root.Mui-focused": {
+                      color: colors.blueAccent[500],
+                      fontWeight: "bold",
+                    },
+                  }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment
+                        position="end"
+                        style={{ marginRight: "1em" }}
                       >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
 
-              <TextField
-                fullWidth
-                variant="filled"
-                type={showPassword ? "text" : "password"}
-                label="Confirm Password"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.confirmpassword}
-                name="confirmpassword"
-                error={!!touched.confirmpassword && !!errors.confirmpassword}
-                helperText={touched.confirmpassword && errors.confirmpassword}
-                sx={{
-                  gridColumn: "span 4",
-                  "& .MuiFormLabel-root.Mui-focused": {
-                    color: colors.blueAccent[500],
-                    fontWeight: "bold",
-                  },
-                }}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment
-                      position="end"
-                      style={{ marginRight: "1em" }}
-                    >
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
-                        edge="end"
+                <TextField
+                  fullWidth
+                  variant="filled"
+                  type={showPassword ? "text" : "password"}
+                  label="Confirm Password"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.confirmpassword}
+                  name="confirmpassword"
+                  error={!!touched.confirmpassword && !!errors.confirmpassword}
+                  helperText={touched.confirmpassword && errors.confirmpassword}
+                  sx={{
+                    gridColumn: "span 2",
+                    "& .MuiFormLabel-root.Mui-focused": {
+                      color: colors.blueAccent[500],
+                      fontWeight: "bold",
+                    },
+                  }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment
+                        position="end"
+                        style={{ marginRight: "1em" }}
                       >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Box>
-
-            <Box display="flex" justifyContent="end" mt="20px">
-              <Button type="submit" color="secondary" variant="contained">
-                Change Password
-              </Button>
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+                <Box display="flex" justifyContent="start" mt="20px">
+                  <Button
+                    type="submit"
+                    color="secondary"
+                    sx={{
+                      background: "linear-gradient(45deg, #062994, #0E72E1)",
+                      color: "#fff",
+                      padding: "10px 20px",
+                      mt:"-20px"
+                    }}
+                    variant="contained"
+                  >
+                    Change Password
+                  </Button>
+                </Box>
+              </Box>
             </Box>
           </form>
         )}
       </Formik>
 
       {/* Snackbar for showing success message */}
-      
 
       <Snackbar
         open={openSnackbar}

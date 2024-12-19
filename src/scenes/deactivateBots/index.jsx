@@ -44,7 +44,7 @@ const DeactivateBots = () => {
   };
 
   const deactiveData = [
-    { field: "id", headerName: "ID", flex: 1 },
+    { field: "id", headerName: "ID", flex: 0.25 },
     {
       field: "name",
       headerName: "Name",
@@ -106,7 +106,12 @@ const DeactivateBots = () => {
   return (
     <Box m="20px">
       {/* HEADER */}
-      <Box display="flex" justifyContent="space-between" flexWrap="wrap" alignItems="center">
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        flexWrap="wrap"
+        alignItems="center"
+      >
         <Header
           title="DEACTIVATE BOTS"
           subtitle="Manage your Deactivated Bots"
@@ -116,8 +121,8 @@ const DeactivateBots = () => {
           <Button
             onClick={handleReactivateSelected}
             sx={{
-              backgroundColor: colors.blueAccent[700],
-              color: colors.grey[100],
+              background: "linear-gradient(45deg, #062994, #0E72E1)",
+              color: '#fff',
               fontSize: "14px",
               fontWeight: "bold",
               padding: isNonMobile ? "10px 20px" : ".5em",

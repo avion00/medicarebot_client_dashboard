@@ -7,7 +7,6 @@ import { tokens } from "../../theme";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import PrecisionManufacturingIcon from "@mui/icons-material/PrecisionManufacturing";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import PasswordIcon from "@mui/icons-material/Password";
@@ -22,6 +21,10 @@ import AddIcon from "@mui/icons-material/Add";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import PaddingIcon from "@mui/icons-material/Padding";
 import AlignHorizontalLeftIcon from "@mui/icons-material/AlignHorizontalLeft";
+import ChatIcon from "@mui/icons-material/Chat";
+import HelpIcon from "@mui/icons-material/Help";
+import SupportAgentIcon from "@mui/icons-material/SupportAgent";
+
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -171,14 +174,14 @@ const Sidebar = ({ isSidebar }) => {
             </Typography>
 
             <Item
-              title="Dashboard Overview"
+              title="Dashboard"
               to="/dashboard"
               icon={<HomeOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <SubMenu
-              title="Manage Bot"
+              title="Manage Bots"
               icon={<ManageAccountsIcon />}
               style={{
                 color: colors.grey[100],
@@ -255,7 +258,7 @@ const Sidebar = ({ isSidebar }) => {
                 </Link>
               </MenuItem> */}
 
-              <MenuItem
+              {/* <MenuItem
                 icon={<PrecisionManufacturingIcon />}
                 onClick={() => setSelected("Assign Bot")}
                 style={{
@@ -272,9 +275,9 @@ const Sidebar = ({ isSidebar }) => {
                     fontSize: "13px",
                   }}
                 >
-                  Configure Settings
+                  Train Bots
                 </Link>
-              </MenuItem>
+              </MenuItem> */}
 
               <MenuItem
                 icon={<UpdateIcon />}
@@ -292,7 +295,7 @@ const Sidebar = ({ isSidebar }) => {
                     fontSize: "13px",
                   }}
                 >
-                  Update Training Data
+                  Train Bots
                 </Link>
               </MenuItem>
 
@@ -320,34 +323,78 @@ const Sidebar = ({ isSidebar }) => {
               </MenuItem>
             </SubMenu>
 
-            <Item
-              title="Settings Manage"
-              to="/settings"
-              icon={<SettingsIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
+            <Typography
+              variant="h6"
+              color={colors.grey[300]}
+              sx={{
+                margin: isCollapsed ? 0 : "12px 0 5px 20px",
+                textAlign: isCollapsed ? "center" : "left",
+              }}
+            >
+              Chat Logs
+            </Typography>
             <Item
               title="Chat Logs"
-              to="/interactions"
-              icon={<LayersIcon />}
+              to="/chatLogs"
+              icon={<ChatIcon />}
               selected={selected}
               setSelected={setSelected}
             />
-            <Item
-              title="Billing Manage"
-              to="/billing"
-              icon={<PaidIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Reports & Performance Analytics"
-              to="/reports"
-              icon={<AssessmentIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
+
+            {/* <SubMenu
+              title="Chat logs"
+              icon={<ChatIcon />}
+              style={{
+                color: colors.grey[100],
+                "& .pro-menu-item.active": {
+                  color: "#6870fa !important",
+                },
+                "& .pro-sub-menu-item.active": {
+                  color: "#6870fa !important",
+                },
+                "& .pro-inner-item:focus": {},
+              }}
+            >
+              <MenuItem
+                icon={<AlignHorizontalLeftIcon />}
+                onClick={() => setSelected("Customer Logs")}
+                style={{
+                  marginBottom: ".5em",
+                  color: selected === "All Bots" ? "#6870fa" : colors.grey[100],
+                }}
+              >
+                <Link
+                  to="/allBots"
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    fontSize: "13px",
+                  }}
+                >
+                  Customer Logs
+                </Link>
+              </MenuItem>
+              <MenuItem
+                icon={<AddIcon />}
+                onClick={() => setSelected("Chat History")}
+                style={{
+                  marginBottom: ".5em",
+                  color: selected === "Add Bots" ? "#6870fa" : colors.grey[100],
+                }}
+              >
+                <Link
+                  to="/addbot"
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    fontSize: "13px",
+                  }}
+                >
+                  Offline Messages
+                </Link>
+              </MenuItem>
+            </SubMenu> */}
+
             <Typography
               variant="h6"
               color={colors.grey[300]}
@@ -358,6 +405,7 @@ const Sidebar = ({ isSidebar }) => {
             >
               Partners Hub
             </Typography>
+
             <Item
               title="Add CRM"
               to="/add_crm"
@@ -372,6 +420,31 @@ const Sidebar = ({ isSidebar }) => {
               selected={selected}
               setSelected={setSelected}
             />
+
+            <Item
+              title="Reports"
+              to="/reports"
+              icon={<AssessmentIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+
+            <Item
+              title="Billing"
+              to="/billing"
+              icon={<PaidIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+
+            <Item
+              title="Settings"
+              to="/settings"
+              icon={<SettingsIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+
             <Typography
               variant="h6"
               color={colors.grey[300]}
@@ -390,6 +463,29 @@ const Sidebar = ({ isSidebar }) => {
               title="Change Password"
               to="/changePassword"
               icon={<PasswordIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+
+            <Typography
+              variant="h6"
+              color={colors.grey[300]}
+              sx={{ m: "15px 0 5px 20px" }}
+            >
+              Help
+            </Typography>
+
+            <Item
+              title="Help Center"
+              to="/helpCenter"
+              icon={<HelpIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Customer Support"
+              to="/customerSupport"
+              icon={<SupportAgentIcon />}
               selected={selected}
               setSelected={setSelected}
             />

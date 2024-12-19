@@ -6,7 +6,7 @@ import { tokens } from "../../theme";
 import InteractionsDataJson from "../../data/interactionData.json";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-const Interactions = () => {
+const Interaction = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const isNonMobile = useMediaQuery("(min-width:768px)");
@@ -115,15 +115,12 @@ const Interactions = () => {
         flexWrap="wrap"
         alignItems="center"
       >
-        <Header
-          title="INTERACTIONS MANAGEMENT"
-          subtitle="Interactions Management Dashboard"
-        />
+        <Header title="CHAT LOGS" subtitle="Chat Logs Management Dashboard" />
         <Box>
           <Button
             sx={{
-              backgroundColor: colors.blueAccent[700],
-              color: colors.grey[100],
+              background: "linear-gradient(45deg, #062994, #0E72E1)",
+              color: "#fff",
               fontSize: "14px",
               fontWeight: "bold",
               padding: isNonMobile ? "10px 20px" : ".5em",
@@ -142,7 +139,7 @@ const Interactions = () => {
           gap: "1em",
           height: "100%",
           maxHeight: "70dvh",
-          flexWrap: 'wrap'
+          flexWrap: "wrap",
         }}
       >
         {/* Customer Logs */}
@@ -161,4 +158,4 @@ const Interactions = () => {
   );
 };
 
-export default Interactions;
+export default Interaction;

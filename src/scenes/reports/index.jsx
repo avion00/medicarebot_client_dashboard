@@ -17,14 +17,19 @@ const Dashboard = () => {
   return (
     <Box m="20px">
       {/* HEADER */}
-      <Box display="flex" justifyContent="space-between" alignItems="center" flexWrap="wrap">
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        flexWrap="wrap"
+      >
         <Header title="Reports" subtitle="Welcome to your dashboard" />
 
         <Box>
           <Button
             sx={{
-              backgroundColor: colors.blueAccent[700],
-              color: colors.grey[100],
+              background: "linear-gradient(45deg, #062994, #0E72E1)",
+              color: "#fff",
               fontSize: "14px",
               fontWeight: "bold",
               padding: isNonMobile ? "10px 20px" : ".5em",
@@ -40,12 +45,14 @@ const Dashboard = () => {
         <Box
           sx={{
             display: "grid",
-            gridTemplateColumns: isNonMobile? "repeat(2, 1fr)" : "repeat(1, 1fr)",
+            gridTemplateColumns: isNonMobile
+              ? "repeat(2, 1fr)"
+              : "repeat(1, 1fr)",
             gridTemplateRows: "auto auto", // Two rows, auto-sized to fit content
             gap: "1em",
             width: "100%",
             "& > :nth-of-type(3)": {
-              gridColumn: "1 / -1", 
+              gridColumn: "1 / -1",
             },
           }}
         >
