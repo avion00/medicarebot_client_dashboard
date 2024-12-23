@@ -52,64 +52,62 @@ const NewPassword = () => {
   const handleClickShowConfirmPassword = () =>
     setShowConfirmPassword(!showConfirmPassword);
 
- const handleFormSubmit = async (values) => {
-  console.log("upper token", token)
-  console.log("rest token", token);
-  
+  const handleFormSubmit = async (values) => {
+    console.log("upper token", token);
+    console.log("rest token", token);
 
-   const storedToken = localStorage.getItem("resetToken");
-   console.log("upper token", token);
-   console.log("store token", storedToken);
-   if (!storedToken) {
-     setErrorSnackbar(true);
-     return;
-   }
-   setIsSubmitting(true);
+    const storedToken = localStorage.getItem("resetToken");
+    console.log("upper token", token);
+    console.log("store token", storedToken);
+    if (!storedToken) {
+      setErrorSnackbar(true);
+      return;
+    }
+    setIsSubmitting(true);
 
-   try {
-     const response = await fetch("https://app.medicarebot.live/newPassword", {
-       method: "POST",
-       headers: {
-         "Content-Type": "application/json",
-       },
-       body: JSON.stringify({
-         token: storedToken,
-         new_password: values.password,
-       }),
-     });
-     console.log("try token", token);
-     console.log("try store token", storedToken);
+    try {
+      const response = await fetch("https://app.medicarebot.live/newPassword", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          token: storedToken,
+          new_password: values.password,
+        }),
+      });
+      console.log("try token", token);
+      console.log("try store token", storedToken);
 
-     const result = await response.json();
+      const result = await response.json();
 
-     if (response.ok) {
-       if (remember) {
-         localStorage.setItem(
-           "userDetails",
-           JSON.stringify({
-             password: values.password,
-           })
-         );
-       }
-       setOpenSnackbar(true);
-       setTimeout(() => {
-         localStorage.removeItem("resetToken");
-         navigate("/login");
-       }, 1500);
-     } else {
-       setErrorSnackbar(true);
-       alert(result.message || "Password reset failed.");
-     }
-   } catch (error) {
-     console.error("Error:", error);
-     setErrorSnackbar(true);
-     console.log("catch token", token);
-     console.log("catch token", storedToken);
-   } finally {
-     setIsSubmitting(false);
-   }
- };
-
+      if (response.ok) {
+        if (remember) {
+          localStorage.setItem(
+            "userDetails",
+            JSON.stringify({
+              password: values.password,
+            })
+          );
+        }
+        setOpenSnackbar(true);
+        setTimeout(() => {
+          localStorage.removeItem("resetToken");
+          navigate("/login");
+        }, 1500);
+      } else {
+        setErrorSnackbar(true);
+        alert(result.message || "Password reset failed.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setErrorSnackbar(true);
+      console.log("catch token", token);
+      console.log("catch token", storedToken);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const handleSnackbarClose = () => {
     setOpenSnackbar(false);

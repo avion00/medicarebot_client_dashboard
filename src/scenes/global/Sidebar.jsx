@@ -71,7 +71,7 @@ const Sidebar = ({ isSidebar }) => {
           backgroundColor: "transparent !important",
         },
         "& .pro-inner-item": {
-          padding: "5px 35px 5px 20px !important",
+          padding: "0px 35px 5px 20px !important",
         },
         "& .pro-inner-item:hover": {
           color: "#868dfb !important",
@@ -91,7 +91,7 @@ const Sidebar = ({ isSidebar }) => {
             onClick={() => setIsCollapsed(!isCollapsed)}
             icon={isCollapsed ? <MenuOutlinedIcon /> : undefined}
             style={{
-              margin: "20px 0 20px 0",
+              margin: isCollapsed ? "30px 0 20px 0" : "15px 0 20px 0",
               color: colors.grey[100],
             }}
           >
@@ -162,7 +162,7 @@ const Sidebar = ({ isSidebar }) => {
           )}
 
           <Box paddingLeft={isCollapsed ? undefined : "10%"}>
-            <Typography
+            {/* <Typography
               variant="h6"
               color={colors.grey[300]}
               sx={{
@@ -171,7 +171,7 @@ const Sidebar = ({ isSidebar }) => {
               }}
             >
               Client Dashboard
-            </Typography>
+            </Typography> */}
 
             <Item
               title="Dashboard"
@@ -323,7 +323,7 @@ const Sidebar = ({ isSidebar }) => {
               </MenuItem>
             </SubMenu>
 
-            <Typography
+            {/* <Typography
               variant="h6"
               color={colors.grey[300]}
               sx={{
@@ -332,7 +332,7 @@ const Sidebar = ({ isSidebar }) => {
               }}
             >
               Chat Logs
-            </Typography>
+            </Typography> */}
             <Item
               title="Chat Logs"
               to="/chatLogs"
@@ -395,7 +395,7 @@ const Sidebar = ({ isSidebar }) => {
               </MenuItem>
             </SubMenu> */}
 
-            <Typography
+            {/* <Typography
               variant="h6"
               color={colors.grey[300]}
               sx={{
@@ -404,17 +404,17 @@ const Sidebar = ({ isSidebar }) => {
               }}
             >
               Partners Hub
-            </Typography>
+            </Typography> */}
 
             <Item
-              title="Add CRM"
+              title="Add Leads"
               to="/add_crm"
               icon={<PlaylistAddIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
-              title="View CRM"
+              title="View Leads"
               to="/view_crm"
               icon={<PaddingIcon />}
               selected={selected}
@@ -445,13 +445,13 @@ const Sidebar = ({ isSidebar }) => {
               setSelected={setSelected}
             />
 
-            <Typography
+            {/* <Typography
               variant="h6"
               color={colors.grey[300]}
               sx={{ m: "15px 0 5px 20px" }}
             >
               Profile
-            </Typography>
+            </Typography> */}
             <Item
               title="Edit Profile"
               to="/editProfile"
@@ -467,13 +467,13 @@ const Sidebar = ({ isSidebar }) => {
               setSelected={setSelected}
             />
 
-            <Typography
+            {/* <Typography
               variant="h6"
               color={colors.grey[300]}
               sx={{ m: "15px 0 5px 20px" }}
             >
               Help
-            </Typography>
+            </Typography> */}
 
             <Item
               title="Help Center"

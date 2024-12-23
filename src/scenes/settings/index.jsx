@@ -276,7 +276,7 @@ const Settings = () => {
         alignItems="center"
         flexWrap="wrap"
       >
-        <Header title="CONFIGURE BOTS" subtitle="Set up and configure bots" />
+        <Header title="SETTING MANAGEMENT" subtitle="Set up Setting and configure bots" />
 
         <Button
           onClick={configureBots}

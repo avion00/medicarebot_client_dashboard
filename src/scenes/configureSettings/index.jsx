@@ -1,4 +1,13 @@
-import { Box, Button, useTheme, Snackbar, Typography, FormControl, InputLabel, Input } from "@mui/material";
+import {
+  Box,
+  Button,
+  useTheme,
+  Snackbar,
+  Typography,
+  FormControl,
+  InputLabel,
+  Input,
+} from "@mui/material";
 import { tokens } from "../../theme";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import Header from "../../components/Header";
@@ -10,7 +19,7 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { SnackbarContent } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-import  {  useEffect } from "react";
+import { useEffect } from "react";
 import trainingDataJson from "../../data/trainingData.json";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
@@ -24,11 +33,9 @@ const ConfigureSetting = () => {
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [smsNotifications, setSmsNotifications] = useState(false);
 
-
-
-  const [ setBackupStatus] = useState("");
-  const [ setRestoreStatus] = useState("");
-  const [ setDeleteStatus] = useState("");
+  const [setBackupStatus] = useState("");
+  const [setRestoreStatus] = useState("");
+  const [setDeleteStatus] = useState("");
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -75,9 +82,6 @@ const ConfigureSetting = () => {
     }
   };
 
-  
-
-
   const [trainingData, setTrainingData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newIntent, setNewIntent] = useState("");
@@ -119,8 +123,6 @@ const ConfigureSetting = () => {
     setTrainingData(trainingData.filter((_, i) => i !== index));
   };
 
-
-
   return (
     <Box m="20px">
       {/* HEADER */}
@@ -130,7 +132,10 @@ const ConfigureSetting = () => {
         alignItems="center"
         flexWrap="wrap"
       >
-        <Header title="TRAIN BOTS" subtitle="Train your all settings" />
+        <Header
+          title="CONFIGURE SETTINGS AND TRAIN BOTS"
+          subtitle="Configure and Train your all settings"
+        />
         <Box>
           <Button
             onClick={() => setIsModalOpen(true)}

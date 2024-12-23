@@ -131,7 +131,10 @@ const ConfigureSetting = () => {
         alignItems="center"
         flexWrap="wrap"
       >
-        <Header title="TRAIN BOTS" subtitle="Train your all settings" />
+        <Header
+          title="CONFIGURE SETTINGS"
+          subtitle="Configure your all settings"
+        />
         <Box>
           <Button
             onClick={() => setIsModalOpen(true)}
@@ -161,7 +164,7 @@ const ConfigureSetting = () => {
             flexGrow: "1",
             width: "100%",
             borderRight: `1px solid ${colors.grey[700]}`,
-            paddingRight: "2em"
+            paddingRight: "2em",
           }}
         >
           <Box
@@ -175,8 +178,8 @@ const ConfigureSetting = () => {
               style={{
                 fontSize: "16px",
                 fontWeight: "700",
-                padding: '.75em',
-                background: colors.primary[400]
+                padding: ".75em",
+                background: colors.primary[400],
               }}
             >
               General Settings
@@ -208,7 +211,6 @@ const ConfigureSetting = () => {
                 backgroundColor: colors.primary[500],
                 borderRadius: "4px",
                 border: `1px solid ${colors.grey[700]}`,
-                
               }}
             />
             <Box>

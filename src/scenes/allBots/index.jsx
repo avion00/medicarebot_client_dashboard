@@ -6,6 +6,7 @@ import {
   IconButton,
   InputBase,
 } from "@mui/material";
+import { useEffect, useState } from "react";
 import { tokens } from "../../theme";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { DataGrid } from "@mui/x-data-grid";
@@ -13,15 +14,28 @@ import Header from "../../components/Header";
 import { AllBotData } from "../../data/allBotData";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
+import { useNavigate, useLocation } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
 const AllBots = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const location = useLocation();
+  const [token, setToken] = useState(null);
+  const navigate = useNavigate();
   const isNonMobile = useMediaQuery("(min-width: 768px)"); // For screens >= 768px
   const isTab = useMediaQuery("(min-width: 1200px)"); // For screens >= 1200px (Tablet and larger)
   const isSmallTab = useMediaQuery("(min-width: 961px)"); // For screens >= 961px (Tablet and larger)
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const extractedToken = queryParams.get("token");
+    if (extractedToken) {
+      localStorage.setItem("resetToken", extractedToken);
+      setToken(extractedToken);
+    }
+  }, [location.search]);
 
   // Event Handlers
   const handleEdit = (id) => {
@@ -58,7 +72,7 @@ const AllBots = () => {
       headerName: "Last Interaction",
       flex: 1,
       renderCell: (params) => (
-        <Typography color={colors.greenAccent[500]}>
+        <Typography variant="h6" color={colors.blueAccent[100]}>
           {params.row.lastInteraction}
         </Typography>
       ),
@@ -70,9 +84,10 @@ const AllBots = () => {
       renderCell: (params) => (
         <Box display="flex" gap=".5em">
           <IconButton
+           
             onClick={() => handleEdit(params.row.id)}
             aria-label="edit"
-            sx={{ color: colors.grey[200] }}
+            sx={{ color: colors.greenAccent[300] }}
           >
             <EditIcon />
           </IconButton>
@@ -113,6 +128,7 @@ const AllBots = () => {
         />
         <Box>
           <Button
+            onClick={() => navigate("/addbot")}
             sx={{
               background: "linear-gradient(45deg, #062994, #0E72E1)",
               color: "#fff",
