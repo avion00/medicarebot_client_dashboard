@@ -15,6 +15,7 @@ import {
   Alert,
   Checkbox,
   FormControlLabel,
+  FormGroup,
 } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
 import Header from "../../components/Header";
@@ -22,6 +23,28 @@ import { tokens } from "../../theme";
 import ExtensionIcon from "@mui/icons-material/Extension";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import axios from "axios";
+
+
+
+
+
+
+
+
+
+import SaveIcon from "@mui/icons-material/Save";
+import BackupIcon from "@mui/icons-material/Backup";
+import RestoreIcon from "@mui/icons-material/Restore";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+// import { SnackbarContent } from "@mui/material";
+// import AddIcon from "@mui/icons-material/Add";
+
+
+
+
+
+
+
 
 const Settings = () => {
   const theme = useTheme();
@@ -268,6 +291,74 @@ const Settings = () => {
     }
   };
 
+
+
+
+
+
+
+
+  
+    const [apiUrl, setApiUrl] = useState("");
+    const [emailNotifications, setEmailNotifications] = useState(true);
+    const [smsNotifications, setSmsNotifications] = useState(false);
+  
+    const [setBackupStatus] = useState("");
+    const [setRestoreStatus] = useState("");
+    const [setDeleteStatus] = useState("");
+  
+
+    // const [snackbarAction, setSnackbarAction] = useState(""); 
+  
+    const handleSnackbar = (message, actionType) => {
+      setSnackbarMessage(message);
+      setOpenSnackbar(true);
+      // setSnackbarAction(actionType); 
+      setTimeout(() => setOpenSnackbar(false), 3000); // Close Snackbar after 3 seconds
+    };
+  
+    const handleSaveSettings = () => {
+      handleSnackbar(`API URL saved: ${apiUrl}`);
+    };
+  
+    const handleSaveNotifications = () => {
+      handleSnackbar(
+        `Notifications saved:\nEmail: ${
+          emailNotifications ? "On" : "Off"
+        }\nSMS: ${smsNotifications ? "On" : "Off"}`
+      );
+    };
+  
+    const handleBackupData = () => {
+      setBackupStatus("Backup successful.");
+      handleSnackbar("Backup successful.");
+    };
+  
+    const handleRestoreData = () => {
+      // Simulating data restoration
+      setRestoreStatus("Data restored.");
+      handleSnackbar("Data restored.");
+    };
+  
+    const handleDeleteData = () => {
+      if (
+        window.confirm(
+          "Are you sure you want to delete all data? This action cannot be undone."
+        )
+      ) {
+        setDeleteStatus("All data deleted.");
+        handleSnackbar("All data deleted.", "delete");
+      }
+    };
+
+
+
+
+
+
+
+
+
   return (
     <Box m="20px">
       <Box
@@ -276,7 +367,10 @@ const Settings = () => {
         alignItems="center"
         flexWrap="wrap"
       >
-        <Header title="SETTING MANAGEMENT" subtitle="Set up Setting and configure bots" />
+        <Header
+          title="SETTING MANAGEMENT"
+          subtitle="Set up Setting and configure bots"
+        />
 
         <Button
           onClick={configureBots}
@@ -1176,6 +1270,222 @@ const Settings = () => {
           </Box>
         </div>
       </Box>
+
+      {/* configure settings */}
+      <Box>
+        <Box
+          className="settings-section"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Typography
+            variant="h3"
+            fontWeight="bold"
+            gutterBottom
+            color={colors.grey[100]}
+            sx={{ mt: "1em", mb: ".5em" }}
+          >
+            General Settings
+          </Typography>
+
+          <TextField
+            label="API URL"
+            variant="filled"
+            type="url"
+            name="apiURL"
+            value={apiUrl}
+            onChange={(e) => setApiUrl(e.target.value)}
+            sx={{
+              flexGrow: "1",
+              m: "1em 0",
+              backgroundColor: colors.primary[400],
+              "& .MuiFilledInput-root": {
+                backgroundColor: colors.primary[400],
+                color: colors.grey[100],
+                "&.Mui-focused": {
+                  backgroundColor: colors.primary[400],
+                  borderColor: colors.grey[100],
+                },
+                "&:hover": {
+                  backgroundColor: colors.primary[400],
+                },
+              },
+              "& .MuiInputLabel-root": {
+                color: colors.grey[100],
+                "&.Mui-focused": {
+                  color: colors.grey[100],
+                  fontWeight: "bold",
+                },
+              },
+              "& .MuiInputBase-input": {
+                color: colors.grey[100],
+              },
+            }}
+          />
+
+          <Box>
+            <Button
+              onClick={handleSaveSettings}
+              color="secondary"
+              variant="outlined"
+              style={{
+                borderRadius: "20px",
+                marginRight: "8px",
+              }}
+            >
+              <SaveIcon sx={{ mr: "10px" }} />
+              Save Settings
+            </Button>
+          </Box>
+        </Box>
+
+        <Box
+          className="settings-section"
+          mt={3}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Typography
+            variant="h3"
+            fontWeight="bold"
+            gutterBottom
+            color={colors.grey[100]}
+            sx={{ mt: "1em", mb: ".5em" }}
+          >
+            Notification Preferences
+          </Typography>
+          <Box
+          sx={{
+            m: "0 1em",
+          }}>
+            <FormControl component="fieldset">
+              <FormGroup>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={emailNotifications}
+                      onChange={() =>
+                        setEmailNotifications(!emailNotifications)
+                      }
+                      sx={{
+                        "&.Mui-checked": { color: "#0E72E1" },
+                      }}
+                    />
+                  }
+                  label="Email Notifications"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={smsNotifications}
+                      onChange={() => setSmsNotifications(!smsNotifications)}
+                      sx={{
+                        "&.Mui-checked": { color: "#0E72E1" },
+                      }}
+                    />
+                  }
+                  label="SMS Notifications"
+                />
+              </FormGroup>
+            </FormControl>
+          </Box>
+
+          <Box mt=".5em">
+            <Button
+              onClick={handleSaveNotifications}
+              color="secondary"
+              variant="outlined"
+              style={{
+                borderRadius: "20px",
+                marginRight: "8px",
+              }}
+            >
+              <SaveIcon sx={{ mr: "10px" }} />
+              Save Notification Preferences
+            </Button>
+          </Box>
+        </Box>
+
+        <Box className="settings-section" mt={5}>
+          <Typography
+            variant="h3"
+            fontWeight="bold"
+            gutterBottom
+            color={colors.grey[100]}
+            sx={{ mt: "1em", mb: ".5em" }}
+          >
+            Data Management
+          </Typography>
+
+          <Box
+            style={{
+              display: "flex",
+              gap: "1em",
+              flexWrap: "wrap",
+              alignItems: "center",
+            }}
+          >
+            <Box>
+              <Button
+                onClick={handleBackupData}
+                color="secondary"
+                variant="outlined"
+                style={{
+                  borderRadius: "20px",
+                  marginRight: "8px",
+                }}
+              >
+                <BackupIcon sx={{ mr: ".5em" }} />
+                Backup Data
+              </Button>
+            </Box>
+            <Box>
+              <Button
+                onClick={handleRestoreData}
+                variant="outlined"
+                sx={{
+                  color: colors.blueAccent[300],
+                  borderColor: colors.blueAccent[300],
+                  borderRadius: "20px",
+                  marginRight: "8px",
+                  "&:hover": {
+                    backgroundColor: colors.blueAccent[700],
+                    borderColor: colors.blueAccent[700],
+                  },
+                }}
+              >
+                <RestoreIcon sx={{ mr: ".5em" }} />
+                Restore Data
+              </Button>
+            </Box>
+            <Box mt=".5em">
+              <Button
+                onClick={handleDeleteData}
+                variant="outlined"
+                sx={{
+                  color: colors.blueAccent[300],
+                  borderColor: colors.blueAccent[300],
+                  borderRadius: "20px",
+                  marginRight: "8px",
+                  "&:hover": {
+                    backgroundColor: colors.blueAccent[700],
+                    borderColor: colors.blueAccent[700],
+                  },
+                }}
+              >
+                <DeleteForeverIcon sx={{ mr: ".5em" }} />
+                Delete All Data
+              </Button>
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+
+      {/* Snackbar */}
       <Snackbar
         open={openSnackbar}
         autoHideDuration={6000}

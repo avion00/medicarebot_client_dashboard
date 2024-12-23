@@ -14,7 +14,6 @@ import botsData from "../../data/ActiveBotsData.json"; // Import JSON file
 import RotateLeftIcon from "@mui/icons-material/RotateLeft";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import EditIcon from "@mui/icons-material/Edit";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import SearchIcon from "@mui/icons-material/Search";
 
 
@@ -32,35 +31,15 @@ const DeactivateBots = () => {
     setDeactivatedBots(inactiveBots);
   }, []);
 
-  const handleReactivateSelected = () => {
-    const updatedData = deactivatedBots.map((bot) => {
-      if (checkedItems.includes(bot.name)) {
-        return { ...bot, status: "Active" };
-      }
-      return bot;
-    });
-
-    const filteredData = updatedData.filter((bot) => bot.status === "Inactive");
-    setDeactivatedBots(filteredData);
-    setCheckedItems([]);
-
-    // Update the JSON file would require an API call or similar method
-    localStorage.setItem("botsData", JSON.stringify(updatedData));
-  };
-
   const handleCheckboxChange = (ids) => {
     setCheckedItems(
       ids.map((id) => deactivatedBots.find((bot) => bot.id === id).name)
     );
   };
 
-    const handleEdit = (id) => {
-      console.log("Edit clicked for ID:", id);
-    };
-
-    const handleView = (id) => {
-      console.log("View clicked for ID:", id);
-    };
+  const handleEdit = (id) => {
+    console.log("Edit clicked for ID:", id);
+  };
 
   const deactiveData = [
     { field: "id", headerName: "ID", flex: 0.25 },
@@ -74,6 +53,18 @@ const DeactivateBots = () => {
       field: "status",
       headerName: "Status",
       flex: 0.75,
+      renderCell: (params) => (
+        <Typography
+          variant="h6"
+          sx={{
+            backgroundColor: colors.redAccent[700],
+            borderRadius: "20px",
+            padding: "0px 10px",
+          }}
+        >
+          {params.row.status}
+        </Typography>
+      ),
     },
     {
       field: "createdOn",
@@ -121,19 +112,51 @@ const DeactivateBots = () => {
             aria-label="edit"
             sx={{ color: colors.greenAccent[200] }}
           >
-            <EditIcon />
+            <EditIcon sx={{ fontSize: "16px" }} />
           </IconButton>
           <IconButton
-            onClick={() => handleView(params.row.id)}
+            onClick={() => handleReactivateSingle(params.row.id)}
             aria-label="view"
             sx={{ color: colors.grey[100] }}
           >
-            <VisibilityIcon />
+            <RotateLeftIcon sx={{ fontSize: "16px" }} />
           </IconButton>
         </Box>
       ),
     },
   ];
+
+  const handleReactivateSelected = () => {
+    const updatedData = deactivatedBots.map((bot) => {
+      if (checkedItems.includes(bot.name)) {
+        return { ...bot, status: "Active" };
+      }
+      return bot;
+    });
+
+    const filteredData = updatedData.filter((bot) => bot.status === "Inactive");
+    setDeactivatedBots(filteredData);
+    setCheckedItems([]);
+
+    // Update the JSON file would require an API call or similar method
+    localStorage.setItem("botsData", JSON.stringify(updatedData));
+  };
+
+  const handleReactivateSingle = (id) => {
+    const updatedBots = deactivatedBots.map((bot) =>
+      bot.id === id ? { ...bot, status: "Active" } : bot
+    );
+
+    // Remove the reactivated bot from the deactivatedBots list
+    const remainingBots = updatedBots.filter(
+      (bot) => bot.status === "Inactive"
+    );
+
+    setDeactivatedBots(remainingBots);
+
+    // Update the JSON file (if necessary)
+    localStorage.setItem("botsData", JSON.stringify(updatedBots));
+  };
 
   return (
     <Box m="20px">
@@ -200,7 +223,7 @@ const DeactivateBots = () => {
               borderBottom: "none",
             },
             "& .name-column--cell": {
-              color: colors.greenAccent[300],
+              color: colors.blueAccent[200],
             },
             "& .MuiDataGrid-columnHeaders": {
               backgroundColor: colors.primary[400],

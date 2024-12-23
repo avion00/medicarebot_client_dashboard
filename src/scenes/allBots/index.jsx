@@ -84,19 +84,18 @@ const AllBots = () => {
       renderCell: (params) => (
         <Box display="flex" gap=".5em">
           <IconButton
-           
             onClick={() => handleEdit(params.row.id)}
             aria-label="edit"
             sx={{ color: colors.greenAccent[300] }}
           >
-            <EditIcon />
+            <EditIcon sx={{ fontSize: "16px" }} />
           </IconButton>
           <IconButton
             onClick={() => handleView(params.row.id)}
             aria-label="view"
             sx={{ color: colors.grey[200] }}
           >
-            <VisibilityIcon />
+            <VisibilityIcon sx={{ fontSize: "16px" }} />
           </IconButton>
         </Box>
       ),

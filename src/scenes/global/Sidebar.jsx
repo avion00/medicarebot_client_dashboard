@@ -16,6 +16,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import BlurOffIcon from "@mui/icons-material/BlurOff";
 import UpdateIcon from "@mui/icons-material/Update";
 import LayersIcon from "@mui/icons-material/Layers";
+import QuizIcon from "@mui/icons-material/Quiz";
 import PaidIcon from "@mui/icons-material/Paid";
 import AddIcon from "@mui/icons-material/Add";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
@@ -63,7 +64,6 @@ const Sidebar = ({ isSidebar }) => {
         zIndex: isNonMobile ? 1 : 1000,
         overflowY: "auto",
         transition: "width 0.3s ease",
-
         "& .pro-sidebar-inner": {
           backgroundColor: colors.primary[400],
         },
@@ -184,6 +184,7 @@ const Sidebar = ({ isSidebar }) => {
               title="Manage Bots"
               icon={<ManageAccountsIcon />}
               style={{
+                fontSize: "14px",
                 color: colors.grey[100],
                 "& .pro-menu-item.active": {
                   color: "#6870fa !important",
@@ -486,6 +487,14 @@ const Sidebar = ({ isSidebar }) => {
               title="Customer Support"
               to="/customerSupport"
               icon={<SupportAgentIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+
+            <Item
+              title="FAQ"
+              to="/faq"
+              icon={<QuizIcon />}
               selected={selected}
               setSelected={setSelected}
             />

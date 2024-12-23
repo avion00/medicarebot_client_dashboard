@@ -159,7 +159,7 @@ const AddCRM = () => {
         alignItems="center"
         flexWrap="wrap"
       >
-        <Header title="ADD NEW CRM" subtitle="Add your new CRM" />
+        <Header title="ADD NEW LEADS" subtitle="Add your new LEADS" />
         <Box>
           <Button
             type="submit"
