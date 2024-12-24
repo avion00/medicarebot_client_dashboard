@@ -35,8 +35,9 @@ import AddBot from "./scenes/addBot/index";
 import AddCRM from "./scenes/add_CRM/index";
 import ViewCRM from "./scenes/view_CRM/index";
 import AllBots from "./scenes/allBots/index";
-import HelpCenter from "./scenes/helpCenter/index";
+import ContactUs from "./scenes/contactUs/index";
 import CustomerSupport from "./scenes/customerSupport/index";
+import ViewProfile from "./scenes/viewProfile/index";
 
 
 
@@ -123,8 +124,9 @@ function App() {
                 <Route path="/allBots" element={<AllBots />} />
                 <Route path="/add_crm" element={<AddCRM />} />
                 <Route path="/view_crm" element={<ViewCRM />} />
-                <Route path="/helpCenter" element={<HelpCenter />} />
+                <Route path="/contactUs" element={<ContactUs />} />
                 <Route path="/customerSupport" element={<CustomerSupport />} />
+                <Route path="/viewProfile" element={<ViewProfile />} />
               </Routes>
             </main>
           </div>

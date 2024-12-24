@@ -15,7 +15,7 @@ import {
   Alert,
   Checkbox,
   FormControlLabel,
-  FormGroup,
+  // FormGroup,
 } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
 import Header from "../../components/Header";
@@ -32,13 +32,12 @@ import axios from "axios";
 
 
 
-import SaveIcon from "@mui/icons-material/Save";
-import BackupIcon from "@mui/icons-material/Backup";
-import RestoreIcon from "@mui/icons-material/Restore";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+// import SaveIcon from "@mui/icons-material/Save";
+// import BackupIcon from "@mui/icons-material/Backup";
+// import RestoreIcon from "@mui/icons-material/Restore";
+// import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 // import { SnackbarContent } from "@mui/material";
 // import AddIcon from "@mui/icons-material/Add";
-
 
 
 
@@ -51,7 +50,10 @@ const Settings = () => {
   const colors = tokens(theme.palette.mode);
   const isNonMobile = useMediaQuery("(min-width:768px)");
 
-  const [configResponse, setConfigResponse] = useState("");
+  const [
+    // configResponse,
+     setConfigResponse] = useState("");
+     
   const [advancedSettings, setAdvancedSettings] = useState({
     responseTime: "",
     supportedLanguages: [],
@@ -299,57 +301,57 @@ const Settings = () => {
 
 
   
-    const [apiUrl, setApiUrl] = useState("");
-    const [emailNotifications, setEmailNotifications] = useState(true);
-    const [smsNotifications, setSmsNotifications] = useState(false);
+    // const [apiUrl, setApiUrl] = useState("");
+    // const [emailNotifications, setEmailNotifications] = useState(true);
+    // const [smsNotifications, setSmsNotifications] = useState(false);
   
-    const [setBackupStatus] = useState("");
-    const [setRestoreStatus] = useState("");
-    const [setDeleteStatus] = useState("");
+    // const [setBackupStatus] = useState("");
+    // const [setRestoreStatus] = useState("");
+    // const [setDeleteStatus] = useState("");
   
 
-    // const [snackbarAction, setSnackbarAction] = useState(""); 
+    // // const [snackbarAction, setSnackbarAction] = useState(""); 
   
-    const handleSnackbar = (message, actionType) => {
-      setSnackbarMessage(message);
-      setOpenSnackbar(true);
-      // setSnackbarAction(actionType); 
-      setTimeout(() => setOpenSnackbar(false), 3000); // Close Snackbar after 3 seconds
-    };
+    // const handleSnackbar = (message, actionType) => {
+    //   setSnackbarMessage(message);
+    //   setOpenSnackbar(true);
+    //   // setSnackbarAction(actionType); 
+    //   setTimeout(() => setOpenSnackbar(false), 3000); // Close Snackbar after 3 seconds
+    // };
   
-    const handleSaveSettings = () => {
-      handleSnackbar(`API URL saved: ${apiUrl}`);
-    };
+    // const handleSaveSettings = () => {
+    //   handleSnackbar(`API URL saved: ${apiUrl}`);
+    // };
   
-    const handleSaveNotifications = () => {
-      handleSnackbar(
-        `Notifications saved:\nEmail: ${
-          emailNotifications ? "On" : "Off"
-        }\nSMS: ${smsNotifications ? "On" : "Off"}`
-      );
-    };
+    // const handleSaveNotifications = () => {
+    //   handleSnackbar(
+    //     `Notifications saved:\nEmail: ${
+    //       emailNotifications ? "On" : "Off"
+    //     }\nSMS: ${smsNotifications ? "On" : "Off"}`
+    //   );
+    // };
   
-    const handleBackupData = () => {
-      setBackupStatus("Backup successful.");
-      handleSnackbar("Backup successful.");
-    };
+    // const handleBackupData = () => {
+    //   setBackupStatus("Backup successful.");
+    //   handleSnackbar("Backup successful.");
+    // };
   
-    const handleRestoreData = () => {
-      // Simulating data restoration
-      setRestoreStatus("Data restored.");
-      handleSnackbar("Data restored.");
-    };
+    // const handleRestoreData = () => {
+    //   // Simulating data restoration
+    //   setRestoreStatus("Data restored.");
+    //   handleSnackbar("Data restored.");
+    // };
   
-    const handleDeleteData = () => {
-      if (
-        window.confirm(
-          "Are you sure you want to delete all data? This action cannot be undone."
-        )
-      ) {
-        setDeleteStatus("All data deleted.");
-        handleSnackbar("All data deleted.", "delete");
-      }
-    };
+    // const handleDeleteData = () => {
+    //   if (
+    //     window.confirm(
+    //       "Are you sure you want to delete all data? This action cannot be undone."
+    //     )
+    //   ) {
+    //     setDeleteStatus("All data deleted.");
+    //     handleSnackbar("All data deleted.", "delete");
+    //   }
+    // };
 
 
 
@@ -1219,7 +1221,7 @@ const Settings = () => {
           fontWeight="bold"
           gutterBottom
           color={colors.grey[100]}
-          sx={{ mt: "1em" }}
+          sx={{ mt: "1em", padding: " 0 .25em" }}
         >
           Activity Logs
         </Typography>
@@ -1272,7 +1274,7 @@ const Settings = () => {
       </Box>
 
       {/* configure settings */}
-      <Box>
+      {/* <Box>
         <Box
           className="settings-section"
           style={{
@@ -1483,7 +1485,7 @@ const Settings = () => {
             </Box>
           </Box>
         </Box>
-      </Box>
+      </Box> */}
 
       {/* Snackbar */}
       <Snackbar

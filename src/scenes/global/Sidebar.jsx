@@ -5,17 +5,13 @@ import { Link } from "react-router-dom";
 import "react-pro-sidebar/dist/css/styles.css";
 import { tokens } from "../../theme";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import PasswordIcon from "@mui/icons-material/Password";
-// import SmartToyIcon from "@mui/icons-material/SmartToy";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import SettingsIcon from "@mui/icons-material/Settings";
 import BlurOffIcon from "@mui/icons-material/BlurOff";
-import UpdateIcon from "@mui/icons-material/Update";
-import LayersIcon from "@mui/icons-material/Layers";
 import QuizIcon from "@mui/icons-material/Quiz";
 import PaidIcon from "@mui/icons-material/Paid";
 import AddIcon from "@mui/icons-material/Add";
@@ -25,6 +21,12 @@ import AlignHorizontalLeftIcon from "@mui/icons-material/AlignHorizontalLeft";
 import ChatIcon from "@mui/icons-material/Chat";
 import HelpIcon from "@mui/icons-material/Help";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
+import SpeedIcon from "@mui/icons-material/Speed";
+import HandshakeIcon from "@mui/icons-material/Handshake";
+import ForumIcon from "@mui/icons-material/Forum";
+import PersonIcon from "@mui/icons-material/Person";
+import FaceIcon from "@mui/icons-material/Face";
+import CallIcon from "@mui/icons-material/Call";
 
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
@@ -279,13 +281,54 @@ const Sidebar = ({ isSidebar }) => {
                   Train Bots
                 </Link>
               </MenuItem> */}
+              <MenuItem
+                icon={<SettingsIcon />}
+                onClick={() => setSelected("Train Bots")}
+                style={{
+                  marginBottom: ".5em",
+                  color:
+                    selected === "Train Bots" ? "#6870fa" : colors.grey[100],
+                }}
+              >
+                <Link
+                  to="/settings"
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    fontSize: "13px",
+                  }}
+                >
+                  Train Bots
+                </Link>
+              </MenuItem>
 
               <MenuItem
+                icon={<SpeedIcon />}
+                onClick={() => setSelected("Test Bots")}
+                style={{
+                  marginBottom: ".5em",
+                  color:
+                    selected === "Test Bots" ? "#6870fa" : colors.grey[100],
+                }}
+              >
+                <Link
+                  to="/updateTraining"
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    fontSize: "13px",
+                  }}
+                >
+                  Test Bots
+                </Link>
+              </MenuItem>
+
+              {/* <MenuItem
                 icon={<UpdateIcon />}
-                onClick={() => setSelected("Account")}
+                onClick={() => setSelected("Train Bots")}
                 style={{
                   marginBottom: "1em",
-                  color: selected === "Account" ? "#6870fa" : colors.grey[100],
+                  color: selected === "TrainBots" ? "#6870fa" : colors.grey[100],
                 }}
               >
                 <Link
@@ -298,7 +341,7 @@ const Sidebar = ({ isSidebar }) => {
                 >
                   Train Bots
                 </Link>
-              </MenuItem>
+              </MenuItem> */}
 
               <MenuItem
                 icon={<BlurOffIcon />}
@@ -319,7 +362,7 @@ const Sidebar = ({ isSidebar }) => {
                     color: "inherit",
                   }}
                 >
-                  Deactivate Bots
+                  Deactivate
                 </Link>
               </MenuItem>
             </SubMenu>
@@ -334,18 +377,12 @@ const Sidebar = ({ isSidebar }) => {
             >
               Chat Logs
             </Typography> */}
-            <Item
-              title="Chat Logs"
-              to="/chatLogs"
-              icon={<ChatIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
 
-            {/* <SubMenu
-              title="Chat logs"
-              icon={<ChatIcon />}
+            <SubMenu
+              title="Partners Hub"
+              icon={<HandshakeIcon />}
               style={{
+                fontSize: "14px",
                 color: colors.grey[100],
                 "& .pro-menu-item.active": {
                   color: "#6870fa !important",
@@ -353,48 +390,160 @@ const Sidebar = ({ isSidebar }) => {
                 "& .pro-sub-menu-item.active": {
                   color: "#6870fa !important",
                 },
-                "& .pro-inner-item:focus": {},
               }}
             >
               <MenuItem
-                icon={<AlignHorizontalLeftIcon />}
-                onClick={() => setSelected("Customer Logs")}
+                icon={<PlaylistAddIcon />}
+                onClick={() => setSelected("Add Partner")}
                 style={{
                   marginBottom: ".5em",
-                  color: selected === "All Bots" ? "#6870fa" : colors.grey[100],
+                  color:
+                    selected === "Add Partner" ? "#6870fa" : colors.grey[100],
                 }}
               >
                 <Link
-                  to="/allBots"
+                  to="/add_crm"
                   style={{
                     textDecoration: "none",
                     color: "inherit",
                     fontSize: "13px",
                   }}
                 >
-                  Customer Logs
+                  Add Partner
                 </Link>
               </MenuItem>
               <MenuItem
-                icon={<AddIcon />}
-                onClick={() => setSelected("Chat History")}
+                icon={<PaddingIcon />}
+                onClick={() => setSelected("view_crm")}
                 style={{
                   marginBottom: ".5em",
-                  color: selected === "Add Bots" ? "#6870fa" : colors.grey[100],
+                  color: selected === "view_crm" ? "#6870fa" : colors.grey[100],
                 }}
               >
                 <Link
-                  to="/addbot"
+                  to="/view_crm"
                   style={{
                     textDecoration: "none",
                     color: "inherit",
                     fontSize: "13px",
                   }}
                 >
-                  Offline Messages
+                  View Partners
                 </Link>
               </MenuItem>
-            </SubMenu> */}
+            </SubMenu>
+
+            <SubMenu
+              title="Chat logs"
+              icon={<ForumIcon />}
+              style={{
+                fontSize: "14px",
+                color: colors.grey[100],
+                "& .pro-menu-item.active": {
+                  color: "#6870fa !important",
+                },
+                "& .pro-sub-menu-item.active": {
+                  color: "#6870fa !important",
+                },
+              }}
+            >
+              <MenuItem
+                icon={<ChatIcon />}
+                onClick={() => setSelected("chatLogs")}
+                style={{
+                  marginBottom: ".5em",
+                  color: selected === "chatLogs" ? "#6870fa" : colors.grey[100],
+                }}
+              >
+                <Link
+                  to="/chatLogs"
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    fontSize: "13px",
+                  }}
+                >
+                  Chat History
+                </Link>
+              </MenuItem>
+            </SubMenu>
+
+            <SubMenu
+              title="Profile"
+              icon={<PersonIcon />}
+              style={{
+                fontSize: "14px",
+                color: colors.grey[100],
+                "& .pro-menu-item.active": {
+                  color: "#6870fa !important",
+                },
+                "& .pro-sub-menu-item.active": {
+                  color: "#6870fa !important",
+                },
+              }}
+            >
+              <MenuItem
+                icon={<FaceIcon />}
+                onClick={() => setSelected("viewProfile")}
+                style={{
+                  marginBottom: ".5em",
+                  color:
+                    selected === "viewProfile" ? "#6870fa" : colors.grey[100],
+                }}
+              >
+                <Link
+                  to="/viewProfile"
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    fontSize: "13px",
+                  }}
+                >
+                  View Profile
+                </Link>
+              </MenuItem>
+              <MenuItem
+                icon={<ManageAccountsIcon />}
+                onClick={() => setSelected("chatLogs")}
+                style={{
+                  marginBottom: ".5em",
+                  color: selected === "chatLogs" ? "#6870fa" : colors.grey[100],
+                }}
+              >
+                <Link
+                  to="/editProfile"
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    fontSize: "13px",
+                  }}
+                >
+                  Edit Profile
+                </Link>
+              </MenuItem>
+              <MenuItem
+                icon={<PasswordIcon />}
+                onClick={() => setSelected("changePassword")}
+                style={{
+                  marginBottom: ".5em",
+                  color:
+                    selected === "changePassword"
+                      ? "#6870fa"
+                      : colors.grey[100],
+                }}
+              >
+                <Link
+                  to="/changePassword"
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    fontSize: "13px",
+                  }}
+                >
+                  Change Password
+                </Link>
+              </MenuItem>
+            </SubMenu>
 
             {/* <Typography
               variant="h6"
@@ -406,21 +555,6 @@ const Sidebar = ({ isSidebar }) => {
             >
               Partners Hub
             </Typography> */}
-
-            <Item
-              title="Add Leads"
-              to="/add_crm"
-              icon={<PlaylistAddIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="View Leads"
-              to="/view_crm"
-              icon={<PaddingIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
 
             <Item
               title="Reports"
@@ -438,14 +572,6 @@ const Sidebar = ({ isSidebar }) => {
               setSelected={setSelected}
             />
 
-            <Item
-              title="Settings"
-              to="/settings"
-              icon={<SettingsIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
             {/* <Typography
               variant="h6"
               color={colors.grey[300]}
@@ -453,20 +579,6 @@ const Sidebar = ({ isSidebar }) => {
             >
               Profile
             </Typography> */}
-            <Item
-              title="Edit Profile"
-              to="/editProfile"
-              icon={<PersonOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Change Password"
-              to="/changePassword"
-              icon={<PasswordIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
 
             {/* <Typography
               variant="h6"
@@ -476,7 +588,7 @@ const Sidebar = ({ isSidebar }) => {
               Help
             </Typography> */}
 
-            <Item
+            {/* <Item
               title="Help Center"
               to="/helpCenter"
               icon={<HelpIcon />}
@@ -497,7 +609,86 @@ const Sidebar = ({ isSidebar }) => {
               icon={<QuizIcon />}
               selected={selected}
               setSelected={setSelected}
-            />
+            /> */}
+
+            <SubMenu
+              title="Help"
+              icon={<HelpIcon />}
+              style={{
+                fontSize: "14px",
+                color: colors.grey[100],
+                "& .pro-menu-item.active": {
+                  color: "#6870fa !important",
+                },
+                "& .pro-sub-menu-item.active": {
+                  color: "#6870fa !important",
+                },
+              }}
+            >
+              <MenuItem
+                icon={<SupportAgentIcon />}
+                onClick={() => setSelected("customerSupport")}
+                style={{
+                  marginBottom: ".5em",
+                  color:
+                    selected === "customerSupport"
+                      ? "#6870fa"
+                      : colors.grey[100],
+                }}
+              >
+                <Link
+                  to="/customerSupport"
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    fontSize: "13px",
+                  }}
+                >
+                  24/7 Chat
+                </Link>
+              </MenuItem>
+
+              <MenuItem
+                icon={<CallIcon />}
+                onClick={() => setSelected("contactUs")}
+                style={{
+                  marginBottom: ".5em",
+                  color:
+                    selected === "contactUs" ? "#6870fa" : colors.grey[100],
+                }}
+              >
+                <Link
+                  to="/contactUs"
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    fontSize: "13px",
+                  }}
+                >
+                  Contact Us
+                </Link>
+              </MenuItem>
+
+              <MenuItem
+                icon={<QuizIcon />}
+                onClick={() => setSelected("faq")}
+                style={{
+                  marginBottom: "1em",
+                  color: selected === "faq" ? "#6870fa" : colors.grey[100],
+                }}
+              >
+                <Link
+                  to="/faq"
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    fontSize: "13px",
+                  }}
+                >
+                  FAQ
+                </Link>
+              </MenuItem>
+            </SubMenu>
           </Box>
         </Menu>
       </ProSidebar>
