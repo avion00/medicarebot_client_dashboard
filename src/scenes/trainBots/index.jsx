@@ -45,7 +45,7 @@ import axios from "axios";
 
 
 
-const Settings = () => {
+const TrainBots = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const isNonMobile = useMediaQuery("(min-width:768px)");
@@ -370,8 +370,8 @@ const Settings = () => {
         flexWrap="wrap"
       >
         <Header
-          title="SETTING MANAGEMENT"
-          subtitle="Set up Setting and configure bots"
+          title="TRAIN BOTS"
+          subtitle=" Train Your bots to perform your task"
         />
 
         <Button
@@ -1506,4 +1506,4 @@ const Settings = () => {
   );
 };
 
-export default Settings;
+export default TrainBots;

@@ -6,11 +6,10 @@ import { tokens } from "../../theme";
 import InteractionsDataJson from "../../data/interactionData.json";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-const Interaction = () => {
+const ChatHistory = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const isNonMobile = useMediaQuery("(min-width:768px)");
-  
 
   const [customerLogs, setCustomerLogs] = useState([]);
   const [chatHistories, setChatHistories] = useState([]);
@@ -22,14 +21,13 @@ const Interaction = () => {
     setOfflineMessages(InteractionsDataJson.offlineMessages);
   }, []);
 
-
   const formatDateAndTime = (timestamp) => {
     const date = new Date(timestamp);
-    const formattedDate = date.toLocaleDateString(); 
+    const formattedDate = date.toLocaleDateString();
     const formattedTime = date.toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
-    }); 
+    });
     return { formattedDate, formattedTime };
   };
 
@@ -42,8 +40,7 @@ const Interaction = () => {
       mt={3}
       sx={{
         flexGrow: "1",
-        width: isNonMobile? "25%" : "100%",
-      
+        width: isNonMobile ? "25%" : "100%",
       }}
     >
       <Box
@@ -82,12 +79,24 @@ const Interaction = () => {
               </Box>
 
               {columns.includes("action") && (
-                <Box sx={{ color: colors.greenAccent[400],overflow:"hidden", height: "25px" }}>
+                <Box
+                  sx={{
+                    color: colors.greenAccent[400],
+                    overflow: "hidden",
+                    height: "25px",
+                  }}
+                >
                   {row.action}
                 </Box>
               )}
               {columns.includes("message") && (
-                <Box sx={{ color: colors.greenAccent[400], height:"25px", overflow: "hidden" }}>
+                <Box
+                  sx={{
+                    color: colors.greenAccent[400],
+                    height: "25px",
+                    overflow: "hidden",
+                  }}
+                >
                   {row.message}
                 </Box>
               )}
@@ -158,4 +167,4 @@ const Interaction = () => {
   );
 };
 
-export default Interaction;
+export default ChatHistory;

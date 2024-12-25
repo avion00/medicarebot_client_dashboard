@@ -23,7 +23,7 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import "./phone-style.css";
 
-const AddCRM = () => {
+const AddPartners = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -159,7 +159,7 @@ const AddCRM = () => {
         alignItems="center"
         flexWrap="wrap"
       >
-        <Header title="ADD NEW LEADS" subtitle="Add your new LEADS" />
+        <Header title="ADD NEW PARTNERS" subtitle="Add your new Partners" />
         <Box>
           <Button
             type="submit"
@@ -173,7 +173,7 @@ const AddCRM = () => {
             }}
           >
             <AddIcon sx={{ mr: "10px" }} />
-            ADD NEW CRM
+            ADD NEW PARTNERS
           </Button>
         </Box>
       </Box>
@@ -872,4 +872,4 @@ const AddCRM = () => {
   );
 };
 
-export default AddCRM;
+export default AddPartners;

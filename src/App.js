@@ -25,19 +25,22 @@ import NewPassword from "./scenes/auth/newPassword/index";
 import EditProfile from "./scenes/editProfile/index";
 import ActiveBots from "./scenes/activeBots/index";
 import ConfigureSettings from "./scenes/configureSettings/index";
-import UpdateTraining from "./scenes/updateTraining/index";
+import TestBots from "./scenes/testBots/index";
 import Deactivate from "./scenes/deactivateBots/index";
-import Settings from "./scenes/settings/index";
-import Interactions from "./scenes/interactions/index";
+import TrainBots from "./scenes/trainBots/index";
 import Billing from "./scenes/billing/index";
 import Reports from "./scenes/reports/index";
 import AddBot from "./scenes/addBot/index";
-import AddCRM from "./scenes/add_CRM/index";
-import ViewCRM from "./scenes/view_CRM/index";
+import AddPartners from "./scenes/addPartners/index";
+import ViewPartners from "./scenes/viewPartners/index";
+import EditPartners from "./scenes/editPartners/index";
 import AllBots from "./scenes/allBots/index";
 import ContactUs from "./scenes/contactUs/index";
 import CustomerSupport from "./scenes/customerSupport/index";
 import ViewProfile from "./scenes/viewProfile/index";
+import ChatHistory from "./scenes/chatHistory/index";
+import InteractionStats from "./scenes/InteractionStats";
+import HumanHandoffs from "./scenes/humanHandoffs/index";
 
 
 
@@ -114,19 +117,25 @@ function App() {
                   path="/configureSettings"
                   element={<ConfigureSettings />}
                 />
-                <Route path="/updateTraining" element={<UpdateTraining />} />
+                <Route path="/testBots" element={<TestBots />} />
                 <Route path="/deactivateBots" element={<Deactivate />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/chatLogs" element={<Interactions />} />
+                <Route path="/trainBots" element={<TrainBots />} />
                 <Route path="/billing" element={<Billing />} />
                 <Route path="/reports" element={<Reports />} />
                 <Route path="/addBot" element={<AddBot />} />
                 <Route path="/allBots" element={<AllBots />} />
-                <Route path="/add_crm" element={<AddCRM />} />
-                <Route path="/view_crm" element={<ViewCRM />} />
+                <Route path="/addPartners" element={<AddPartners />} />
+                <Route path="/editPartners" element={<EditPartners />} />
+                <Route path="/viewPartners" element={<ViewPartners />} />
                 <Route path="/contactUs" element={<ContactUs />} />
                 <Route path="/customerSupport" element={<CustomerSupport />} />
                 <Route path="/viewProfile" element={<ViewProfile />} />
+                <Route
+                  path="/interactionStats"
+                  element={<InteractionStats />}
+                />
+                <Route path="/chatHistory" element={<ChatHistory />} />
+                <Route path="/humanHandoffs" element={<HumanHandoffs />} />
               </Routes>
             </main>
           </div>

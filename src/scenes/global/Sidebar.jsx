@@ -27,6 +27,9 @@ import ForumIcon from "@mui/icons-material/Forum";
 import PersonIcon from "@mui/icons-material/Person";
 import FaceIcon from "@mui/icons-material/Face";
 import CallIcon from "@mui/icons-material/Call";
+import EditIcon from "@mui/icons-material/Edit";
+import LayersIcon from "@mui/icons-material/Layers";
+import EmojiPeopleIcon from "@mui/icons-material/EmojiPeople";
 
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
@@ -291,7 +294,7 @@ const Sidebar = ({ isSidebar }) => {
                 }}
               >
                 <Link
-                  to="/settings"
+                  to="/trainBots"
                   style={{
                     textDecoration: "none",
                     color: "inherit",
@@ -312,7 +315,7 @@ const Sidebar = ({ isSidebar }) => {
                 }}
               >
                 <Link
-                  to="/updateTraining"
+                  to="/testBots"
                   style={{
                     textDecoration: "none",
                     color: "inherit",
@@ -394,7 +397,7 @@ const Sidebar = ({ isSidebar }) => {
             >
               <MenuItem
                 icon={<PlaylistAddIcon />}
-                onClick={() => setSelected("Add Partner")}
+                onClick={() => setSelected("addPartners")}
                 style={{
                   marginBottom: ".5em",
                   color:
@@ -402,26 +405,46 @@ const Sidebar = ({ isSidebar }) => {
                 }}
               >
                 <Link
-                  to="/add_crm"
+                  to="/addPartners"
                   style={{
                     textDecoration: "none",
                     color: "inherit",
                     fontSize: "13px",
                   }}
                 >
-                  Add Partner
+                  Add Partners
+                </Link>
+              </MenuItem>
+              <MenuItem
+                icon={<EditIcon />}
+                onClick={() => setSelected("editPartner")}
+                style={{
+                  marginBottom: ".5em",
+                  color:
+                    selected === "editPartner" ? "#6870fa" : colors.grey[100],
+                }}
+              >
+                <Link
+                  to="/editPartners"
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    fontSize: "13px",
+                  }}
+                >
+                  Edit Partners
                 </Link>
               </MenuItem>
               <MenuItem
                 icon={<PaddingIcon />}
-                onClick={() => setSelected("view_crm")}
+                onClick={() => setSelected("viewPartners")}
                 style={{
                   marginBottom: ".5em",
                   color: selected === "view_crm" ? "#6870fa" : colors.grey[100],
                 }}
               >
                 <Link
-                  to="/view_crm"
+                  to="/viewPartners"
                   style={{
                     textDecoration: "none",
                     color: "inherit",
@@ -449,14 +472,15 @@ const Sidebar = ({ isSidebar }) => {
             >
               <MenuItem
                 icon={<ChatIcon />}
-                onClick={() => setSelected("chatLogs")}
+                onClick={() => setSelected("chatHistory")}
                 style={{
                   marginBottom: ".5em",
-                  color: selected === "chatLogs" ? "#6870fa" : colors.grey[100],
+                  color:
+                    selected === "chatHistory" ? "#6870fa" : colors.grey[100],
                 }}
               >
                 <Link
-                  to="/chatLogs"
+                  to="/chatHistory"
                   style={{
                     textDecoration: "none",
                     color: "inherit",
@@ -464,6 +488,48 @@ const Sidebar = ({ isSidebar }) => {
                   }}
                 >
                   Chat History
+                </Link>
+              </MenuItem>
+              <MenuItem
+                icon={<LayersIcon />}
+                onClick={() => setSelected("interactionStats")}
+                style={{
+                  marginBottom: ".5em",
+                  color:
+                    selected === "interactionStats"
+                      ? "#6870fa"
+                      : colors.grey[100],
+                }}
+              >
+                <Link
+                  to="/interactionStats"
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    fontSize: "13px",
+                  }}
+                >
+                  Interactions States
+                </Link>
+              </MenuItem>
+              <MenuItem
+                icon={<EmojiPeopleIcon />}
+                onClick={() => setSelected("humanHandoffs")}
+                style={{
+                  marginBottom: ".5em",
+                  color:
+                    selected === "humanHandoffs" ? "#6870fa" : colors.grey[100],
+                }}
+              >
+                <Link
+                  to="/humanHandoffs"
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    fontSize: "13px",
+                  }}
+                >
+                  Human Handoffs
                 </Link>
               </MenuItem>
             </SubMenu>
@@ -504,10 +570,11 @@ const Sidebar = ({ isSidebar }) => {
               </MenuItem>
               <MenuItem
                 icon={<ManageAccountsIcon />}
-                onClick={() => setSelected("chatLogs")}
+                onClick={() => setSelected("editProfile")}
                 style={{
                   marginBottom: ".5em",
-                  color: selected === "chatLogs" ? "#6870fa" : colors.grey[100],
+                  color:
+                    selected === "editProfile" ? "#6870fa" : colors.grey[100],
                 }}
               >
                 <Link
@@ -612,7 +679,7 @@ const Sidebar = ({ isSidebar }) => {
             /> */}
 
             <SubMenu
-              title="Help"
+              title="Help Center"
               icon={<HelpIcon />}
               style={{
                 fontSize: "14px",

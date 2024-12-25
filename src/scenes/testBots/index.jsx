@@ -10,7 +10,7 @@ import initialData from "./data.json";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
-const UpdateTraining = () => {
+const TestBots = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   // const isNonMobile = useMediaQuery("(min-width:768px)");
@@ -75,7 +75,7 @@ const UpdateTraining = () => {
         alignItems="center"
         flexWrap="wrap"
       >
-        <Header title="TRAIN BOTS" subtitle="Train your bot with new data" />
+        <Header title="TEST BOTS" subtitle="Test your bot with new data" />
         {/* <Box>
           <Button
             sx={{
@@ -1442,4 +1442,4 @@ const UpdateTraining = () => {
   );
 };
 
-export default UpdateTraining;
+export default TestBots;

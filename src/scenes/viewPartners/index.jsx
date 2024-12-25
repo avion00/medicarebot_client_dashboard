@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   useTheme,
   // Typography,
   IconButton,
@@ -10,22 +9,23 @@ import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import RotateLeftIcon from "@mui/icons-material/RotateLeft";
-import useMediaQuery from "@mui/material/useMediaQuery";
+// import useMediaQuery from "@mui/material/useMediaQuery";
 import EditIcon from "@mui/icons-material/Edit";
 import SearchIcon from "@mui/icons-material/Search";
-import { GridToolbar } from "@mui/x-data-grid";
+// import { GridToolbar } from "@mui/x-data-grid";
 import { LeadsData } from "../../data/viewLeadsData";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const ViewLeads = () => {
+const ViewPartners = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const isNonMobile = useMediaQuery("(min-width:768px)");
+  // const isNonMobile = useMediaQuery("(min-width:768px)");
 
   const [removeLeaders, setRemoveLeaders] = useState([]);
-  const [checkedItems, setCheckedItems] = useState([]);
+  const [
+    // checkedItems,
+     setCheckedItems] = useState([]);
 
   useEffect(() => {
     // Filter inactive bots from the JSON data
@@ -85,21 +85,21 @@ const ViewLeads = () => {
     },
   ];
 
-  const handleRemoveLeadsSelected = () => {
-    const updatedData = removeLeaders.map((bot) => {
-      if (checkedItems.includes(bot.name)) {
-        return { ...bot, status: "Active" };
-      }
-      return bot;
-    });
+  // const handleRemoveLeadsSelected = () => {
+  //   const updatedData = removeLeaders.map((bot) => {
+  //     if (checkedItems.includes(bot.name)) {
+  //       return { ...bot, status: "Active" };
+  //     }
+  //     return bot;
+  //   });
 
-    const filteredData = updatedData.filter((bot) => bot.status === "Inactive");
-    setRemoveLeaders(filteredData);
-    setCheckedItems([]);
+  //   const filteredData = updatedData.filter((bot) => bot.status === "Inactive");
+  //   setRemoveLeaders(filteredData);
+  //   setCheckedItems([]);
 
-    // Update the JSON file would require an API call or similar method
-    localStorage.setItem("botsData", JSON.stringify(updatedData));
-  };
+  //   // Update the JSON file would require an API call or similar method
+  //   localStorage.setItem("botsData", JSON.stringify(updatedData));
+  // };
 
   const handleReactivateSingle = (id) => {
     const updatedBots = removeLeaders.map((bot) =>
@@ -127,8 +127,8 @@ const ViewLeads = () => {
         alignItems="center"
       >
         <Header
-          title="VIEW LEADS"
-          subtitle="List of LEADS for Future Reference"
+          title="VIEW PARTNERS"
+          subtitle="List of Partners for Future Reference"
 />
 
         {/* <Box>
@@ -227,4 +227,4 @@ const ViewLeads = () => {
   );
 };
 
-export default ViewLeads;
+export default ViewPartners;

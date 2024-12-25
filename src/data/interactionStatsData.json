@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "botName": "Bot_1",
+    "frequencyofInteraction": "72 interactions/week",
+    "commonTopics": "Topic 8, Topic 8"
+  },
+  {
+    "id": 2,
+    "botName": "Bot_2",
+    "frequencyofInteraction": "21 interactions/week",
+    "commonTopics": "Topic 4, Topic 4"
+  },
+  {
+    "id": 3,
+    "botName": "Bot_3",
+    "frequencyofInteraction": "83 interactions/week",
+    "commonTopics": "Topic 2, Topic 1"
+  },
+  {
+    "id": 4,
+    "botName": "Bot_4",
+    "frequencyofInteraction": "75 interactions/week",
+    "commonTopics": "Topic 6, Topic 5"
+  },
+  {
+    "id": 5,
+    "botName": "Bot_5",
+    "frequencyofInteraction": "96 interactions/week",
+    "commonTopics": "Topic 6, Topic 5"
+  },
+  {
+    "id": 6,
+    "botName": "Bot_6",
+    "frequencyofInteraction": "2 interactions/week",
+    "commonTopics": "Topic 4, Topic 5"
+  },
+  {
+    "id": 7,
+    "botName": "Bot_7",
+    "frequencyofInteraction": "98 interactions/week",
+    "commonTopics": "Topic 6, Topic 7"
+  },
+  {
+    "id": 8,
+    "botName": "Bot_8",
+    "frequencyofInteraction": "27 interactions/week",
+    "commonTopics": "Topic 7, Topic 6"
+  },
+  {
+    "id": 9,
+    "botName": "Bot_9",
+    "frequencyofInteraction": "40 interactions/week",
+    "commonTopics": "Topic 2, Topic 5"
+  },
+  {
+    "id": 10,
+    "botName": "Bot_10",
+    "frequencyofInteraction": "29 interactions/week",
+    "commonTopics": "Topic 3, Topic 6"
+  },
+  {
+    "id": 11,
+    "botName": "Bot_11",
+    "frequencyofInteraction": "51 interactions/week",
+    "commonTopics": "Topic 2, Topic 8"
+  },
+  {
+    "id": 12,
+    "botName": "Bot_12",
+    "frequencyofInteraction": "93 interactions/week",
+    "commonTopics": "Topic 10, Topic 1"
+  },
+  {
+    "id": 13,
+    "botName": "Bot_13",
+    "frequencyofInteraction": "34 interactions/week",
+    "commonTopics": "Topic 7, Topic 10"
+  },
+  {
+    "id": 14,
+    "botName": "Bot_14",
+    "frequencyofInteraction": "45 interactions/week",
+    "commonTopics": "Topic 2, Topic 2"
+  },
+  {
+    "id": 15,
+    "botName": "Bot_15",
+    "frequencyofInteraction": "39 interactions/week",
+    "commonTopics": "Topic 3, Topic 3"
+  },
+  {
+    "id": 16,
+    "botName": "Bot_16",
+    "frequencyofInteraction": "34 interactions/week",
+    "commonTopics": "Topic 7, Topic 7"
+  },
+  {
+    "id": 17,
+    "botName": "Bot_17",
+    "frequencyofInteraction": "74 interactions/week",
+    "commonTopics": "Topic 2, Topic 3"
+  },
+  {
+    "id": 18,
+    "botName": "Bot_18",
+    "frequencyofInteraction": "50 interactions/week",
+    "commonTopics": "Topic 5, Topic 3"
+  },
+  {
+    "id": 19,
+    "botName": "Bot_19",
+    "frequencyofInteraction": "75 interactions/week",
+    "commonTopics": "Topic 4, Topic 1"
+  },
+  {
+    "id": 20,
+    "botName": "Bot_20",
+    "frequencyofInteraction": "83 interactions/week",
+    "commonTopics": "Topic 8, Topic 9"
+  }
+]
