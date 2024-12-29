@@ -172,7 +172,8 @@ const TestBots = () => {
               onClick={() => console.log("Filter By Clicked")}
               sx={{
                 flex: 0.25,
-                padding: "0.5em 1em ",
+                padding: "0.6em 1em ",
+                width: "fit-content",
                 position: "relative",
                 background: "linear-gradient(45deg, #062994, #0E72E1)",
                 color: "#fff",
@@ -185,7 +186,14 @@ const TestBots = () => {
               }}
             >
               <FilterAltIcon />
-              <Typography>Filter By</Typography>
+              <Typography
+                variant="h6"
+                fontWeight="bold"
+                textAlign="center"
+                width="60px"
+              >
+                Filter By
+              </Typography>
               <ArrowDropDownIcon />
             </Box>
           </Box>

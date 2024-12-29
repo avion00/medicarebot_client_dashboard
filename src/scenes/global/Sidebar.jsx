@@ -30,6 +30,7 @@ import CallIcon from "@mui/icons-material/Call";
 import EditIcon from "@mui/icons-material/Edit";
 import LayersIcon from "@mui/icons-material/Layers";
 import EmojiPeopleIcon from "@mui/icons-material/EmojiPeople";
+import FlagIcon from "@mui/icons-material/Flag";
 
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
@@ -401,7 +402,7 @@ const Sidebar = ({ isSidebar }) => {
                 style={{
                   marginBottom: ".5em",
                   color:
-                    selected === "Add Partner" ? "#6870fa" : colors.grey[100],
+                    selected === "addPartners" ? "#6870fa" : colors.grey[100],
                 }}
               >
                 <Link
@@ -417,11 +418,11 @@ const Sidebar = ({ isSidebar }) => {
               </MenuItem>
               <MenuItem
                 icon={<EditIcon />}
-                onClick={() => setSelected("editPartner")}
+                onClick={() => setSelected("editPartners")}
                 style={{
                   marginBottom: ".5em",
                   color:
-                    selected === "editPartner" ? "#6870fa" : colors.grey[100],
+                    selected === "editPartners" ? "#6870fa" : colors.grey[100],
                 }}
               >
                 <Link
@@ -440,7 +441,8 @@ const Sidebar = ({ isSidebar }) => {
                 onClick={() => setSelected("viewPartners")}
                 style={{
                   marginBottom: ".5em",
-                  color: selected === "view_crm" ? "#6870fa" : colors.grey[100],
+                  color:
+                    selected === "viewPartners" ? "#6870fa" : colors.grey[100],
                 }}
               >
                 <Link
@@ -491,6 +493,61 @@ const Sidebar = ({ isSidebar }) => {
                 </Link>
               </MenuItem>
               <MenuItem
+                icon={<EmojiPeopleIcon />}
+                onClick={() => setSelected("humanHandoffs")}
+                style={{
+                  marginBottom: ".5em",
+                  color:
+                    selected === "humanHandoffs" ? "#6870fa" : colors.grey[100],
+                }}
+              >
+                <Link
+                  to="/humanHandoffs"
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    fontSize: "13px",
+                  }}
+                >
+                  Human Handoffs
+                </Link>
+              </MenuItem>
+            </SubMenu>
+
+            <SubMenu
+              title="Reports"
+              icon={<FlagIcon />}
+              style={{
+                fontSize: "14px",
+                color: colors.grey[100],
+                "& .pro-menu-item.active": {
+                  color: "#6870fa !important",
+                },
+                "& .pro-sub-menu-item.active": {
+                  color: "#6870fa !important",
+                },
+              }}
+            >
+              <MenuItem
+                icon={<AssessmentIcon />}
+                onClick={() => setSelected("reports")}
+                style={{
+                  marginBottom: ".5em",
+                  color: selected === "reports" ? "#6870fa" : colors.grey[100],
+                }}
+              >
+                <Link
+                  to="/reports"
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    fontSize: "13px",
+                  }}
+                >
+                  Reports
+                </Link>
+              </MenuItem>
+              <MenuItem
                 icon={<LayersIcon />}
                 onClick={() => setSelected("interactionStats")}
                 style={{
@@ -512,27 +569,22 @@ const Sidebar = ({ isSidebar }) => {
                   Interactions States
                 </Link>
               </MenuItem>
-              <MenuItem
-                icon={<EmojiPeopleIcon />}
-                onClick={() => setSelected("humanHandoffs")}
-                style={{
-                  marginBottom: ".5em",
-                  color:
-                    selected === "humanHandoffs" ? "#6870fa" : colors.grey[100],
-                }}
-              >
-                <Link
-                  to="/humanHandoffs"
-                  style={{
-                    textDecoration: "none",
-                    color: "inherit",
-                    fontSize: "13px",
-                  }}
-                >
-                  Human Handoffs
-                </Link>
-              </MenuItem>
             </SubMenu>
+            <Item
+              title="Reports"
+              to="/reports"
+              icon={<AssessmentIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+
+            <Item
+              title="Billing"
+              to="/billing"
+              icon={<PaidIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
 
             <SubMenu
               title="Profile"
@@ -622,22 +674,6 @@ const Sidebar = ({ isSidebar }) => {
             >
               Partners Hub
             </Typography> */}
-
-            <Item
-              title="Reports"
-              to="/reports"
-              icon={<AssessmentIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            <Item
-              title="Billing"
-              to="/billing"
-              icon={<PaidIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
 
             {/* <Typography
               variant="h6"
