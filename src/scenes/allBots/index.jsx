@@ -22,7 +22,7 @@ const AllBots = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const location = useLocation();
-  const [token, setToken] = useState(null);
+  const [/* token */, setToken] = useState(null);
   const navigate = useNavigate();
   const isNonMobile = useMediaQuery("(min-width: 768px)"); // For screens >= 768px
   const isTab = useMediaQuery("(min-width: 1200px)"); // For screens >= 1200px (Tablet and larger)

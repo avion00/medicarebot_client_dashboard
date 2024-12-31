@@ -570,13 +570,7 @@ const Sidebar = ({ isSidebar }) => {
                 </Link>
               </MenuItem>
             </SubMenu>
-            <Item
-              title="Reports"
-              to="/reports"
-              icon={<AssessmentIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
+            
 
             <Item
               title="Billing"

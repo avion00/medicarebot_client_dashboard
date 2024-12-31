@@ -209,7 +209,7 @@ const MultiStepForm = () => {
               multiple
               onChange={handleChangeStep1}
             />
-            {formDataStep1.imageInput && (
+            {/* {formDataStep1.imageInput && (
               <Box mt={2} display="flex" gap={2}>
                 {Array.from(formDataStep1.imageInput).map((img, index) => (
                   <img
@@ -224,7 +224,7 @@ const MultiStepForm = () => {
                   />
                 ))}
               </Box>
-            )}
+            )} */}
           </Box>
         )}
 

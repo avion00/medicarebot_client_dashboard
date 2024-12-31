@@ -41,6 +41,7 @@ import ViewProfile from "./scenes/viewProfile/index";
 import ChatHistory from "./scenes/chatHistory/index";
 import InteractionStats from "./scenes/InteractionStats";
 import HumanHandoffs from "./scenes/humanHandoffs/index";
+import BotIntegration from "./scenes/botIntegration/index";
 
 
 
@@ -136,6 +137,7 @@ function App() {
                 />
                 <Route path="/chatHistory" element={<ChatHistory />} />
                 <Route path="/humanHandoffs" element={<HumanHandoffs />} />
+                <Route path="/botIntegration" element={<BotIntegration />} />
               </Routes>
             </main>
           </div>

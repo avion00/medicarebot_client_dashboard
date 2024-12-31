@@ -4,10 +4,8 @@ import Header from "../../components/Header";
 import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { PendingRequest, ResolvedRequests } from "../../data/humanHandoffsData";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import EditIcon from "@mui/icons-material/Edit";
+// import useMediaQuery from "@mui/material/useMediaQuery";
 import SearchIcon from "@mui/icons-material/Search";
-import DeleteIcon from "@mui/icons-material/Delete";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
@@ -15,10 +13,12 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 const HumanHandoffs = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const isNonMobile = useMediaQuery("(min-width:768px)");
+  // const isNonMobile = useMediaQuery("(min-width:768px)");
 
   const [deactivatedBots, setDeactivatedBots] = useState([]);
-  const [checkedItems, setCheckedItems] = useState([]);
+  const [
+    // checkedItems,
+     setCheckedItems] = useState([]);
 
   useEffect(() => {
     // Filter inactive bots from the JSON data
@@ -32,10 +32,6 @@ const HumanHandoffs = () => {
     setCheckedItems(
       ids.map((id) => deactivatedBots.find((bot) => bot.id === id).name)
     );
-  };
-
-  const handleEdit = (id) => {
-    console.log("Edit clicked for ID:", id);
   };
 
   const PendingColumns = [
