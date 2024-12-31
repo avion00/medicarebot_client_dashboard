@@ -12,6 +12,7 @@ import {
   Slider,
 } from "@mui/material";
 import { Formik } from "formik";
+import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
@@ -60,13 +61,12 @@ const AddBot = () => {
   const [SuccessBox, setSuccessBox] = useState(false);
 
   const isNonMobile = useMediaQuery("(min-width:600px)");
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
 
 
   const handleFormSubmit = (values) => {
     setSnackbarOpen(true);
-    // navigate("/");
     setSuccessBox(true);
   };
   const handleSnackbarClose = () => {
@@ -75,6 +75,7 @@ const AddBot = () => {
  const handleSetSuccessBoxClose = () => {
    setSuccessBox(false); // Close the dialog
    setSnackbarOpen(false); // (Optional) Close the Snackbar if needed
+   navigate("/botIntegration");
  };
 
 
