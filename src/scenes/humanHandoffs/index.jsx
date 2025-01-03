@@ -1,7 +1,7 @@
 import { Box, useTheme, IconButton, InputBase, Typography } from "@mui/material";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { PendingRequest, ResolvedRequests } from "../../data/humanHandoffsData";
 // import useMediaQuery from "@mui/material/useMediaQuery";
@@ -15,23 +15,8 @@ const HumanHandoffs = () => {
   const colors = tokens(theme.palette.mode);
   // const isNonMobile = useMediaQuery("(min-width:768px)");
 
-  const [deactivatedBots, setDeactivatedBots] = useState([]);
-  const [
-    // checkedItems,
-     setCheckedItems] = useState([]);
-
-  useEffect(() => {
-    // Filter inactive bots from the JSON data
-    const inactiveBots = PendingRequest.filter(
-      (bot) => bot.status === "Inactive"
-    );
-    setDeactivatedBots(inactiveBots);
-  }, []);
-
   const handleCheckboxChange = (ids) => {
-    setCheckedItems(
-      ids.map((id) => deactivatedBots.find((bot) => bot.id === id).name)
-    );
+    // submittion code
   };
 
   const PendingColumns = [

@@ -37,7 +37,6 @@ const Dashboard = () => {
           <Button
             sx={{
               background: "linear-gradient(45deg, #062994, #0E72E1)",
-              // color: colors.grey[100],
               color: "#fff",
               // width: isNonMobile ? "50%" : "100%",
               fontSize: "14px",
