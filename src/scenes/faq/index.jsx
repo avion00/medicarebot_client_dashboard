@@ -19,7 +19,7 @@ const FAQ = () => {
       {faqData.map((faq, index) => (
         <Accordion key={index} defaultExpanded>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography color={colors.greenAccent[500]} variant="h5">
+            <Typography color={colors.blueAccent[500]} variant="h5">
               {faq.question}
             </Typography>
           </AccordionSummary>

@@ -66,6 +66,24 @@ const AllBots = () => {
       field: "status",
       headerName: "Status",
       flex: 1,
+      renderCell: (params) => {
+        const isActive =
+          params.row.status === "active" || params.row.status === "Active";
+        return (
+          <Typography
+            variant="h6"
+            sx={{
+              backgroundColor: isActive
+                ? colors.greenAccent[700]
+                : colors.redAccent[700],
+              borderRadius: "20px",
+              padding: "2px 10px",
+            }}
+          >
+            {params.row.status}
+          </Typography>
+        );
+      },
     },
     {
       field: "lastInteraction",

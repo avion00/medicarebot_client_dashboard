@@ -53,18 +53,24 @@ const DeactivateBots = () => {
       field: "status",
       headerName: "Status",
       flex: 0.75,
-      renderCell: (params) => (
-        <Typography
-          variant="h6"
-          sx={{
-            backgroundColor: colors.redAccent[700],
-            borderRadius: "20px",
-            padding: "0px 10px",
-          }}
-        >
-          {params.row.status}
-        </Typography>
-      ),
+      renderCell: (params) => {
+        const isActive =
+          params.row.status === "active" || params.row.status === "Active";
+        return (
+          <Typography
+            variant="h6"
+            sx={{
+              backgroundColor: isActive
+                ? colors.greenAccent[700]
+                : colors.redAccent[700],
+              borderRadius: "20px",
+              padding: "2px 10px",
+            }}
+          >
+            {params.row.status}
+          </Typography>
+        );
+      },
     },
     {
       field: "createdOn",

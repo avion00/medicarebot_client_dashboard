@@ -173,7 +173,7 @@ const ContactUs = () => {
                   variant="h5"
                   fontSize={15}
                   style={{
-                    color: colors.greenAccent[500],
+                    color: colors.blueAccent[500],
                     fontWeight: "500",
                   }}
                 >
