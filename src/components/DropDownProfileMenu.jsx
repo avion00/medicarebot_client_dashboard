@@ -4,11 +4,12 @@ import { tokens } from "../theme";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import PasswordIcon from "@mui/icons-material/Password";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const DropdownMenu = ({ items }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const navigate = useNavigate(); // To programmatically navigate on logout
 
   const icons = {
     Profile: <AccountCircleIcon sx={{ marginRight: "8px" }} />,
@@ -19,7 +20,17 @@ const DropdownMenu = ({ items }) => {
   const links = {
     Profile: "/editProfile",
     "Change Password": "/changePassword",
-    "Log out": "/",
+    "Log out": "/", // Placeholder; will handle navigation programmatically
+  };
+
+  const handleLogout = () => {
+    // Clear localStorage and other cached data
+    localStorage.clear();
+    sessionStorage.clear(); // Clear session storage if used
+    // Optional: Clear additional data like cookies, if required
+
+    // Navigate to the login page
+    navigate("/logIn");
   };
 
   return (
@@ -62,19 +73,35 @@ const DropdownMenu = ({ items }) => {
               e.target.style.backgroundColor = "transparent";
             }}
           >
-            <Link
-              to={links[item]}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                textDecoration: "none",
-                color: "inherit",
-                width: "100%",
-              }}
-            >
-              {icons[item]}
-              <Typography variant="body2">{item}</Typography>
-            </Link>
+            {item === "Log out" ? (
+              <div
+                onClick={handleLogout}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  textDecoration: "none",
+                  color: "inherit",
+                  width: "100%",
+                }}
+              >
+                {icons[item]}
+                <Typography variant="body2">{item}</Typography>
+              </div>
+            ) : (
+              <Link
+                to={links[item]}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  textDecoration: "none",
+                  color: "inherit",
+                  width: "100%",
+                }}
+              >
+                {icons[item]}
+                <Typography variant="body2">{item}</Typography>
+              </Link>
+            )}
           </li>
         ))}
       </ul>

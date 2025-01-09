@@ -60,24 +60,21 @@ const Register = () => {
   const handleFormSubmit = async (values) => {
     setLoading(true);
     try {
-      const response = await axios.post(
-        "https://app.medicarebot.live/register",
-        {
-          first_name: values.firstName,
-          last_name: values.lastName,
-          username: values.username,
-          email: values.email,
-          country_code: values.countryCode,
-          mobile_number: values.phoneNumber,
-          company_name: values.companyName,
-          city: values.city,
-          state: values.state,
-          country: values.country,
-          medicare_bot_usage: values.botUsage,
-          package: "basic",
-          password: values.password,
-        }
-      );
+      const response = await axios.post("http://46.202.153.94:5000/register", {
+        first_name: values.firstName,
+        last_name: values.lastName,
+        username: values.username,
+        email: values.email,
+        country_code: values.countryCode,
+        mobile_number: values.phoneNumber,
+        company_name: values.companyName,
+        city: values.city,
+        state: values.state,
+        country: values.country,
+        medicare_bot_usage: values.botUsage,
+        package: "basic",
+        password: values.password,
+      });
 
       if (response.data.success) {
         setNotificationType("success");

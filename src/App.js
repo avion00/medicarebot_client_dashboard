@@ -42,13 +42,15 @@ import ChatHistory from "./scenes/chatHistory/index";
 import InteractionStats from "./scenes/InteractionStats";
 import HumanHandoffs from "./scenes/humanHandoffs/index";
 import BotIntegration from "./scenes/botIntegration/index";
-
-
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   const [theme, colorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
   const isNonMobile = useMediaQuery("(min-width:768px)");
+
+
+
 
   const location = useLocation();
 
@@ -100,44 +102,263 @@ function App() {
               <Topbar setIsSidebar={setIsSidebar} />
               <Routes>
                 <Route path="*" element={<Navigate to="/logIn" />} />
-                <Route exact path="/dashboard" element={<Dashboard />} />
-                <Route path="/team" element={<Team />} />
-                <Route path="/contacts" element={<Contacts />} />
-                <Route path="/invoices" element={<Invoices />} />
-                <Route path="/form" element={<Form />} />
-                <Route path="/bar" element={<Bar />} />
-                <Route path="/pie" element={<Pie />} />
-                <Route path="/line" element={<Line />} />
-                <Route path="/faq" element={<FAQ />} />
-                <Route path="/calendar" element={<Calendar />} />
-                <Route path="/geography" element={<Geography />} />
-                <Route path="/changePassword" element={<ChangePassword />} />
-                <Route path="/editProfile" element={<EditProfile />} />
-                <Route path="/activeBots" element={<ActiveBots />} />
+                <Route
+                  exact
+                  path="/dashboard"
+                  element={
+                    <PrivateRoute>
+                      <Dashboard />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/team"
+                  element={
+                    <PrivateRoute>
+                      <Team />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/contacts"
+                  eelement={
+                    <PrivateRoute>
+                      <Contacts />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/invoices"
+                  element={
+                    <PrivateRoute>
+                      <Invoices />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/form"
+                  element={
+                    <PrivateRoute>
+                      <Form />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/bar"
+                  element={
+                    <PrivateRoute>
+                      <Bar />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/pie"
+                  element={
+                    <PrivateRoute>
+                      <Pie />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/line"
+                  element={
+                    <PrivateRoute>
+                      <Line />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/faq"
+                  element={
+                    <PrivateRoute>
+                      <FAQ />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/calendar"
+                  element={
+                    <PrivateRoute>
+                      <Calendar />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/geography"
+                  element={
+                    <PrivateRoute>
+                      <Geography />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/changePassword"
+                  element={
+                    <PrivateRoute>
+                      <ChangePassword />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/editProfile"
+                  element={
+                    <PrivateRoute>
+                      <EditProfile />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/activeBots"
+                  element={
+                    <PrivateRoute>
+                      <ActiveBots />
+                    </PrivateRoute>
+                  }
+                />
                 <Route
                   path="/configureSettings"
-                  element={<ConfigureSettings />}
+                  element={
+                    <PrivateRoute>
+                      <ConfigureSettings />
+                    </PrivateRoute>
+                  }
                 />
-                <Route path="/testBots" element={<TestBots />} />
-                <Route path="/deactivateBots" element={<Deactivate />} />
-                <Route path="/trainBots" element={<TrainBots />} />
-                <Route path="/billing" element={<Billing />} />
-                <Route path="/reports" element={<Reports />} />
-                <Route path="/addBot" element={<AddBot />} />
-                <Route path="/allBots" element={<AllBots />} />
-                <Route path="/addPartners" element={<AddPartners />} />
-                <Route path="/editPartners" element={<EditPartners />} />
-                <Route path="/viewPartners" element={<ViewPartners />} />
-                <Route path="/contactUs" element={<ContactUs />} />
-                <Route path="/customerSupport" element={<CustomerSupport />} />
-                <Route path="/viewProfile" element={<ViewProfile />} />
+                <Route
+                  path="/testBots"
+                  element={
+                    <PrivateRoute>
+                      <TestBots />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/deactivateBots"
+                  element={
+                    <PrivateRoute>
+                      <Deactivate />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/trainBots"
+                  element={
+                    <PrivateRoute>
+                      <TrainBots />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/billing"
+                  element={
+                    <PrivateRoute>
+                      <Billing />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/reports"
+                  element={
+                    <PrivateRoute>
+                      <Reports />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/addBot"
+                  element={
+                    <PrivateRoute>
+                      <AddBot />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/allBots"
+                  element={
+                    <PrivateRoute>
+                      <AllBots />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/addPartners"
+                  element={
+                    <PrivateRoute>
+                      <AddPartners />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/editPartners"
+                  element={
+                    <PrivateRoute>
+                      <EditPartners />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/viewPartners"
+                  element={
+                    <PrivateRoute>
+                      <ViewPartners />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/contactUs"
+                  element={
+                    <PrivateRoute>
+                      <ContactUs />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/customerSupport"
+                  element={
+                    <PrivateRoute>
+                      <CustomerSupport />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/viewProfile"
+                  element={
+                    <PrivateRoute>
+                      <ViewProfile />
+                    </PrivateRoute>
+                  }
+                />
                 <Route
                   path="/interactionStats"
-                  element={<InteractionStats />}
+                  element={
+                    <PrivateRoute>
+                      <InteractionStats />
+                    </PrivateRoute>
+                  }
                 />
-                <Route path="/chatHistory" element={<ChatHistory />} />
-                <Route path="/humanHandoffs" element={<HumanHandoffs />} />
-                <Route path="/botIntegration" element={<BotIntegration />} />
+                <Route
+                  path="/chatHistory"
+                  element={
+                    <PrivateRoute>
+                      <ChatHistory />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/humanHandoffs"
+                  element={
+                    <PrivateRoute>
+                      <HumanHandoffs />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/botIntegration"
+                  element={
+                    <PrivateRoute>
+                      <BotIntegration />
+                    </PrivateRoute>
+                  }
+                />
               </Routes>
             </main>
           </div>

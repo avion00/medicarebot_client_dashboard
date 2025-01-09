@@ -67,7 +67,7 @@ const LogIn = () => {
 
  const handleFormSubmit = async (values, { setSubmitting }) => {
    try {
-     const response = await fetch("https://app.medicarebot.live/login", {
+     const response = await fetch("http://46.202.153.94:5000/login", {
        method: "POST",
        headers: {
          "Content-Type": "application/json",
@@ -101,7 +101,7 @@ const LogIn = () => {
      // Wait for 1 minute before navigating
      setTimeout(() => {
        navigate("/dashboard");
-     }, 1000); // 60 seconds
+     }, 1000);
    } catch (error) {
      console.error("Error during login:", error.message);
      setNotificationType("error");
