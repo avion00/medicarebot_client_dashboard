@@ -96,7 +96,7 @@ const LogIn = () => {
 
      // Store token in cookies and local storage
      document.cookie = `authToken=${data.token};path=/;secure`;
-     localStorage.setItem("authToken", data.token);
+     sessionStorage.setItem("authToken", data.token);
 
      // Wait for 1 minute before navigating
      setTimeout(() => {

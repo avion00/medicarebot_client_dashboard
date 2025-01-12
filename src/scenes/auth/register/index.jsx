@@ -47,6 +47,7 @@ const Register = () => {
   const navigate = useNavigate();
   // const [Usage, setUsage] = useState("");
   const [showNotification, setShowNotification] = useState(false);
+  
   const [notificationType, setNotificationType] = useState("success");
   const [notificationMessage, setNotificationMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -356,6 +357,7 @@ const Register = () => {
                     label="Email"
                     onBlur={handleBlur}
                     onChange={handleChange}
+                    
                     value={values.email}
                     name="email"
                     error={!!touched.email && !!errors.email}

@@ -8,7 +8,7 @@ import {
   Alert,
   IconButton,
   Typography,
-  Slider,
+  // Slider,
 } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -40,15 +40,17 @@ const AddBot = () => {
   const [showNotification, setShowNotification] = useState(false);
   const [notificationType, setNotificationType] = useState("success");
   const [notificationMessage, setNotificationMessage] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const isNonMobile = useMediaQuery("(min-width:600px)");
 
+  const filePlaceholder = new File([""], "placeholder.txt", {
+    type: "text/plain",
+  });
+
   const handleFormSubmit = async (values) => {
-    setLoading(true);
     const formData = new FormData();
 
-    // Append simple fields
+    // Append fields
     formData.append("name", values.botName);
     formData.append(
       "avatar",
@@ -57,6 +59,7 @@ const AddBot = () => {
     formData.append("type", values.channel);
     formData.append("description", values.description);
     formData.append("role_description", values.detailedRoleDescription);
+    // formData.append("language_support", JSON.stringify(values.languageSupport));
     formData.append("pretrained_template", values.preTrainedTemplate);
     formData.append("expectation", values.ExpectedOutcome);
     formData.append(
@@ -78,81 +81,20 @@ const AddBot = () => {
         }
       );
 
-      // Check for success response
-      if (response.data?.bot_id) {
-        const botId = response.data.bot_id;
-        console.log(botId);
-        setNotificationType("success");
-        setNotificationMessage(`Bot created successfully! Bot ID: ${botId}`);
-        setShowNotification(true);
-        console.log("Success:", response.data.message, "Bot ID:", botId);
-
-        // Perform further actions with bot_id (e.g., save it, redirect)
-        // Example: Redirect to a bot details page
-        // navigate(`/bot-details/${botId}`);
+      if (response.data.success) {
+        console.log("Success:", response.data.message);
       } else {
-        // Handle backend failure messages explicitly
-        const errorMessage = response.data?.message || "Request failed.";
-        setNotificationType("error");
-        setNotificationMessage(errorMessage);
-        setShowNotification(true);
-        console.error("Backend Error:", errorMessage);
+        throw new Error(response.data.message || "Request failed.");
       }
     } catch (error) {
-      // Catch unexpected errors
-      const errorMessage =
-        error.response?.data?.message || "An error occurred. Please try again.";
-      setNotificationType("error");
-      setNotificationMessage(errorMessage);
-      console.error("Unexpected Error:", error.response?.data || error.message);
-      setShowNotification(true);
-    } finally {
-      setLoading(false);
-      console.log("finally");
+      console.error("Error:", error.response?.data || error.message);
     }
   };
+
 
   const handleCloseNotification = (event, reason) => {
     if (reason === "clickaway") return;
     setShowNotification(false);
-  };
-
-  const handleBotNameChange = (event, handleChange) => {
-    handleChange(event);
-  };
-  const handleAvatarChange = (event, handleChange) => {
-    handleChange(event);
-  };
-  const handleDescriptionChange = (event, handleChange) => {
-    handleChange(event);
-  };
-
-  const handleDetailedRoleDescriptionChange = (event, handleChange) => {
-    handleChange(event);
-  };
-
-  const handleRoleAndPurposeExplanationChange = (event, handleChange) => {
-    handleChange(event);
-  };
-
-  const handleExpectedOutcomeChange = (event, handleChange) => {
-    handleChange(event);
-  };
-
-  const handleChannelChange = (event, handleChange) => {
-    handleChange(event);
-  };
-
-  const handleLanguageSupportChange = (event, handleChange) => {
-    handleChange(event);
-  };
-
-  const handleResponseTimeChange = (newValue, setFieldValue) => {
-    setFieldValue("responseTime", newValue);
-  };
-
-  const handlePreTrainedTemplateChange = (event, handleChange) => {
-    handleChange(event);
   };
 
   const initialValues = {
@@ -161,7 +103,7 @@ const AddBot = () => {
     channel: "",
     description: "",
     detailedRoleDescription: "",
-    languageSupport: "",
+    // languageSupport: "",
     preTrainedTemplate: "",
     ExpectedOutcome: "",
     uploadKnowledgeBase: "",
@@ -176,7 +118,7 @@ const AddBot = () => {
     detailedRoleDescription: yup
       .string()
       .required("Detailed Role Description is required"),
-    languageSupport: yup.string().required("Language Support is required"),
+    // languageSupport: yup.string().required("Language Support is required"),
     preTrainedTemplate: yup.string().nullable(), // Optional field
     ExpectedOutcome: yup.string().required("Expected Outcome is required"),
     uploadKnowledgeBase: yup.string().nullable(), // Optional field
@@ -190,13 +132,6 @@ const AddBot = () => {
 
   const handlePrev = () => {
     if (currentStep > 1) setCurrentStep(currentStep - 1);
-  };
-
-  const [uploadKnowledgeBase, setUploadKnowledgeBase] = useState("");
-
-  const handleuploadKnowledgeBaseChange = (event) => {
-    const file = event.target.files[0];
-    setUploadKnowledgeBase(file ? file.name : "");
   };
 
   useEffect(() => {
@@ -221,7 +156,6 @@ const AddBot = () => {
       </Box>
 
       <Box>
-        {/* timeline 1-2-3-4-5 like this okey */}
         <Box
           display="flex"
           justifyContent="flex-start"
@@ -309,7 +243,7 @@ const AddBot = () => {
                     type="text"
                     label="Bot Name"
                     onBlur={handleBlur}
-                    onChange={(e) => handleBotNameChange(e, handleChange)}
+                    onChange={handleChange}
                     value={values.botName}
                     name="botName"
                     error={!!touched.botName && !!errors.botName}
@@ -328,7 +262,7 @@ const AddBot = () => {
                     type="text"
                     label="avatar"
                     onBlur={handleBlur}
-                    onChange={(e) => handleAvatarChange(e, handleChange)}
+                    onChange={handleChange}
                     value={values.avatar}
                     name="avatar"
                     error={!!touched.avatar && !!errors.avatar}
@@ -341,7 +275,27 @@ const AddBot = () => {
                       },
                     }}
                   />
-                  <FormControl
+                  <TextField
+                    fullWidth
+                    variant="filled"
+                    type="text"
+                    label="Channel"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.channel}
+                    name="channel"
+                    error={!!touched.channel && !!errors.channel}
+                    helperText={touched.channel && errors.channel}
+                    sx={{
+                      gridColumn: "span 2",
+                      "& .MuiFormLabel-root.Mui-focused": {
+                        color: colors.blueAccent[500],
+                        fontWeight: "bold",
+                      },
+                    }}
+                  />
+
+                  {/* <FormControl
                     fullWidth
                     variant="filled"
                     sx={{
@@ -363,7 +317,7 @@ const AddBot = () => {
                       id="channel"
                       value={values.channel}
                       name="channel"
-                      onChange={(e) => handleChannelChange(e, handleChange)}
+                      onChange={handleChange}
                       onBlur={handleBlur}
                       error={!!touched.channel && !!errors.channel}
                     >
@@ -378,7 +332,7 @@ const AddBot = () => {
                         {errors.channel}
                       </Box>
                     )}
-                  </FormControl>
+                  </FormControl> */}
 
                   <TextField
                     fullWidth
@@ -389,7 +343,7 @@ const AddBot = () => {
                     type="text"
                     label="Description"
                     onBlur={handleBlur}
-                    onChange={(e) => handleDescriptionChange(e, handleChange)}
+                    onChange={handleChange}
                     value={values.description}
                     name="description"
                     error={!!touched.description && !!errors.description}
@@ -413,9 +367,7 @@ const AddBot = () => {
                     maxRows={10}
                     label="Detailed Role Description"
                     onBlur={handleBlur}
-                    onChange={(e) =>
-                      handleDetailedRoleDescriptionChange(e, handleChange)
-                    }
+                    onChange={handleChange}
                     value={values.detailedRoleDescription}
                     name="detailedRoleDescription"
                     error={
@@ -425,38 +377,6 @@ const AddBot = () => {
                     helperText={
                       touched.detailedRoleDescription &&
                       errors.detailedRoleDescription
-                    }
-                    sx={{
-                      gridColumn: "span 4",
-                      overflow: "auto",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-
-                  <TextField
-                    fullWidth
-                    multiline
-                    minRows={5}
-                    maxRows={10}
-                    variant="filled"
-                    type="text"
-                    label="Provide a detailed explanation of bot's Role and Purpose"
-                    onBlur={handleBlur}
-                    onChange={(e) =>
-                      handleRoleAndPurposeExplanationChange(e, handleChange)
-                    }
-                    value={values.roleAndPurposeExplanation}
-                    name="roleAndPurposeExplanation"
-                    error={
-                      !!touched.roleAndPurposeExplanation &&
-                      !!errors.roleAndPurposeExplanation
-                    }
-                    helperText={
-                      touched.roleAndPurposeExplanation &&
-                      errors.roleAndPurposeExplanation
                     }
                     sx={{
                       gridColumn: "span 4",
@@ -481,7 +401,31 @@ const AddBot = () => {
                     },
                   }}
                 >
-                  <FormControl
+                  {/* <TextField
+                    fullWidth
+                    variant="filled"
+                    type="text"
+                    label="languageSupport"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.languageSupport}
+                    name="languageSupport"
+                    error={
+                      !!touched.languageSupport && !!errors.languageSupport
+                    }
+                    helperText={
+                      touched.languageSupport && errors.languageSupport
+                    }
+                    sx={{
+                      gridColumn: "span 2",
+                      "& .MuiFormLabel-root.Mui-focused": {
+                        color: colors.blueAccent[500],
+                        fontWeight: "bold",
+                      },
+                    }}
+                  /> */}
+
+                  {/* <FormControl
                     fullWidth
                     variant="filled"
                     sx={{
@@ -501,20 +445,29 @@ const AddBot = () => {
                     <Select
                       labelId="language-support"
                       id="languageSupport"
-                      value={values.languageSupport}
+                      multiple // Enable multiple selection
+                      value={values.languageSupport || []} // Ensure it defaults to an array
                       name="languageSupport"
-                      onChange={(e) =>
-                        handleLanguageSupportChange(e, handleChange)
-                      }
+                      onChange={(e) => {
+                        const selectedValues = e.target.value; // Get the array of selected values'
+                        console.log(selectedValues);
+                        handleChange({
+                          target: {
+                            name: "languageSupport",
+                            value: selectedValues,
+                          },
+                        });
+                      }}
                       onBlur={handleBlur}
                       error={
                         !!touched.languageSupport && !!errors.languageSupport
                       }
+                      renderValue={(selected) => selected.join(", ")}
                     >
-                      <MenuItem value='{"eng"}'>English</MenuItem>
+                      <MenuItem value="eng">English</MenuItem>
                       <MenuItem value="italy">Italian</MenuItem>
                       <MenuItem value="French">French</MenuItem>
-                      <MenuItem value="Gernan">German</MenuItem>
+                      <MenuItem value="German">German</MenuItem>
                       <MenuItem value="Spanish">Spanish</MenuItem>
                       <MenuItem value="Hindi">Hindi</MenuItem>
                     </Select>
@@ -523,9 +476,29 @@ const AddBot = () => {
                         {errors.languageSupport}
                       </Box>
                     )}
-                  </FormControl>
+                  </FormControl> */}
 
-                  <FormControl
+                  <TextField
+                    fullWidth
+                    variant="filled"
+                    type="text"
+                    label="preTrainedTemplate"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.preTrainedTemplate}
+                    name="preTrainedTemplate"
+                    error={!!touched.preTrainedTemplate && !!errors.preTrainedTemplate}
+                    helperText={touched.preTrainedTemplate && errors.preTrainedTemplate}
+                    sx={{
+                      gridColumn: "span 2",
+                      "& .MuiFormLabel-root.Mui-focused": {
+                        color: colors.blueAccent[500],
+                        fontWeight: "bold",
+                      },
+                    }}
+                  />
+
+                  {/* <FormControl
                     fullWidth
                     variant="filled"
                     sx={{
@@ -547,9 +520,7 @@ const AddBot = () => {
                       id="preTrainedTemplate"
                       value={values.preTrainedTemplate}
                       name="preTrainedTemplate"
-                      onChange={(e) =>
-                        handlePreTrainedTemplateChange(e, handleChange)
-                      }
+                      onChange={handleChange}
                       onBlur={handleBlur}
                       error={
                         !!touched.preTrainedTemplate &&
@@ -566,81 +537,7 @@ const AddBot = () => {
                           {errors.preTrainedTemplate}
                         </Box>
                       )}
-                  </FormControl>
-
-                  <Box sx={{ gridColumn: "span 1" }}></Box>
-
-                  <Box
-                    sx={{
-                      gridColumn: "span 2",
-                      display: "flex",
-                      flexDirection: "column",
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <Typography
-                        variant="h6"
-                        sx={{
-                          mb: 1,
-                          color: colors.grey[400],
-                        }}
-                      >
-                        Slow
-                      </Typography>
-                      <Typography
-                        variant="h5"
-                        sx={{
-                          mb: 1,
-                          color: colors.grey[200],
-                        }}
-                      >
-                        Response Time
-                      </Typography>
-                    </Box>
-                    <Slider
-                      value={values.responseTime}
-                      min={1}
-                      max={5}
-                      step={1}
-                      marks={[
-                        { value: 1, label: "1" },
-                        { value: 2, label: "2" },
-                        { value: 3, label: "3" },
-                        { value: 4, label: "4" },
-                        { value: 5, label: "5" },
-                      ]}
-                      onChange={(e, newValue) =>
-                        handleResponseTimeChange(
-                          newValue,
-                          setFieldValue,
-                          e,
-                          handleChange
-                        )
-                      }
-                      valueLabelDisplay="auto"
-                      sx={{
-                        color: colors.blueAccent[200],
-                        "& .MuiSlider-thumb": {
-                          "&:hover, &.Mui-focusVisible": {
-                            boxShadow:
-                              "0px 0px 0px 8px rgba(33, 150, 243, 0.16)",
-                          },
-                        },
-                      }}
-                    />
-                    {touched.responseTime && errors.responseTime && (
-                      <Typography variant="caption" color="error">
-                        {errors.responseTime}
-                      </Typography>
-                    )}
-                  </Box>
-
-                  <Box sx={{ gridColumn: "span 1" }}></Box>
+                  </FormControl> */}
 
                   <TextField
                     fullWidth
@@ -651,9 +548,7 @@ const AddBot = () => {
                     maxRows={10}
                     label="Expected Outcome"
                     onBlur={handleBlur}
-                    onChange={(e) =>
-                      handleExpectedOutcomeChange(e, handleChange)
-                    }
+                    onChange={handleChange}
                     value={values.ExpectedOutcome}
                     name="ExpectedOutcome"
                     error={
@@ -677,7 +572,7 @@ const AddBot = () => {
                     variant="filled"
                     type="text"
                     name="uploadKnowledgeBase"
-                    value={uploadKnowledgeBase}
+                    value={values.uploadKnowledgeBase}
                     InputProps={{
                       readOnly: true,
                       endAdornment: (
@@ -703,10 +598,7 @@ const AddBot = () => {
                             type="file"
                             hidden
                             name="botImage"
-                            onChange={(e) => {
-                              handleuploadKnowledgeBaseChange(e);
-                              handleChange(e);
-                            }}
+                            onChange={handleChange}
                           />
                         </Button>
                       ),

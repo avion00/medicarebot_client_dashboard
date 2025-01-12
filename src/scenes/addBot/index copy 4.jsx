@@ -79,17 +79,11 @@ const AddBot = () => {
       );
 
       // Check for success response
-      if (response.data?.bot_id) {
-        const botId = response.data.bot_id;
-        console.log(botId);
+      if (response.data?.success) {
         setNotificationType("success");
-        setNotificationMessage(`Bot created successfully! Bot ID: ${botId}`);
+        setNotificationMessage("Bot Create successful! Redirecting...");
         setShowNotification(true);
-        console.log("Success:", response.data.message, "Bot ID:", botId);
-
-        // Perform further actions with bot_id (e.g., save it, redirect)
-        // Example: Redirect to a bot details page
-        // navigate(`/bot-details/${botId}`);
+        console.log("Success:", response.data.message);
       } else {
         // Handle backend failure messages explicitly
         const errorMessage = response.data?.message || "Request failed.";
@@ -111,6 +105,65 @@ const AddBot = () => {
       console.log("finally");
     }
   };
+
+
+  //  const handleFormSubmit = async (values) => {
+  //     const formData = new FormData();
+  
+  //     // Append fields
+  //     formData.append("name", values.botName);
+  //     formData.append(
+  //       "avatar",
+  //       values.avatar || new File([""], "placeholder.jpg")
+  //     );
+  //     formData.append("type", values.channel);
+  //     formData.append("description", values.description);
+  //     formData.append("role_description", values.detailedRoleDescription);
+  //     // formData.append("language_support", JSON.stringify(values.languageSupport));
+  //     formData.append("pretrained_template", values.preTrainedTemplate);
+  //     formData.append("expectation", values.ExpectedOutcome);
+  //     formData.append(
+  //       "knowledge_base_file",
+  //       values.uploadKnowledgeBase || new File([""], "placeholder.txt")
+  //     );
+  
+  //     const token = localStorage.getItem("authToken");
+  
+  //     try {
+  //       const response = await axios.post(
+  //         "http://46.202.153.94:5000/create_bot",
+  //         formData,
+  //         {
+  //           headers: {
+  //             "Content-Type": "multipart/form-data",
+  //             Authorization: `Bearer ${token}`,
+  //           },
+  //         }
+  //       );
+  
+  //       if (response.data.success) {
+  //         console.log("Success:", response.data.message);
+  //       } else {
+  //         throw new Error(response.data.message || "Request failed.");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error:", error.response?.data || error.message);
+  //     }
+  //   };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   const handleCloseNotification = (event, reason) => {
     if (reason === "clickaway") return;

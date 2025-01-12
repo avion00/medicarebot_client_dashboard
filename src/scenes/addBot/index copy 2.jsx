@@ -46,69 +46,38 @@ const AddBot = () => {
 
   const handleFormSubmit = async (values) => {
     setLoading(true);
-    const formData = new FormData();
-
-    // Append simple fields
-    formData.append("name", values.botName);
-    formData.append(
-      "avatar",
-      values.avatar || new File([""], "placeholder.jpg")
-    );
-    formData.append("type", values.channel);
-    formData.append("description", values.description);
-    formData.append("role_description", values.detailedRoleDescription);
-    formData.append("pretrained_template", values.preTrainedTemplate);
-    formData.append("expectation", values.ExpectedOutcome);
-    formData.append(
-      "knowledge_base_file",
-      values.uploadKnowledgeBase || new File([""], "placeholder.txt")
-    );
-
-    const token = sessionStorage.getItem("authToken");
-
     try {
       const response = await axios.post(
         "http://46.202.153.94:5000/create_bot",
-        formData,
         {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
+          name: values.botName,
+          avatar: values.avatar,
+          type: values.channel,
+          description: values.description,
+          role_description: values.detailedRoleDescription,
+          language_support: values.languageSupport,
+          pretrained_template: values.preTrainedTemplate,
+          expectation: values.ExpectedOutcome,
+          knowledge_base_file: values.uploadKnowledgeBase,
         }
       );
 
-      // Check for success response
-      if (response.data?.bot_id) {
-        const botId = response.data.bot_id;
-        console.log(botId);
+      if (response.data.success) {
         setNotificationType("success");
-        setNotificationMessage(`Bot created successfully! Bot ID: ${botId}`);
+        setNotificationMessage("Bot Create successful! Redirecting...");
         setShowNotification(true);
-        console.log("Success:", response.data.message, "Bot ID:", botId);
-
-        // Perform further actions with bot_id (e.g., save it, redirect)
-        // Example: Redirect to a bot details page
-        // navigate(`/bot-details/${botId}`);
       } else {
-        // Handle backend failure messages explicitly
-        const errorMessage = response.data?.message || "Request failed.";
-        setNotificationType("error");
-        setNotificationMessage(errorMessage);
-        setShowNotification(true);
-        console.error("Backend Error:", errorMessage);
+        throw new Error(response.data.message || "Registration failed.");
       }
     } catch (error) {
-      // Catch unexpected errors
-      const errorMessage =
-        error.response?.data?.message || "An error occurred. Please try again.";
       setNotificationType("error");
-      setNotificationMessage(errorMessage);
-      console.error("Unexpected Error:", error.response?.data || error.message);
+      setNotificationMessage(
+        error.response?.data?.message ,
+        console.log(error)
+      );
       setShowNotification(true);
     } finally {
       setLoading(false);
-      console.log("finally");
     }
   };
 
@@ -165,6 +134,7 @@ const AddBot = () => {
     preTrainedTemplate: "",
     ExpectedOutcome: "",
     uploadKnowledgeBase: "",
+   
   };
 
   const checkoutSchema = yup.object().shape({
@@ -180,6 +150,7 @@ const AddBot = () => {
     preTrainedTemplate: yup.string().nullable(), // Optional field
     ExpectedOutcome: yup.string().required("Expected Outcome is required"),
     uploadKnowledgeBase: yup.string().nullable(), // Optional field
+   
   });
 
   const [currentStep, setCurrentStep] = useState(1);
