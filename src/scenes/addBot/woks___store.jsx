@@ -22,18 +22,13 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import KeyboardTabIcon from "@mui/icons-material/KeyboardTab";
-import BlockIcon from "@mui/icons-material/Block";
-import SyncIcon from "@mui/icons-material/Sync";
-// import UploadIcon from "@mui/icons-material/Upload";
-
-
 import initialData from "./data.json";
 import axios from "axios";
+import BlockIcon from "@mui/icons-material/Block";
+import SyncIcon from "@mui/icons-material/Sync";
 
 const steps = [
   { id: 1, label: "Bot Details", content: "Please fill out the form" },
-  { id: 2, label: "Visual Customization", content: "Please fill  the form" },
-
   {
     id: 2,
     label: "Configure Bot Behaviour",
@@ -74,8 +69,6 @@ const AddBot = () => {
       "knowledge_base_file",
       values.uploadKnowledgeBase || new File([""], "placeholder.txt")
     );
-
-    
 
     const token = sessionStorage.getItem("authToken");
 
@@ -199,27 +192,11 @@ const AddBot = () => {
     preTrainedTemplate: "",
     ExpectedOutcome: "",
     uploadKnowledgeBase: "",
-
-    // optional
-    // imageOne: "",
-    // imageTwo: "",
-    // imageThree: "",
-
-    // roleAndPurposeExplanation: "",
-    // responseTime: 1,
-    // ExpectedAchieve: "",
-    // attachDocuments: "",
-    // uploadOptionalDocument: "",
-    // apiKey: "",
-    // callbackURL: "",
-    // startURL: "",
-    // depth: "",
-    // focusKeywords: "",
   };
 
   const checkoutSchema = yup.object().shape({
     botName: yup.string().required("Bot Name is required"),
-    avatar: yup.string().nullable(),
+    avatar: yup.string().required("avatar Name is required"),
 
     channel: yup.string().required("Channel is required"),
     description: yup.string().required("Description is required"),
@@ -227,67 +204,15 @@ const AddBot = () => {
       .string()
       .required("Detailed Role Description is required"),
     languageSupport: yup.string().required("Language Support is required"),
-    preTrainedTemplate: yup.string().nullable(), 
+    preTrainedTemplate: yup.string().nullable(), // Optional field
     ExpectedOutcome: yup.string().required("Expected Outcome is required"),
-    uploadKnowledgeBase: yup.string().nullable(),
+    uploadKnowledgeBase: yup.string().nullable(), // Optional field
 
-    // optinal things
-    // imageOne: yup
-    //       .mixed()
-    //       .required("Avatar Image is required")
-    //       .test(
-    //         "fileSize",
-    //         "File too large",
-    //         (value) => value && value.size <= 5 * 1024 * 1024
-    //       ) // 5MB limit
-    //       .test("fileType", "Unsupported Format", (value) =>
-    //         ["image/jpeg", "image/png"].includes(value?.type)
-    //       ),
+
+    // optional
+    attachDocuments: yup.mixed().nullable(),
+    uploadOptionalDocument: yup.mixed().nullable(), 
     
-    //     imageTwo: yup
-    //       .mixed()
-    //       .required("Icon is required")
-    //       .test(
-    //         "fileSize",
-    //         "File too large",
-    //         (value) => value && value.size <= 5 * 1024 * 1024
-    //       ) // 5MB limit
-    //       .test("fileType", "Unsupported Format", (value) =>
-    //         ["image/jpeg", "image/png"].includes(value?.type)
-    //       ),
-    
-    //     imageThree: yup
-    //       .mixed()
-    //       .test(
-    //         "fileSize",
-    //         "File too large",
-    //         (value) => value && value.size <= 5 * 1024 * 1024
-    //       ) // 5MB limit
-    //       .test("fileType", "Unsupported Format", (value) =>
-    //         ["image/jpeg", "image/png"].includes(value?.type)
-    //       ),
-    
-        roleAndPurposeExplanation: yup
-          .string()
-          .required("Role and Purpose Explanation is required"),
-        responseTime: yup
-          .number()
-          .required("Response Time is required")
-          .min(1, "Response Time must be at least 1 second"),
-        ExpectedAchieve: yup.string().required("Expected Achievement is required"),
-        attachDocuments: yup.mixed().nullable(), // Optional field for file upload
-        uploadOptionalDocument: yup.mixed().nullable(), // Optional field for file upload
-        apiKey: yup.string().nullable("API key is required"),
-        callbackURL: yup.string().url("Invalid URL format").nullable(), // Optional field
-        startURL: yup.string().url("Invalid URL format").nullable(), // Optional field
-        depth: yup
-          .number()
-          .nullable(),
-        focusKeywords: yup.string().nullable(), // Optional field
-      
-
-
-
   });
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -301,10 +226,13 @@ const AddBot = () => {
   };
 
 
+
+
+
+
+
   const [attachDocuments, setAttachDocuments] = useState("");
   const [uploadKnowledgeBase, setUploadKnowledgeBase] = useState("");
-  const [avatar, setAvatar] = useState("");
-  
   const [uploadOptionalDocument, setUploadOptionalDocument] = useState("");
 
   const handleattachDocumentsChange = (event) => {
@@ -317,15 +245,11 @@ const AddBot = () => {
     setUploadKnowledgeBase(file ? file.name : "");
   };
 
-  const handleAvatarrrrChange = (event) => {
-    const file = event.target.files[0];
-    setAvatar(file ? file.name : "");
-  };
-
   const handleuploadOptionalDocumentChange = (event) => {
     const file = event.target.files[0];
     setUploadOptionalDocument(file ? file.name : "");
   };
+
 
 
 
@@ -612,8 +536,6 @@ const AddBot = () => {
                 </Box>
               )}
 
-             
-
               {currentStep === 2 && (
                 <Box
                   display="grid"
@@ -812,6 +734,69 @@ const AddBot = () => {
                       "& .MuiFormLabel-root.Mui-focused": {
                         color: colors.blueAccent[500],
                         fontWeight: "bold",
+                      },
+                    }}
+                  />
+                  <TextField
+                    gridColumn="span 2"
+                    label="Upload Knowledge Base"
+                    variant="filled"
+                    type="text"
+                    name="uploadKnowledgeBase"
+                    value={uploadKnowledgeBase}
+                    InputProps={{
+                      readOnly: true,
+                      endAdornment: (
+                        <Button
+                          variant="contained"
+                          component="label"
+                          sx={{
+                            backgroundColor: "transparent",
+                            color: "white",
+                            textTransform: "none",
+                            boxShadow: "none",
+                            width: "100%",
+                            height: "100%",
+                            position: "absolute",
+                            top: "0",
+                            left: "0",
+                            "&:hover": {
+                              backgroundColor: "transparent",
+                            },
+                          }}
+                        >
+                          <input
+                            type="file"
+                            hidden
+                            name="botImage"
+                            onChange={(e) => {
+                              handleuploadKnowledgeBaseChange(e);
+                              handleChange(e);
+                            }}
+                          />
+                        </Button>
+                      ),
+                    }}
+                    onBlur={handleBlur}
+                    error={
+                      !!touched.uploadKnowledgeBase &&
+                      !!errors.uploadKnowledgeBase
+                    }
+                    helperText={
+                      touched.uploadKnowledgeBase && errors.uploadKnowledgeBase
+                    }
+                    sx={{
+                      position: "relative",
+                      width: "100%",
+                      flexGrow: "1",
+                      gridColumn: "span 2",
+                      "& .MuiFormLabel-root.Mui-focused": {
+                        color: colors.blueAccent[500],
+                        fontWeight: "bold",
+                      },
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: colors.primary[400],
+                        color: colors.grey[100],
                       },
                     }}
                   />
