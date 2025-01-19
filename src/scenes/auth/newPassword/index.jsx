@@ -66,16 +66,19 @@ const NewPassword = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("https://app.medicarebot.live/newPassword", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          token: storedToken,
-          new_password: values.password,
-        }),
-      });
+      const response = await fetch(
+        "https://app.medicarebot.live//newPassword",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            token: storedToken,
+            new_password: values.password,
+          }),
+        }
+      );
       console.log("try token", token);
       console.log("try store token", storedToken);
 

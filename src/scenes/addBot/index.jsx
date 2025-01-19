@@ -11,6 +11,8 @@ import {
   Slider,
   CircularProgress,
 } from "@mui/material";
+import LinearProgress from "@mui/material/LinearProgress";
+
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -52,73 +54,7 @@ const AddBot = () => {
 
   const isNonMobile = useMediaQuery("(min-width:600px)");
 
-  const handleFormSubmit = async (values) => {
-    setLoading(true);
-    const formData = new FormData();
-
-    // Append simple fields
-    formData.append("name", values.botName);
-    formData.append(
-      "avatar",
-      values.avatar || new File([""], "placeholder.jpg")
-    );
-    formData.append("type", values.channel);
-    formData.append("description", values.description);
-    formData.append("role_description", values.detailedRoleDescription);
-    formData.append("pretrained_template", values.preTrainedTemplate);
-    formData.append("expectation", values.ExpectedOutcome);
-    formData.append(
-      "knowledge_base_file",
-      values.uploadKnowledgeBase || new File([""], "placeholder.txt")
-    );
-
-    const token = sessionStorage.getItem("authToken");
-
-    try {
-      const response = await axios.post(
-        "http://46.202.153.94:5000/create_bot",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      // Check for success response
-      if (response.data?.bot_id) {
-        const botId = response.data.bot_id;
-        console.log(botId);
-        setNotificationType("success");
-        setNotificationMessage(`Bot created successfully! Bot ID: ${botId}`);
-        setShowNotification(true);
-        console.log("Success:", response.data.message, "Bot ID:", botId);
-
-        // Perform further actions with bot_id (e.g., save it, redirect)
-        // Example: Redirect to a bot details page
-        // navigate(`/bot-details/${botId}`);
-      } else {
-        // Handle backend failure messages explicitly
-        const errorMessage = response.data?.message || "Request failed.";
-        setNotificationType("error");
-        setNotificationMessage(errorMessage);
-        setShowNotification(true);
-        console.error("Backend Error:", errorMessage);
-      }
-    } catch (error) {
-      // Catch unexpected errors
-      const errorMessage =
-        error.response?.data?.message || "An error occurred. Please try again.";
-      setNotificationType("error");
-      setNotificationMessage(errorMessage);
-      console.error("Unexpected Error:", error.response?.data || error.message);
-      setShowNotification(true);
-    } finally {
-      setLoading(false);
-      console.log("finally");
-    }
-  };
+  
 
   const handleCloseNotification = (event, reason) => {
     if (reason === "clickaway") return;
@@ -233,7 +169,7 @@ const AddBot = () => {
   };
 
   const [attachDocuments, setAttachDocuments] = useState("");
-  const [uploadKnowledgeBase, setUploadKnowledgeBase] = useState("");
+  const [uploadKnowledgeBase, setUploadKnowledgeBase] = useState(null);
   const [uploadOptionalDocument, setUploadOptionalDocument] = useState("");
 
   const handleattachDocumentsChange = (event) => {
@@ -241,10 +177,16 @@ const AddBot = () => {
     setAttachDocuments(file ? file.name : "");
   };
 
+  // const handleuploadKnowledgeBaseChange = (event) => {
+  //   const file = event.target.files[0];
+  //   setUploadKnowledgeBase(file ? file.name : "");
+  // };
+
   const handleuploadKnowledgeBaseChange = (event) => {
     const file = event.target.files[0];
-    setUploadKnowledgeBase(file ? file.name : "");
+    setUploadKnowledgeBase(file || null); // Ensure null if no file is selected
   };
+
 
   const handleuploadOptionalDocumentChange = (event) => {
     const file = event.target.files[0];
@@ -273,6 +215,155 @@ const AddBot = () => {
   const handleCancel = () => {
     console.log("Action canceled!");
   };
+
+  const [uploadProgress, setUploadProgress] = useState(0);
+
+
+
+  const handleFormSubmit = async (values) => {
+    setLoading(true);
+    const formData = new FormData();
+
+    // Append form fields
+    formData.append("name", values.botName);
+    formData.append(
+      "avatar",
+      values.avatar || new File([""], "placeholder.jpg")
+    );
+    formData.append("type", values.channel);
+    formData.append("description", values.description);
+    formData.append("role_description", values.detailedRoleDescription);
+    formData.append("pretrained_template", values.preTrainedTemplate);
+    formData.append("expectation", values.ExpectedOutcome);
+
+    // Check and append the file
+    if (uploadKnowledgeBase) {
+      formData.append("knowledge_base_file", uploadKnowledgeBase);
+    } else {
+      formData.append("knowledge_base_file", new File([""], "placeholder.txt"));
+    }
+
+    const token = sessionStorage.getItem("authToken");
+
+    try {
+      const response = await axios.post(
+        "https://app.medicarebot.live/create_bot",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data?.bot_id) {
+        const botId = response.data.bot_id;
+        setNotificationType("success");
+        setNotificationMessage(`Bot created successfully! Bot ID: ${botId}`);
+        setShowNotification(true);
+      } else {
+        const errorMessage = response.data?.message || "Request failed.";
+        setNotificationType("error");
+        setNotificationMessage(errorMessage);
+        setShowNotification(true);
+      }
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || "An error occurred. Please try again.";
+      setNotificationType("error");
+      setNotificationMessage(errorMessage);
+      setShowNotification(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+  // const handleUploadFile = async () => {
+  //   if (!uploadKnowledgeBase) {
+  //     setNotificationType("error");
+  //     setNotificationMessage("Please select a file first.");
+  //     setShowNotification(true);
+  //     return;
+  //   }
+
+  //   const formData = new FormData();
+  //   formData.append("knowledge_base_file", uploadKnowledgeBase);
+
+  //   const token = sessionStorage.getItem("authToken");
+
+  //   try {
+  //     const response = await axios.post(
+  //       "https://app.medicarebot.live/create_bot/upload_knowledge_base",
+  //       formData,
+  //       {
+  //         headers: {
+  //           "Content-Type": "multipart/form-data",
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+
+  //     if (response.data?.success) {
+  //       setNotificationType("success");
+  //       setNotificationMessage("File uploaded successfully!");
+  //       setShowNotification(true);
+  //     } else {
+  //       setNotificationType("error");
+  //       setNotificationMessage("File upload failed.");
+  //       setShowNotification(true);
+  //     }
+  //   } catch (error) {
+  //     console.error("Upload Error:", error);
+  //     setNotificationType("error");
+  //     setNotificationMessage("An error occurred during upload.");
+  //     setShowNotification(true);
+  //   }
+  // };
+
+  // const handleUploadFile = async () => {
+  //   if (!uploadKnowledgeBase) return;
+
+  //   setUploadProgress(0); // Reset progress
+
+  //   const formData = new FormData();
+  //   formData.append("knowledge_base_file", uploadKnowledgeBase);
+
+  //   const token = sessionStorage.getItem("authToken");
+
+  //   try {
+  //     const response = await axios.post(
+  //       "https://app.medicarebot.live/create_bot",
+  //       formData,
+  //       {
+  //         headers: {
+  //           "Content-Type": "multipart/form-data",
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //         onUploadProgress: (progressEvent) => {
+  //           const progress = Math.round(
+  //             (progressEvent.loaded * 100) / progressEvent.total
+  //           );
+  //           setUploadProgress(progress);
+  //         },
+  //       }
+  //     );
+
+  //     if (response.data?.success) {
+  //       setNotificationType("success");
+  //       setNotificationMessage("File uploaded successfully!");
+  //       setShowNotification(true);
+  //     }
+  //   } catch (error) {
+  //     console.error("Upload Error:", error);
+  //     setNotificationType("error");
+  //     setNotificationMessage("An error occurred during upload.");
+  //     setShowNotification(true);
+  //   }
+  // };
+
+
 
   return (
     <Box m="20px">
@@ -874,7 +965,7 @@ const AddBot = () => {
                     variant="filled"
                     type="text"
                     name="uploadKnowledgeBase"
-                    value={uploadKnowledgeBase}
+                    value={uploadKnowledgeBase ? uploadKnowledgeBase.name : ""}
                     InputProps={{
                       readOnly: true,
                       endAdornment: (
@@ -899,23 +990,12 @@ const AddBot = () => {
                           <input
                             type="file"
                             hidden
-                            name="botImage"
-                            onChange={(e) => {
-                              handleuploadKnowledgeBaseChange(e);
-                              handleChange(e);
-                            }}
+                            name="uploadKnowledgeBase"
+                            onChange={(e) => handleuploadKnowledgeBaseChange(e)}
                           />
                         </Button>
                       ),
                     }}
-                    onBlur={handleBlur}
-                    error={
-                      !!touched.uploadKnowledgeBase &&
-                      !!errors.uploadKnowledgeBase
-                    }
-                    helperText={
-                      touched.uploadKnowledgeBase && errors.uploadKnowledgeBase
-                    }
                     sx={{
                       position: "relative",
                       width: "100%",
@@ -931,6 +1011,15 @@ const AddBot = () => {
                       },
                     }}
                   />
+
+                  {uploadProgress > 0 && (
+                    <Box sx={{ width: "100%", mt: 1 }}>
+                      <LinearProgress
+                        variant="determinate"
+                        value={uploadProgress}
+                      />
+                    </Box>
+                  )}
 
                   <Typography
                     gridColumn="span 4"
