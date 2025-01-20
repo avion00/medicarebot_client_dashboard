@@ -11,14 +11,13 @@ import {
   Slider,
   CircularProgress,
 } from "@mui/material";
-import LinearProgress from "@mui/material/LinearProgress";
 
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
 import { tokens } from "../../theme";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -28,6 +27,10 @@ import initialData from "./data.json";
 import axios from "axios";
 import BlockIcon from "@mui/icons-material/Block";
 import SyncIcon from "@mui/icons-material/Sync";
+import { Dialog, DialogContent, DialogActions } from "@mui/material";
+import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
+import AccountTreeIcon from "@mui/icons-material/AccountTree";
+
 
 const steps = [
   { id: 1, label: "Bot Details", content: "Please fill out the form" },
@@ -46,6 +49,8 @@ const steps = [
 const AddBot = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+    const navigate = useNavigate();
+  
 
   const [showNotification, setShowNotification] = useState(false);
   const [notificationType, setNotificationType] = useState("success");
@@ -168,30 +173,26 @@ const AddBot = () => {
     if (currentStep > 1) setCurrentStep(currentStep - 1);
   };
 
-  const [attachDocuments, setAttachDocuments] = useState("");
+  // state 5 that is documents part
+  const [attachDocuments, setAttachDocuments] = useState(null);
   const [uploadKnowledgeBase, setUploadKnowledgeBase] = useState(null);
-  const [uploadOptionalDocument, setUploadOptionalDocument] = useState("");
+  const [uploadOptionalDocument, setUploadOptionalDocument] = useState(null);
 
   const handleattachDocumentsChange = (event) => {
     const file = event.target.files[0];
-    setAttachDocuments(file ? file.name : "");
+    setAttachDocuments(file || null);
   };
-
-  // const handleuploadKnowledgeBaseChange = (event) => {
-  //   const file = event.target.files[0];
-  //   setUploadKnowledgeBase(file ? file.name : "");
-  // };
 
   const handleuploadKnowledgeBaseChange = (event) => {
     const file = event.target.files[0];
-    setUploadKnowledgeBase(file || null); // Ensure null if no file is selected
+    setUploadKnowledgeBase(file || null);
   };
-
 
   const handleuploadOptionalDocumentChange = (event) => {
     const file = event.target.files[0];
-    setUploadOptionalDocument(file ? file.name : "");
+    setUploadOptionalDocument(file || null);
   };
+
 
   useEffect(() => {
     setConversation(initialData);
@@ -216,7 +217,14 @@ const AddBot = () => {
     console.log("Action canceled!");
   };
 
-  const [uploadProgress, setUploadProgress] = useState(0);
+    const [SuccessBox, setSuccessBox] = useState(false);
+  
+  const handleSetSuccessBoxClose = () => {
+    setSuccessBox(false);
+    setShowNotification(false);
+    navigate("/botIntegration");
+  };
+
 
 
 
@@ -237,10 +245,31 @@ const AddBot = () => {
     formData.append("expectation", values.ExpectedOutcome);
 
     // Check and append the file
+    if (attachDocuments) {
+      formData.append("upload_documents", attachDocuments);
+    } else {
+      formData.append(
+        "upload_documents",
+        new File([""], "upload_documents.txt")
+      );
+    }
+
     if (uploadKnowledgeBase) {
       formData.append("knowledge_base_file", uploadKnowledgeBase);
     } else {
-      formData.append("knowledge_base_file", new File([""], "placeholder.txt"));
+      formData.append(
+        "knowledge_base_file",
+        new File([""], "upload_knowledge_base.txt")
+      );
+    }
+
+    if (uploadOptionalDocument) {
+      formData.append("upload_optional_document", uploadOptionalDocument);
+    } else {
+      formData.append(
+        "upload_optional_document",
+        new File([""], "upload_optional_document.txt")
+      );
     }
 
     const token = sessionStorage.getItem("authToken");
@@ -278,90 +307,6 @@ const AddBot = () => {
       setLoading(false);
     }
   };
-
-
-  // const handleUploadFile = async () => {
-  //   if (!uploadKnowledgeBase) {
-  //     setNotificationType("error");
-  //     setNotificationMessage("Please select a file first.");
-  //     setShowNotification(true);
-  //     return;
-  //   }
-
-  //   const formData = new FormData();
-  //   formData.append("knowledge_base_file", uploadKnowledgeBase);
-
-  //   const token = sessionStorage.getItem("authToken");
-
-  //   try {
-  //     const response = await axios.post(
-  //       "https://app.medicarebot.live/create_bot/upload_knowledge_base",
-  //       formData,
-  //       {
-  //         headers: {
-  //           "Content-Type": "multipart/form-data",
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-
-  //     if (response.data?.success) {
-  //       setNotificationType("success");
-  //       setNotificationMessage("File uploaded successfully!");
-  //       setShowNotification(true);
-  //     } else {
-  //       setNotificationType("error");
-  //       setNotificationMessage("File upload failed.");
-  //       setShowNotification(true);
-  //     }
-  //   } catch (error) {
-  //     console.error("Upload Error:", error);
-  //     setNotificationType("error");
-  //     setNotificationMessage("An error occurred during upload.");
-  //     setShowNotification(true);
-  //   }
-  // };
-
-  // const handleUploadFile = async () => {
-  //   if (!uploadKnowledgeBase) return;
-
-  //   setUploadProgress(0); // Reset progress
-
-  //   const formData = new FormData();
-  //   formData.append("knowledge_base_file", uploadKnowledgeBase);
-
-  //   const token = sessionStorage.getItem("authToken");
-
-  //   try {
-  //     const response = await axios.post(
-  //       "https://app.medicarebot.live/create_bot",
-  //       formData,
-  //       {
-  //         headers: {
-  //           "Content-Type": "multipart/form-data",
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //         onUploadProgress: (progressEvent) => {
-  //           const progress = Math.round(
-  //             (progressEvent.loaded * 100) / progressEvent.total
-  //           );
-  //           setUploadProgress(progress);
-  //         },
-  //       }
-  //     );
-
-  //     if (response.data?.success) {
-  //       setNotificationType("success");
-  //       setNotificationMessage("File uploaded successfully!");
-  //       setShowNotification(true);
-  //     }
-  //   } catch (error) {
-  //     console.error("Upload Error:", error);
-  //     setNotificationType("error");
-  //     setNotificationMessage("An error occurred during upload.");
-  //     setShowNotification(true);
-  //   }
-  // };
 
 
 
@@ -902,7 +847,7 @@ const AddBot = () => {
                     variant="filled"
                     type="text"
                     name="attachDocuments"
-                    value={attachDocuments}
+                    value={attachDocuments ? attachDocuments.name : ""}
                     InputProps={{
                       readOnly: true,
                       endAdornment: (
@@ -927,22 +872,14 @@ const AddBot = () => {
                           <input
                             type="file"
                             hidden
-                            name="botImage"
+                            name="attachDocuments"
                             onChange={(e) => {
                               handleattachDocumentsChange(e);
-                              handleChange(e);
                             }}
                           />
                         </Button>
                       ),
                     }}
-                    onBlur={handleBlur}
-                    error={
-                      !!touched.attachDocuments && !!errors.attachDocuments
-                    }
-                    helperText={
-                      touched.attachDocuments && errors.attachDocuments
-                    }
                     sx={{
                       position: "relative",
                       width: "100%",
@@ -1011,15 +948,6 @@ const AddBot = () => {
                       },
                     }}
                   />
-
-                  {uploadProgress > 0 && (
-                    <Box sx={{ width: "100%", mt: 1 }}>
-                      <LinearProgress
-                        variant="determinate"
-                        value={uploadProgress}
-                      />
-                    </Box>
-                  )}
 
                   <Typography
                     gridColumn="span 4"
@@ -1412,6 +1340,108 @@ const AddBot = () => {
                   </Box>
                 )}
               </Box>
+
+              {/* <Dialog
+                open={SuccessBox}
+                onClose={handleSetSuccessBoxClose}
+                sx={{
+                  zIndex: 1300,
+                  "& .MuiDialog-paper": {
+                    borderRadius: "8px",
+                    padding: "24px",
+                    maxWidth: "420px",
+                    width: "100%",
+                    backgroundColor: colors.primary[500],
+                  },
+                }}
+              >
+                <DialogContent
+                  sx={{
+                    textAlign: "center",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: "80px",
+                      height: "80px",
+                      margin: "0 auto",
+                      borderRadius: "50%",
+                      background: "linear-gradient(45deg, #062994, #0E72E1)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <RocketLaunchIcon
+                      sx={{
+                        fontSize: "46px",
+                      }}
+                    />
+                  </Box>
+
+                  <Typography
+                    variant="h3"
+                    sx={{
+                      fontWeight: "bold",
+                      marginTop: "16px",
+                      color: colors.grey[100],
+                    }}
+                  >
+                    Congratulations!
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      marginTop: "12px",
+                      color: colors.grey[200],
+                    }}
+                  >
+                    Your Bot <strong f>{values.botName}</strong> Has been
+                    Created Successfully
+                  </Typography>
+
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      marginTop: "12px",
+                      color: colors.grey[200],
+                    }}
+                  >
+                    Now Let’s <strong>Integrate</strong> this bot into
+                    <strong> Your website or platform</strong>
+                  </Typography>
+                </DialogContent>
+
+                <DialogActions
+                  sx={{
+                    justifyContent: "center",
+                    marginTop: "16px",
+                  }}
+                >
+                  <Button
+                    onClick={handleSetSuccessBoxClose}
+                    variant="contained"
+                    color="primary"
+                    startIcon={<AccountTreeIcon />}
+                    sx={{
+                      background: "linear-gradient(45deg, #062994, #0E72E1)",
+                      textTransform: "capitalize",
+                      color: "#fff",
+                      // width: isNonMobile ? "50%" : "100%",
+                      fontSize: "14px",
+                      fontWeight: "bold",
+                      padding: "10px 20px",
+                      mb: isNonMobile ? "0em" : "1em",
+                      transition: "all 0.5s ease",
+                      "&:hover": {
+                        opacity: ".7",
+                      },
+                    }}
+                  >
+                    Let’s Integrate
+                  </Button>
+                </DialogActions>
+              </Dialog> */}
             </form>
           )}
         </Formik>
