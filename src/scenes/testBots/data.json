@@ -86,5 +86,5 @@
     "message": "You can contact our customer support team by calling 1-800-123-4567 or emailing support@example.com."
   },
   { "sender": "user", "message": "Thank you for all the help today!" },
-  { "sender": "bot", "message": "You're very welcome! Have a wonderful day!" }
+  { "sender": "bot", "message": "You're very welcome! Have a wonderful day eah!" }
 ]
