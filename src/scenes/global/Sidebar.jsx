@@ -31,7 +31,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import LayersIcon from "@mui/icons-material/Layers";
 import EmojiPeopleIcon from "@mui/icons-material/EmojiPeople";
 import FlagIcon from "@mui/icons-material/Flag";
-
+import EmailIcon from "@mui/icons-material/Email";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -493,6 +493,28 @@ const Sidebar = ({ isSidebar }) => {
                 </Link>
               </MenuItem>
               <MenuItem
+                icon={<EmailIcon />}
+                onClick={() => setSelected("gmailChatHistory")}
+                style={{
+                  marginBottom: ".5em",
+                  color:
+                    selected === "gmailChatHistory"
+                      ? "#6870fa"
+                      : colors.grey[100],
+                }}
+              >
+                <Link
+                  to="/gmailChatHistory"
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                    fontSize: "13px",
+                  }}
+                >
+                  Gmail Chat History
+                </Link>
+              </MenuItem>
+              <MenuItem
                 icon={<EmojiPeopleIcon />}
                 onClick={() => setSelected("humanHandoffs")}
                 style={{
@@ -570,7 +592,6 @@ const Sidebar = ({ isSidebar }) => {
                 </Link>
               </MenuItem>
             </SubMenu>
-            
 
             <Item
               title="Billing"

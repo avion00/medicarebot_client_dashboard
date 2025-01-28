@@ -43,7 +43,8 @@ import InteractionStats from "./scenes/InteractionStats";
 import HumanHandoffs from "./scenes/humanHandoffs/index";
 import BotIntegration from "./scenes/botIntegration/index";
 import PrivateRoute from "./components/PrivateRoute";
-import TestComponent from "./scenes/test/index"
+import TestComponent from "./scenes/test/index";
+import GmailChatHistory from "./scenes/gmailChatHistory/index";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -357,6 +358,14 @@ function App() {
                   element={
                     <PrivateRoute>
                       <BotIntegration />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/gmailChatHistory"
+                  element={
+                    <PrivateRoute>
+                      <GmailChatHistory />
                     </PrivateRoute>
                   }
                 />

@@ -114,6 +114,7 @@ const ChatHistory = () => {
                   flexGrow="grow"
                   sx={{
                     border: `2px solid white`,
+                    paddingRight: "2.5em",
                     backgroundColor: "#e6e6e6",
                     "&:focus-within": {
                       backgroundColor: "white",

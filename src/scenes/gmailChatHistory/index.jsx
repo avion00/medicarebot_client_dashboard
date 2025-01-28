@@ -1,4 +1,10 @@
-import { Box, useTheme, Typography, InputBase } from "@mui/material";
+import {
+  Box,
+  useTheme,
+  Typography,
+  InputBase,
+  IconButton,
+} from "@mui/material";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import React, { useState, useEffect, useRef } from "react";
@@ -10,7 +16,7 @@ import initialData from "./data.json";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
-const TestBots = () => {
+const GmailChatHistory = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   // const isNonMobile = useMediaQuery("(min-width:768px)");
@@ -57,8 +63,8 @@ const TestBots = () => {
 
   const handleKeyPress = (event) => {
     if (event.key === "Enter" && !event.shiftKey) {
-      event.preventDefault(); // Prevent the form from submitting
-      handleSendMessage(); // Call the function to send the message
+      event.preventDefault();
+      handleSendMessage();
     }
   };
 
@@ -66,31 +72,39 @@ const TestBots = () => {
     conversationEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [conversation]);
 
+  const [isOpen, setIsOpen] = useState(false); // State to toggle filter options
+  const filterRef = useRef(null); // Ref to the filter box
+
+  // Toggle filter options visibility
+  const handleFilterClick = () => {
+    setIsOpen((prevState) => !prevState);
+  };
+
+  // Close the filter box when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (filterRef.current && !filterRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    // Add event listener on mount
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Remove event listener on cleanup
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <Box m="20px">
       {/* HEADER */}
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        flexWrap="wrap"
-      >
-        <Header title="TEST BOTS" subtitle="Test your bot with new data" />
-        {/* <Box>
-          <Button
-            sx={{
-              background: "linear-gradient(45deg, #062994, #0E72E1)",
-              color: "#fff",
-              fontSize: "14px",
-              fontWeight: "bold",
-              padding: isNonMobile ? "10px 20px" : ".5em",
-              marginBottom: isNonMobile ? "inherit" : "1.5em",
-            }}
-          >
-            <AddIcon sx={{ mr: "10px" }} />
-            Add new Training Data
-          </Button>
-        </Box> */}
+      <Box>
+        <Header
+          title="GMAIL CHAT HISTORY"
+          subtitle="Get you gmail chat history with new data"
+        />
       </Box>
       <Box
         sx={{
@@ -144,7 +158,7 @@ const TestBots = () => {
                       color: "#000",
                       width: "100%",
                     }}
-                    placeholder="Type here to Search Bot"
+                    placeholder="Type here to Search Gmail Bot"
                     value={botSearch}
                     onChange={handleSearchBotChange}
                     // onKeyPress={handleKeyPress}
@@ -162,6 +176,7 @@ const TestBots = () => {
                   cursor: "pointer",
                   borderRadius: "50%",
                   background: "transparent",
+                  // border: '1px solid red'
                 }}
                 onClick={handleSearchBotChat}
               >
@@ -170,32 +185,92 @@ const TestBots = () => {
             </Box>
 
             <Box
-              onClick={() => console.log("Filter By Clicked")}
+              onClick={handleFilterClick}
               sx={{
                 flex: 0.25,
-                padding: "0.6em 1em ",
-                width: "fit-content",
                 position: "relative",
-                background: "linear-gradient(45deg, #062994, #0E72E1)",
-                color: "#fff",
-                borderRadius: "20px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: ".5em",
-                cursor: "pointer",
               }}
             >
-              <FilterAltIcon />
-              <Typography
-                variant="h6"
-                fontWeight="bold"
-                textAlign="center"
-                width="60px"
+              <IconButton
+                sx={{
+                  background: "linear-gradient(45deg, #062994, #0E72E1)",
+                  color: "#fff",
+                  borderRadius: "20px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: ".5em",
+                }}
               >
-                Filter By
-              </Typography>
-              <ArrowDropDownIcon />
+                <FilterAltIcon />
+                <Typography
+                  variant="h6"
+                  fontWeight="bold"
+                  textAlign="center"
+                  width="60px"
+                >
+                  Filter By
+                </Typography>
+                <ArrowDropDownIcon />
+              </IconButton>
+
+              {/* Filter options box */}
+              {isOpen && (
+                <Box
+                  ref={filterRef} // Assign ref to the filter dropdown box
+                  sx={{
+                    border: `1px solid ${colors.grey[600]}`,
+                    borderRadius: "8px",
+                    position: "absolute",
+                    top: "3em",
+                    left: "0",
+                    width: "100%",
+                    background: colors.primary[400],
+                    padding: ".5em 0",
+                    overflow: "hidden",
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      background: colors.primary[400],
+                      padding: ".5em 1em",
+                      cursor: "pointer",
+                      transition: "all .4s ease-out",
+                      "&:hover": {
+                        background: colors.primary[500],
+                      },
+                    }}
+                  >
+                    Interaction Type
+                  </Typography>
+                  <Typography
+                    sx={{
+                      background: colors.primary[400],
+                      padding: ".5em 1em",
+                      cursor: "pointer",
+                      transition: "all .4s ease-out",
+                      "&:hover": {
+                        background: colors.primary[500],
+                      },
+                    }}
+                  >
+                    Channel
+                  </Typography>
+                  <Typography
+                    sx={{
+                      background: colors.primary[400],
+                      padding: ".5em 1em",
+                      cursor: "pointer",
+                      transition: "all .4s ease-out",
+                      "&:hover": {
+                        background: colors.primary[500],
+                      },
+                    }}
+                  >
+                    Timestamp
+                  </Typography>
+                </Box>
+              )}
             </Box>
           </Box>
 
@@ -1293,10 +1368,10 @@ const TestBots = () => {
                     fontWeight="bold"
                     color="#ccc"
                   >
-                    Web Chatbot
+                    John Deo
                   </Typography>
                   <Typography variant="h6" lineHeight="1.4" color="#79898D">
-                    Test Bot
+                    johndoe@gmail.com
                   </Typography>
                 </Box>
               </Box>
@@ -1451,4 +1526,4 @@ const TestBots = () => {
   );
 };
 
-export default TestBots;
+export default GmailChatHistory;
