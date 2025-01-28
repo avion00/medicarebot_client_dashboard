@@ -43,6 +43,7 @@ import InteractionStats from "./scenes/InteractionStats";
 import HumanHandoffs from "./scenes/humanHandoffs/index";
 import BotIntegration from "./scenes/botIntegration/index";
 import PrivateRoute from "./components/PrivateRoute";
+import TestComponent from "./scenes/test/index"
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -356,6 +357,14 @@ function App() {
                   element={
                     <PrivateRoute>
                       <BotIntegration />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/testComponent"
+                  element={
+                    <PrivateRoute>
+                      <TestComponent />
                     </PrivateRoute>
                   }
                 />

@@ -27,9 +27,6 @@ import initialData from "./data.json";
 import axios from "axios";
 import BlockIcon from "@mui/icons-material/Block";
 import SyncIcon from "@mui/icons-material/Sync";
-import { Dialog, DialogContent, DialogActions } from "@mui/material";
-import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
-import AccountTreeIcon from "@mui/icons-material/AccountTree";
 
 
 const steps = [
@@ -41,15 +38,15 @@ const steps = [
     label: "Configure Bot Behaviour",
     content: "Please fill as the form",
   },
-  { id: 4, label: "Knowledge Base", content: "Please fill fdf the form" },
+  { id: 4, label: "Knowledge Base", content: "Please fill the form" },
 
-  { id: 5, label: "Advanced Settings", content: "Please fill dfdfdf the form" },
+  { id: 5, label: "Advanced Settings", content: "Please fill  the form" },
 ];
 
 const AddBot = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   
 
   const [showNotification, setShowNotification] = useState(false);
@@ -60,7 +57,6 @@ const AddBot = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
 
   
-
   const handleCloseNotification = (event, reason) => {
     if (reason === "clickaway") return;
     setShowNotification(false);
@@ -217,13 +213,7 @@ const AddBot = () => {
     console.log("Action canceled!");
   };
 
-    const [SuccessBox, setSuccessBox] = useState(false);
   
-  const handleSetSuccessBoxClose = () => {
-    setSuccessBox(false);
-    setShowNotification(false);
-    navigate("/botIntegration");
-  };
 
 
 
@@ -1341,108 +1331,7 @@ const AddBot = () => {
                 )}
               </Box>
 
-              {/* <Dialog
-                open={SuccessBox}
-                onClose={handleSetSuccessBoxClose}
-                sx={{
-                  zIndex: 1300,
-                  "& .MuiDialog-paper": {
-                    borderRadius: "8px",
-                    padding: "24px",
-                    maxWidth: "420px",
-                    width: "100%",
-                    backgroundColor: colors.primary[500],
-                  },
-                }}
-              >
-                <DialogContent
-                  sx={{
-                    textAlign: "center",
-                  }}
-                >
-                  <Box
-                    sx={{
-                      width: "80px",
-                      height: "80px",
-                      margin: "0 auto",
-                      borderRadius: "50%",
-                      background: "linear-gradient(45deg, #062994, #0E72E1)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <RocketLaunchIcon
-                      sx={{
-                        fontSize: "46px",
-                      }}
-                    />
-                  </Box>
-
-                  <Typography
-                    variant="h3"
-                    sx={{
-                      fontWeight: "bold",
-                      marginTop: "16px",
-                      color: colors.grey[100],
-                    }}
-                  >
-                    Congratulations!
-                  </Typography>
-                  <Typography
-                    variant="body1"
-                    sx={{
-                      marginTop: "12px",
-                      color: colors.grey[200],
-                    }}
-                  >
-                    Your Bot <strong f>{values.botName}</strong> Has been
-                    Created Successfully
-                  </Typography>
-
-                  <Typography
-                    variant="body1"
-                    sx={{
-                      marginTop: "12px",
-                      color: colors.grey[200],
-                    }}
-                  >
-                    Now Let’s <strong>Integrate</strong> this bot into
-                    <strong> Your website or platform</strong>
-                  </Typography>
-                </DialogContent>
-
-                <DialogActions
-                  sx={{
-                    justifyContent: "center",
-                    marginTop: "16px",
-                  }}
-                >
-                  <Button
-                    onClick={handleSetSuccessBoxClose}
-                    variant="contained"
-                    color="primary"
-                    startIcon={<AccountTreeIcon />}
-                    sx={{
-                      background: "linear-gradient(45deg, #062994, #0E72E1)",
-                      textTransform: "capitalize",
-                      color: "#fff",
-                      // width: isNonMobile ? "50%" : "100%",
-                      fontSize: "14px",
-                      fontWeight: "bold",
-                      padding: "10px 20px",
-                      mb: isNonMobile ? "0em" : "1em",
-                      transition: "all 0.5s ease",
-                      "&:hover": {
-                        opacity: ".7",
-                      },
-                    }}
-                  >
-                    Let’s Integrate
-                  </Button>
-                </DialogActions>
-              </Dialog> */}
-            </form>
+              </form>
           )}
         </Formik>
       </Box>
