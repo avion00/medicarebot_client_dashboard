@@ -17,7 +17,7 @@ import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
 import { tokens } from "../../theme";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -27,7 +27,10 @@ import initialData from "./data.json";
 import axios from "axios";
 import BlockIcon from "@mui/icons-material/Block";
 import SyncIcon from "@mui/icons-material/Sync";
-import AddBotDialogBox from "../../components/AddBotDialogBox";
+import { Dialog, DialogContent, DialogActions } from "@mui/material";
+import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
+import AccountTreeIcon from "@mui/icons-material/AccountTree";
+
 
 const steps = [
   { id: 1, label: "Bot Details", content: "Please fill out the form" },
@@ -38,15 +41,16 @@ const steps = [
     label: "Configure Bot Behaviour",
     content: "Please fill as the form",
   },
-  { id: 4, label: "Knowledge Base", content: "Please fill the form" },
+  { id: 4, label: "Knowledge Base", content: "Please fill fdf the form" },
 
-  { id: 5, label: "Advanced Settings", content: "Please fill  the form" },
+  { id: 5, label: "Advanced Settings", content: "Please fill dfdfdf the form" },
 ];
 
 const AddBot = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  // const navigate = useNavigate();
+    const navigate = useNavigate();
+  
 
   const [showNotification, setShowNotification] = useState(false);
   const [notificationType, setNotificationType] = useState("success");
@@ -54,6 +58,8 @@ const AddBot = () => {
   const [loading, setLoading] = useState(false);
 
   const isNonMobile = useMediaQuery("(min-width:600px)");
+
+  
 
   const handleCloseNotification = (event, reason) => {
     if (reason === "clickaway") return;
@@ -187,6 +193,7 @@ const AddBot = () => {
     setUploadOptionalDocument(file || null);
   };
 
+
   useEffect(() => {
     setConversation(initialData);
   }, []);
@@ -202,67 +209,26 @@ const AddBot = () => {
     conversationEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [conversation]);
 
-  const handleDraft = async () => {
-    setLoading(true); // Set loading to true to show the loading animation
-    console.log("Saving draft...");
-
-    try {
-      // Implement logic to save the draft, for example:
-      // You can send the draft data to a backend or store it locally
-      const draftData = {
-        /* Your draft data here */
-      };
-
-      // Simulating saving the draft (replace with actual logic)
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate a delay for the draft save
-
-      // After saving the draft, update the UI
-      setNotificationType("success");
-      setNotificationMessage("Draft saved successfully!");
-      setShowNotification(true);
-
-      console.log("Draft saved successfully!");
-    } catch (error) {
-      setNotificationType("error");
-      setNotificationMessage("Failed to save draft. Please try again.");
-      setShowNotification(true);
-
-      console.error("Error saving draft:", error);
-    } finally {
-      setLoading(false); // Set loading back to false when done
-    }
+  const handleDraft = () => {
+    console.log("Draft saved!");
   };
 
-  const handleCancel = (resetForm) => {
-    const isConfirmed = window.confirm("Are you sure you want to cancel?");
-
-    if (isConfirmed) {
-      // Reset the form and other states
-      resetForm();
-      setAttachDocuments(null);
-      setUploadKnowledgeBase(null);
-      setUploadOptionalDocument(null);
-      setShowNotification(true);
-      setTimeout(() => {
-        setCurrentStep(1);
-      }, 1200);
-      setNotificationType("success");
-      setNotificationMessage("You have successfully Canceled the action.");
-    } else {
-      console.log("Cancellation aborted by user.");
-      setShowNotification(true);
-      setNotificationType("error");
-      setNotificationMessage("Cancellation abort");
-    }
+  const handleCancel = () => {
+    console.log("Action canceled!");
   };
 
-  const [successBox, setSuccessBox] = useState(false);
-
-  const handleCloseDialog = () => {
+    const [SuccessBox, setSuccessBox] = useState(false);
+  
+  const handleSetSuccessBoxClose = () => {
     setSuccessBox(false);
+    setShowNotification(false);
+    navigate("/botIntegration");
   };
 
-  const handleFormSubmit = async (values, { resetForm }) => {
+
+
+
+  const handleFormSubmit = async (values) => {
     setLoading(true);
     const formData = new FormData();
 
@@ -278,19 +244,33 @@ const AddBot = () => {
     formData.append("pretrained_template", values.preTrainedTemplate);
     formData.append("expectation", values.ExpectedOutcome);
 
-    // Check and append the file fields
-    formData.append(
-      "upload_documents",
-      attachDocuments || new File([""], "upload_documents.txt")
-    );
-    formData.append(
-      "knowledge_base_file",
-      uploadKnowledgeBase || new File([""], "upload_knowledge_base.txt")
-    );
-    formData.append(
-      "upload_optional_document",
-      uploadOptionalDocument || new File([""], "upload_optional_document.txt")
-    );
+    // Check and append the file
+    if (attachDocuments) {
+      formData.append("upload_documents", attachDocuments);
+    } else {
+      formData.append(
+        "upload_documents",
+        new File([""], "upload_documents.txt")
+      );
+    }
+
+    if (uploadKnowledgeBase) {
+      formData.append("knowledge_base_file", uploadKnowledgeBase);
+    } else {
+      formData.append(
+        "knowledge_base_file",
+        new File([""], "upload_knowledge_base.txt")
+      );
+    }
+
+    if (uploadOptionalDocument) {
+      formData.append("upload_optional_document", uploadOptionalDocument);
+    } else {
+      formData.append(
+        "upload_optional_document",
+        new File([""], "upload_optional_document.txt")
+      );
+    }
 
     const token = sessionStorage.getItem("authToken");
 
@@ -311,12 +291,6 @@ const AddBot = () => {
         setNotificationType("success");
         setNotificationMessage(`Bot created successfully! Bot ID: ${botId}`);
         setShowNotification(true);
-        setSuccessBox(true);
-        resetForm();
-        setCurrentStep(1);
-        setAttachDocuments(null);
-        setUploadKnowledgeBase(null);
-        setUploadOptionalDocument(null);
       } else {
         const errorMessage = response.data?.message || "Request failed.";
         setNotificationType("error");
@@ -333,6 +307,8 @@ const AddBot = () => {
       setLoading(false);
     }
   };
+
+
 
   return (
     <Box m="20px">
@@ -409,7 +385,6 @@ const AddBot = () => {
             handleChange,
             handleSubmit,
             setFieldValue,
-            resetForm,
           }) => (
             <form onSubmit={handleSubmit}>
               {/* Conditional content based on step  ookey*/}
@@ -1340,11 +1315,10 @@ const AddBot = () => {
                     >
                       Save as Draft
                     </Button>
-
                     <Button
                       variant="contained"
                       color="error"
-                      onClick={() => handleCancel(resetForm)}
+                      onClick={handleCancel}
                       startIcon={<BlockIcon />}
                       sx={{
                         background: "linear-gradient(45deg, #f44336, #e57373)",
@@ -1361,11 +1335,113 @@ const AddBot = () => {
                         },
                       }}
                     >
-                      {loading ? `Cancelling...` : "Cancel"}
+                      Cancel
                     </Button>
                   </Box>
                 )}
               </Box>
+
+              {/* <Dialog
+                open={SuccessBox}
+                onClose={handleSetSuccessBoxClose}
+                sx={{
+                  zIndex: 1300,
+                  "& .MuiDialog-paper": {
+                    borderRadius: "8px",
+                    padding: "24px",
+                    maxWidth: "420px",
+                    width: "100%",
+                    backgroundColor: colors.primary[500],
+                  },
+                }}
+              >
+                <DialogContent
+                  sx={{
+                    textAlign: "center",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: "80px",
+                      height: "80px",
+                      margin: "0 auto",
+                      borderRadius: "50%",
+                      background: "linear-gradient(45deg, #062994, #0E72E1)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <RocketLaunchIcon
+                      sx={{
+                        fontSize: "46px",
+                      }}
+                    />
+                  </Box>
+
+                  <Typography
+                    variant="h3"
+                    sx={{
+                      fontWeight: "bold",
+                      marginTop: "16px",
+                      color: colors.grey[100],
+                    }}
+                  >
+                    Congratulations!
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      marginTop: "12px",
+                      color: colors.grey[200],
+                    }}
+                  >
+                    Your Bot <strong f>{values.botName}</strong> Has been
+                    Created Successfully
+                  </Typography>
+
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      marginTop: "12px",
+                      color: colors.grey[200],
+                    }}
+                  >
+                    Now Let’s <strong>Integrate</strong> this bot into
+                    <strong> Your website or platform</strong>
+                  </Typography>
+                </DialogContent>
+
+                <DialogActions
+                  sx={{
+                    justifyContent: "center",
+                    marginTop: "16px",
+                  }}
+                >
+                  <Button
+                    onClick={handleSetSuccessBoxClose}
+                    variant="contained"
+                    color="primary"
+                    startIcon={<AccountTreeIcon />}
+                    sx={{
+                      background: "linear-gradient(45deg, #062994, #0E72E1)",
+                      textTransform: "capitalize",
+                      color: "#fff",
+                      // width: isNonMobile ? "50%" : "100%",
+                      fontSize: "14px",
+                      fontWeight: "bold",
+                      padding: "10px 20px",
+                      mb: isNonMobile ? "0em" : "1em",
+                      transition: "all 0.5s ease",
+                      "&:hover": {
+                        opacity: ".7",
+                      },
+                    }}
+                  >
+                    Let’s Integrate
+                  </Button>
+                </DialogActions>
+              </Dialog> */}
             </form>
           )}
         </Formik>
@@ -1385,11 +1461,6 @@ const AddBot = () => {
           {notificationMessage}
         </Alert>
       </Snackbar>
-
-      <AddBotDialogBox
-        successBox={successBox}
-        handleSetSuccessBoxClose={handleCloseDialog}
-      />
     </Box>
   );
 };
