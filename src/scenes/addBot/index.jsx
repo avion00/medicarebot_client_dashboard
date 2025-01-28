@@ -10,6 +10,7 @@ import {
   Typography,
   Slider,
   CircularProgress,
+  InputAdornment,
 } from "@mui/material";
 
 import { Formik } from "formik";
@@ -28,6 +29,8 @@ import axios from "axios";
 import BlockIcon from "@mui/icons-material/Block";
 import SyncIcon from "@mui/icons-material/Sync";
 import AddBotDialogBox from "../../components/AddBotDialogBox";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 const steps = [
   { id: 1, label: "Bot Details", content: "Please fill out the form" },
@@ -63,6 +66,7 @@ const AddBot = () => {
   const handleBotNameChange = (event, handleChange) => {
     handleChange(event);
   };
+
   const handleAvatarChange = (event, handleChange) => {
     handleChange(event);
   };
@@ -126,6 +130,20 @@ const AddBot = () => {
     handleChange(event);
   };
 
+  const handleSMTPserverLinkChange = (event, handleChange) => {
+    handleChange(event);
+  };
+
+  const handleEmailAddressChange = (event, handleChange) => {
+    handleChange(event);
+  };
+
+  const [showPassword, setShowPassword] = useState(false);
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
   const initialValues = {
     botName: "",
     avatar: "",
@@ -136,6 +154,11 @@ const AddBot = () => {
     preTrainedTemplate: "",
     ExpectedOutcome: "",
     uploadKnowledgeBase: "",
+
+    // email web bot
+    SMTPServerLink: "",
+    emailAddress: "",
+    password: "",
   };
 
   const checkoutSchema = yup.object().shape({
@@ -155,6 +178,11 @@ const AddBot = () => {
     // optional
     attachDocuments: yup.mixed().nullable(),
     uploadOptionalDocument: yup.mixed().nullable(),
+
+    // email web bot
+    SMTPServerLink: yup.string().required("SMTP Server Link is required"),
+    emailAddress: yup.string().required("Email Address is required"),
+    password: yup.string().required("Password is required"),
   });
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -203,18 +231,17 @@ const AddBot = () => {
   }, [conversation]);
 
   const handleDraft = async () => {
-    setLoading(true); // Set loading to true to show the loading animation
+    setLoading(false);
     console.log("Saving draft...");
 
     try {
       // Implement logic to save the draft, for example:
       // You can send the draft data to a backend or store it locally
-      const draftData = {
-        /* Your draft data here */
-      };
+      // const draftData = {
+      //   /* Your draft data here */
+      // };
 
-      // Simulating saving the draft (replace with actual logic)
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate a delay for the draft save
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // After saving the draft, update the UI
       setNotificationType("success");
@@ -278,6 +305,11 @@ const AddBot = () => {
     formData.append("pretrained_template", values.preTrainedTemplate);
     formData.append("expectation", values.ExpectedOutcome);
 
+    // email web bot
+    formData.append("SMTPServerLink", values.SMTPServerLink);
+    formData.append("emailAddress", values.emailAddress);
+    formData.append("password", values.password);
+
     // Check and append the file fields
     formData.append(
       "upload_documents",
@@ -314,6 +346,7 @@ const AddBot = () => {
         setSuccessBox(true);
         resetForm();
         setCurrentStep(1);
+        // manually empty when submit the form
         setAttachDocuments(null);
         setUploadKnowledgeBase(null);
         setUploadOptionalDocument(null);
@@ -470,11 +503,11 @@ const AddBot = () => {
                       onBlur={handleBlur}
                       error={!!touched.channel && !!errors.channel}
                     >
+                      <MenuItem value="Email">Email</MenuItem>
                       <MenuItem value="Telegram">Telegram</MenuItem>
                       <MenuItem value="Webchat">Webchat</MenuItem>
                       <MenuItem value="Messanger">Messanger</MenuItem>
                       <MenuItem value="Whatsapp">Whatsapp</MenuItem>
-                      <MenuItem value="Email">Email</MenuItem>
                     </Select>
                     {touched.channel && errors.channel && (
                       <Box color="red" mt="4px" fontSize="11px" ml="1.5em">
@@ -482,6 +515,109 @@ const AddBot = () => {
                       </Box>
                     )}
                   </FormControl>
+
+                  {/* Conditionally render Email-related fields */}
+                  {values.channel === "Email" && (
+                    <Box
+                      display="grid"
+                      gridColumn="span 4"
+                      gap="30px"
+                      gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                      sx={{
+                        "& > div": {
+                          gridColumn: isNonMobile ? undefined : "span 4",
+                        },
+                      }}
+                    >
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type="url"
+                        label="SMTP Server Link"
+                        onBlur={handleBlur}
+                        onChange={(e) =>
+                          handleSMTPserverLinkChange(e, handleChange)
+                        }
+                        value={values.SMTPServerLink}
+                        name="SMTPServerLink"
+                        error={
+                          !!touched.SMTPServerLink && !!errors.SMTPServerLink
+                        }
+                        helperText={
+                          touched.SMTPServerLink && errors.SMTPServerLink
+                        }
+                        sx={{
+                          gridColumn: "span 4",
+                          "& .MuiFormLabel-root.Mui-focused": {
+                            color: colors.blueAccent[500],
+                            fontWeight: "bold",
+                          },
+                        }}
+                      />
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type="email"
+                        label="Email Address"
+                        onBlur={handleBlur}
+                        onChange={(e) =>
+                          handleEmailAddressChange(e, handleChange)
+                        }
+                        value={values.emailAddress}
+                        name="emailAddress"
+                        error={!!touched.emailAddress && !!errors.emailAddress}
+                        helperText={touched.emailAddress && errors.emailAddress}
+                        sx={{
+                          gridColumn: "span 2",
+                          "& .MuiFormLabel-root.Mui-focused": {
+                            color: colors.blueAccent[500],
+                            fontWeight: "bold",
+                          },
+                        }}
+                      />
+
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type={showPassword ? "text" : "password"}
+                        label="Password"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.password}
+                        name="password"
+                        error={!!touched.password && !!errors.password}
+                        helperText={touched.password && errors.password}
+                        sx={{
+                          gridColumn: "span 2",
+                          "& .MuiFormLabel-root.Mui-focused": {
+                            color: colors.blueAccent[500],
+                            fontWeight: "bold",
+                          },
+                        }}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment
+                              position="end"
+                              style={{ marginRight: "1em" }}
+                            >
+                              <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={handleClickShowPassword}
+                                onMouseDown={handleMouseDownPassword}
+                                edge="end"
+                              >
+                                {showPassword ? (
+                                  <VisibilityOff />
+                                ) : (
+                                  <Visibility />
+                                )}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                    </Box>
+                  )}
 
                   <TextField
                     fullWidth
@@ -572,7 +708,7 @@ const AddBot = () => {
                   />
                 </Box>
               )}
-              {currentStep === 2 && (
+              {currentStep === 2 && values.channel !== "Email" && (
                 <Box
                   display="grid"
                   gap="30px"
@@ -705,7 +841,6 @@ const AddBot = () => {
                       </Box>
                     )}
                   </FormControl>
-
                   <FormControl
                     fullWidth
                     variant="filled"
@@ -1392,6 +1527,9 @@ const AddBot = () => {
       />
     </Box>
   );
+  
 };
+
+
 
 export default AddBot;

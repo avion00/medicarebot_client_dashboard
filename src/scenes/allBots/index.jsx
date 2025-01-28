@@ -5,6 +5,7 @@ import {
   useTheme,
   IconButton,
   InputBase,
+  Switch,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { tokens } from "../../theme";
@@ -17,12 +18,13 @@ import AddIcon from "@mui/icons-material/Add";
 import { useNavigate, useLocation } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+// import { motion } from "framer-motion";
 
 const AllBots = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const location = useLocation();
-  const [/* token */, setToken] = useState(null);
+  const [, /* token */ setToken] = useState(null);
   const navigate = useNavigate();
   const isNonMobile = useMediaQuery("(min-width: 768px)"); // For screens >= 768px
   const isTab = useMediaQuery("(min-width: 1200px)"); // For screens >= 1200px (Tablet and larger)
@@ -46,6 +48,20 @@ const AllBots = () => {
   const handleView = (id) => {
     console.log("View clicked for ID:", id);
     // Add your logic for viewing the bot details here
+  };
+
+  // Mock data for rows
+  const [botData, setBotData] = useState(AllBotData);
+
+  // Toggle handler for the button
+  const handleToggle = (id) => {
+    setBotData((prevData) =>
+      prevData.map((row) =>
+        row.id === id
+          ? { ...row, status: row.status === "Active" ? "Inactive" : "Active" }
+          : row
+      )
+    );
   };
 
   // DataGrid Columns
@@ -117,6 +133,39 @@ const AllBots = () => {
           </IconButton>
         </Box>
       ),
+    },
+    {
+      field: "Start/Stop",
+      headerName: "Start/Stop",
+      flex: 0.5,
+      renderCell: (params) => {
+        const isOn = params.row.status === "Active";
+        return (
+          <Box display="flex" alignItems="center">
+            <Switch
+              checked={isOn}
+              onChange={() => handleToggle(params.row.id)}
+              inputProps={{ "aria-label": "controlled" }}
+              sx={{
+                "&.Mui-checked": {
+                  color: "green",
+                  transition: "all .3s ease-out",
+                },
+                "& .MuiSwitch-thumb": {
+                  backgroundColor: isOn
+                    ? colors.greenAccent[700]
+                    : colors.redAccent[700],
+                },
+                "& .MuiSwitch-track": {
+                  backgroundColor: isOn
+                    ? colors.greenAccent[700]
+                    : colors.redAccent[700],
+                },
+              }}
+            />
+          </Box>
+        );
+      },
     },
   ];
 
@@ -438,7 +487,7 @@ const AllBots = () => {
           >
             <DataGrid
               checkboxSelection
-              rows={AllBotData}
+              rows={botData}
               columns={columns}
               rowHeight={40}
               headerHeight={40}
