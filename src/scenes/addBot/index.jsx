@@ -32,20 +32,6 @@ import AddBotDialogBox from "../../components/AddBotDialogBox";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
-const steps = [
-  { id: 1, label: "Bot Details", content: "Please fill out the form" },
-  { id: 2, label: "Visual Customization", content: "Please fill  the form" },
-
-  {
-    id: 3,
-    label: "Configure Bot Behaviour",
-    content: "Please fill as the form",
-  },
-  { id: 4, label: "Knowledge Base", content: "Please fill the form" },
-
-  { id: 5, label: "Advanced Settings", content: "Please fill  the form" },
-];
-
 const AddBot = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -90,10 +76,6 @@ const AddBot = () => {
   };
 
   const handleExpectedOutcomeChange = (event, handleChange) => {
-    handleChange(event);
-  };
-
-  const handleChannelChange = (event, handleChange) => {
     handleChange(event);
   };
 
@@ -146,7 +128,7 @@ const AddBot = () => {
 
   const initialValues = {
     botName: "",
-    avatar: "",
+    avatar: "helloavatar.png",
     channel: "",
     description: "",
     detailedRoleDescription: "",
@@ -163,7 +145,7 @@ const AddBot = () => {
 
   const checkoutSchema = yup.object().shape({
     botName: yup.string().required("Bot Name is required"),
-    avatar: yup.string().required("avatar Name is required"),
+    avatar: yup.string().nullable(),
 
     channel: yup.string().required("Channel is required"),
     description: yup.string().required("Description is required"),
@@ -185,16 +167,6 @@ const AddBot = () => {
     password: yup.string().required("Password is required"),
   });
 
-  const [currentStep, setCurrentStep] = useState(1);
-
-  const handleNext = () => {
-    if (currentStep < steps.length) setCurrentStep(currentStep + 1);
-  };
-
-  const handlePrev = () => {
-    if (currentStep > 1) setCurrentStep(currentStep - 1);
-  };
-
   // state 5 that is documents part
   const [attachDocuments, setAttachDocuments] = useState(null);
   const [uploadKnowledgeBase, setUploadKnowledgeBase] = useState(null);
@@ -214,6 +186,7 @@ const AddBot = () => {
     const file = event.target.files[0];
     setUploadOptionalDocument(file || null);
   };
+
 
   useEffect(() => {
     setConversation(initialData);
@@ -365,6 +338,54 @@ const AddBot = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const [channel, setChannel] = useState(""); // Selected channel
+  const [currentStep, setCurrentStep] = useState(1); // Current step
+
+  const allSteps = [
+    { id: 1, label: "Bot Details", content: "Please fill out the form" },
+    { id: 2, label: "Visual Customization", content: "Please fill the form" },
+    {
+      id: 3,
+      label: "Configure Bot Behaviour",
+      content: "Please fill as the form",
+    },
+    { id: 4, label: "Knowledge Base", content: "Please fill the form" },
+    { id: 5, label: "Advanced Settings", content: "Please fill the form" },
+  ];
+
+  // Dynamically filter steps based on the selected channel
+  const steps =
+    channel === "Email"
+      ? [
+          { id: 1, label: "Bot Details", content: "Please fill out the form" },
+          {
+            id: 2,
+            label: "Configure Bot Behaviour",
+            content: "Please fill as the form",
+          },
+          { id: 3, label: "Knowledge Base", content: "Please fill the form" },
+          {
+            id: 4,
+            label: "Advanced Settings",
+            content: "Please fill the form",
+          },
+        ]
+      : allSteps;
+
+  const handleNext = () => {
+    if (currentStep < steps.length) setCurrentStep(currentStep + 1);
+  };
+
+  const handlePrev = () => {
+    if (currentStep > 1) setCurrentStep(currentStep - 1);
+  };
+
+  const handleChannelChange = (event, handleChange) => {
+    setChannel(event.target.value);
+    setCurrentStep(1);
+    handleChange(event);
   };
 
   return (
@@ -787,7 +808,7 @@ const AddBot = () => {
                 </Box>
               )}
 
-              {currentStep === 3 && (
+              {currentStep === (values.channel === "Email" ? 2 : 3) && (
                 <Box
                   display="grid"
                   gap="30px"
@@ -990,7 +1011,7 @@ const AddBot = () => {
                 </Box>
               )}
 
-              {currentStep === 4 && (
+              {currentStep === (values.channel === "Email" ? 3 : 4) && (
                 <Box
                   display="grid"
                   gap="30px"
@@ -1121,11 +1142,13 @@ const AddBot = () => {
 
                   <TextField
                     gridColumn="span 2"
-                    label="Upload"
+                    label="upload Optional Document"
                     variant="filled"
                     type="text"
                     name="uploadOptionalDocument"
-                    value={uploadOptionalDocument}
+                    value={
+                      uploadOptionalDocument ? uploadOptionalDocument.name : ""
+                    }
                     InputProps={{
                       readOnly: true,
                       endAdornment: (
@@ -1150,24 +1173,14 @@ const AddBot = () => {
                           <input
                             type="file"
                             hidden
-                            name="botImage"
-                            onChange={(e) => {
-                              handleuploadOptionalDocumentChange(e);
-                              handleChange(e);
-                            }}
+                            name="uploadOptionalDocument"
+                            onChange={(e) =>
+                              handleuploadOptionalDocumentChange(e)
+                            }
                           />
                         </Button>
                       ),
                     }}
-                    onBlur={handleBlur}
-                    error={
-                      !!touched.uploadOptionalDocument &&
-                      !!errors.uploadOptionalDocument
-                    }
-                    helperText={
-                      touched.uploadOptionalDocument &&
-                      errors.uploadOptionalDocument
-                    }
                     sx={{
                       position: "relative",
                       width: "100%",
@@ -1197,7 +1210,7 @@ const AddBot = () => {
                 </Box>
               )}
 
-              {currentStep === 5 && (
+              {currentStep === (values.channel === "Email" ? 4 : 5) && (
                 <Box
                   display="grid"
                   rowGap="8px"
@@ -1209,52 +1222,59 @@ const AddBot = () => {
                     },
                   }}
                 >
-                  <Typography
-                    fontWeight="bold"
-                    gridColumn="span 4"
-                    varient="h6"
-                  >
-                    API Integration (Optional)
-                  </Typography>
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="API Key"
-                    onBlur={handleBlur}
-                    onChange={(e) => handleApiKeyChange(e, handleChange)}
-                    value={values.apiKey}
-                    name="apiKey"
-                    error={!!touched.apiKey && !!errors.apiKey}
-                    helperText={touched.apiKey && errors.apiKey}
-                    sx={{
-                      gridColumn: "span 2",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
+                  {values.channel !== "Email" && (
+                    <>
+                      <Typography
+                        fontWeight="bold"
+                        gridColumn="span 4"
+                        varient="h6"
+                      >
+                        API Integration (Optional)
+                      </Typography>
 
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="Callback URL"
-                    onBlur={handleBlur}
-                    onChange={(e) => handleCallbackURLChange(e, handleChange)}
-                    value={values.callbackURL}
-                    name="callbackURL"
-                    error={!!touched.callbackURL && !!errors.callbackURL}
-                    helperText={touched.callbackURL && errors.callbackURL}
-                    sx={{
-                      gridColumn: "span 2",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type="text"
+                        label="API Key"
+                        onBlur={handleBlur}
+                        onChange={(e) => handleApiKeyChange(e, handleChange)}
+                        value={values.apiKey}
+                        name="apiKey"
+                        error={!!touched.apiKey && !!errors.apiKey}
+                        helperText={touched.apiKey && errors.apiKey}
+                        sx={{
+                          gridColumn: "span 2",
+                          "& .MuiFormLabel-root.Mui-focused": {
+                            color: colors.blueAccent[500],
+                            fontWeight: "bold",
+                          },
+                        }}
+                      />
+
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type="text"
+                        label="Callback URL"
+                        onBlur={handleBlur}
+                        onChange={(e) =>
+                          handleCallbackURLChange(e, handleChange)
+                        }
+                        value={values.callbackURL}
+                        name="callbackURL"
+                        error={!!touched.callbackURL && !!errors.callbackURL}
+                        helperText={touched.callbackURL && errors.callbackURL}
+                        sx={{
+                          gridColumn: "span 2",
+                          "& .MuiFormLabel-root.Mui-focused": {
+                            color: colors.blueAccent[500],
+                            fontWeight: "bold",
+                          },
+                        }}
+                      />
+                    </>
+                  )}
 
                   <Typography
                     fontWeight="bold"
@@ -1527,9 +1547,6 @@ const AddBot = () => {
       />
     </Box>
   );
-  
 };
-
-
 
 export default AddBot;
