@@ -900,7 +900,6 @@ const EditPartners = () => {
         open={showNotification}
         autoHideDuration={3000}
         onClose={() => setShowNotification(false)}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
         <Alert severity={notificationType} sx={{ width: "100%" }}>
           {notificationMessage}

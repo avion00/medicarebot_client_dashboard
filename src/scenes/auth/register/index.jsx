@@ -47,13 +47,11 @@ const Register = () => {
   const navigate = useNavigate();
   // const [Usage, setUsage] = useState("");
   const [showNotification, setShowNotification] = useState(false);
-  
   const [notificationType, setNotificationType] = useState("success");
   const [notificationMessage, setNotificationMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
-
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
@@ -62,7 +60,7 @@ const Register = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "https://app.medicarebot.live//register",
+        "https://app.medicarebot.live/register",
         {
           first_name: values.firstName,
           last_name: values.lastName,
@@ -84,7 +82,7 @@ const Register = () => {
         setNotificationType("success");
         setNotificationMessage("Registration successful! Redirecting...");
         setShowNotification(true);
-        setTimeout(() => navigate("/login"), 2000);
+        setTimeout(() => navigate("/login"), 3000);
       } else {
         throw new Error(response.data.message || "Registration failed.");
       }
@@ -117,7 +115,7 @@ const Register = () => {
     lastName: "",
     username: "",
     email: "",
-    countryCode: "+977",
+    countryCode: "",
     phoneNumber: "",
     companyName: "",
     city: "",
@@ -282,6 +280,7 @@ const Register = () => {
               handleChange,
               handleBlur,
               handleSubmit,
+              setFieldValue,
               errors,
               touched,
             }) => (
@@ -360,7 +359,6 @@ const Register = () => {
                     label="Email"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    
                     value={values.email}
                     name="email"
                     error={!!touched.email && !!errors.email}
@@ -378,28 +376,31 @@ const Register = () => {
                   >
                     <Box
                       sx={{
-                        gridColumn: "span 4",
+                        gridColumn: "span 2",
                         width: "100%",
                       }}
                     >
                       <PhoneInput
                         country={"us"}
                         value={values.phoneNumber}
-                        onChange={(value) =>
-                          handleChange({
-                            target: { name: "phoneNumber", value },
-                          })
-                        }
-                        onBlur={handleBlur}
-                        name="phoneNumber"
+                        onChange={(phone, country) => {
+                          // Extract country code and number separately
+                          const countryCode = `+${country.dialCode}`;
+                          const phoneNumber = phone
+                            .replace(countryCode, "")
+                            .trim();
+
+                          setFieldValue("countryCode", countryCode);
+                          setFieldValue("phoneNumber", phoneNumber);
+                        }}
                         inputProps={{
                           name: "phone",
                           required: true,
+                          autoFocus: false,
                         }}
                         containerStyle={{
-                          width: `65%`,
-                          height: "100%",
-                          // padding: "10px",
+                          width: "65%",
+                          height: "52px",
                           border: "none",
                         }}
                         inputStyle={{
@@ -407,6 +408,7 @@ const Register = () => {
                           marginLeft: "54%",
                           height: "52px",
                           padding: "10px",
+                          paddingLeft: "1.5em",
                           fontSize: "14px",
                           borderRadius: "0 .3em 0 0",
                           backgroundColor: colors.primary[400],
@@ -422,6 +424,19 @@ const Register = () => {
                           borderBottom: `1px solid ${colors.primary[100]}`,
                         }}
                       />
+                      {touched.phoneNumber && errors.phoneNumber && (
+                        <Typography
+                          variant="caption"
+                          color="error"
+                          sx={{
+                            mt: 1,
+                            display: "block",
+                            fontSize: "0.75rem",
+                          }}
+                        >
+                          {errors.phoneNumber}
+                        </Typography>
+                      )}
                     </Box>
                   </Box>
 

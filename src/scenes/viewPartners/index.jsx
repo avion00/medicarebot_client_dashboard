@@ -4,55 +4,144 @@ import {
   // Typography,
   IconButton,
   InputBase,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 // import useMediaQuery from "@mui/material/useMediaQuery";
+import { useNavigate } from "react-router-dom";
+
 import EditIcon from "@mui/icons-material/Edit";
 import SearchIcon from "@mui/icons-material/Search";
-// import { GridToolbar } from "@mui/x-data-grid";
-import { LeadsData } from "../../data/viewLeadsData";
+// import { LeadsData } from "../../data/viewLeadsData";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import DeleteIcon from "@mui/icons-material/Delete";
+import axios from "axios";
 
 const ViewPartners = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const navigate = useNavigate();
   // const isNonMobile = useMediaQuery("(min-width:768px)");
 
-  const [removeLeaders, setRemoveLeaders] = useState([]);
-  const [
-    // checkedItems,
-     setCheckedItems] = useState([]);
+  const [viewLeadersData, setViewLeadersData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  const [leads, setLeads] = useState([]); // State to store leads
+  const [showNotification, setShowNotification] = useState(false); // State for snackbar visibility
+  const [notificationType, setNotificationType] = useState("success");
+  const [notificationMessage, setNotificationMessage] = useState("");
+  const token = sessionStorage.getItem("authToken");
+
+  // Fetch leads (you can add your API call logic here)
   useEffect(() => {
-    // Filter inactive bots from the JSON data
-    const learders = LeadsData.filter((bot) => bot.status === "Inactive");
-    setRemoveLeaders(learders);
+    axios
+      .get("https://app.medicarebot.live/get-leads")
+      .then((response) => {
+        setLeads(response.data); // Set the leads data from API
+      })
+      .catch((error) => {
+        console.error("Error fetching leads:", error);
+      });
   }, []);
 
-  const handleCheckboxChange = (ids) => {
-    setCheckedItems(
-      ids.map((id) => removeLeaders.find((bot) => bot.id === id).name)
-    );
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(
+          "https://app.medicarebot.live/list-leads",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.data.status === "success") {
+          setViewLeadersData(response.data.leads);
+        } else {
+          throw new Error("Failed to fetch leads");
+        }
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [token]);
 
   const handleEdit = (id) => {
     console.log("Edit clicked for ID:", id);
+    navigate(`/editPartners/${id}`);
+  };
+
+  const handleView = (id) => {
+    console.log("Edit clicked for ID:", id);
+  };
+
+  const handleDelete = async (id) => {
+    setLoading(true); // Show loading state
+    try {
+      const token = sessionStorage.getItem("authToken");
+
+      const response = await axios.delete(
+        `https://app.medicarebot.live/delete-lead/${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      // Show success message from the server
+      setNotificationType("success");
+      setNotificationMessage(
+        response.data.message || "Lead deleted successfully!"
+      );
+
+      // Remove the deleted lead from the UI by filtering it out of both leads and viewLeadersData
+      setLeads((prevLeads) => prevLeads.filter((lead) => lead.id !== id));
+      setViewLeadersData((prevData) =>
+        prevData.filter((lead) => lead.id !== id)
+      ); // Update the DataGrid state
+    } catch (error) {
+      let errorMessage = "Error deleting lead. Please try again.";
+
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        errorMessage = error.response.data.message; // Get the error message from the server
+      }
+
+      // Show error message
+      setNotificationType("error");
+      setNotificationMessage(errorMessage);
+      console.error("Error deleting lead:", error);
+    } finally {
+      setLoading(false);
+      setShowNotification(true); // Show the snackbar with message
+    }
   };
 
   const columns = [
     { field: "id", headerName: "ID", flex: 0.5 },
-    { field: "fullName", headerName: "Full Name", flex: 1 },
+    { field: "fullname", headerName: "Full Name", flex: 1 },
     { field: "email", headerName: "Email", flex: 1.25 },
-    { field: "phoneNumber", headerName: "Phone Number", flex: 1 },
+    { field: "mobile_number", headerName: "Phone Number", flex: 1 },
     { field: "city", headerName: "City", flex: 0.75 },
+    { field: "state", headerName: "State", flex: 0.5 },
     { field: "country", headerName: "Country", flex: 0.75 },
-    { field: "companyName", headerName: "Company Name", flex: 1 },
-    { field: "jobTitle", headerName: "Job Title", flex: 1 },
-    { field: "companySize", headerName: "Company Size", flex: 0.75 },
+    { field: "company_name", headerName: "Company Name", flex: 1 },
+    { field: "job_title", headerName: "Job Title", flex: 1 },
+    { field: "company_size", headerName: "Company Size", flex: 0.75 },
+
     {
       field: "action",
       headerName: "Action",
@@ -67,55 +156,25 @@ const ViewPartners = () => {
             <EditIcon sx={{ fontSize: "14px" }} />
           </IconButton>
           <IconButton
-            onClick={() => handleReactivateSingle(params.row.id)}
+            onClick={() => handleView(params.row.id)}
             aria-label="view"
             sx={{ color: colors.grey[100] }}
           >
             <VisibilityIcon sx={{ fontSize: "14px" }} />
           </IconButton>
           <IconButton
-            onClick={() => handleReactivateSingle(params.row.id)}
+            onClick={() => handleDelete(params.row.id)}
             aria-label="view"
             sx={{ color: colors.grey[100] }}
           >
-            <DeleteIcon sx={{ fontSize: "14px", color: colors.redAccent[400] }} />
+            <DeleteIcon
+              sx={{ fontSize: "14px", color: colors.redAccent[400] }}
+            />
           </IconButton>
         </Box>
       ),
     },
   ];
-
-  // const handleRemoveLeadsSelected = () => {
-  //   const updatedData = removeLeaders.map((bot) => {
-  //     if (checkedItems.includes(bot.name)) {
-  //       return { ...bot, status: "Active" };
-  //     }
-  //     return bot;
-  //   });
-
-  //   const filteredData = updatedData.filter((bot) => bot.status === "Inactive");
-  //   setRemoveLeaders(filteredData);
-  //   setCheckedItems([]);
-
-  //   // Update the JSON file would require an API call or similar method
-  //   localStorage.setItem("botsData", JSON.stringify(updatedData));
-  // };
-
-  const handleReactivateSingle = (id) => {
-    const updatedBots = removeLeaders.map((bot) =>
-      bot.id === id ? { ...bot, status: "Active" } : bot
-    );
-
-    // Remove the reactivated bot from the deactivatedBots list
-    const remainingBots = updatedBots.filter(
-      (bot) => bot.status === "Inactive"
-    );
-
-    setRemoveLeaders(remainingBots);
-
-    // Update the JSON file (if necessary)
-    localStorage.setItem("botsData", JSON.stringify(updatedBots));
-  };
 
   return (
     <Box m="20px">
@@ -129,23 +188,7 @@ const ViewPartners = () => {
         <Header
           title="VIEW PARTNERS"
           subtitle="List of Partners for Future Reference"
-/>
-
-        {/* <Box>
-          <Button
-            onClick={handleRemoveLeadsSelected}
-            sx={{
-              background: "linear-gradient(45deg, #062994, #0E72E1)",
-              color: "#fff",
-              fontSize: "14px",
-              fontWeight: "bold",
-              padding: isNonMobile ? "10px 20px" : ".5em",
-            }}
-          >
-            <RotateLeftIcon sx={{ mr: "10px" }} />
-            Reactivate selected bots
-          </Button>
-        </Box> */}
+        />
       </Box>
       <Box gridColumn="span 12" backgroundColor={colors.primary[400]} pt=".5em">
         <Box
@@ -203,26 +246,58 @@ const ViewPartners = () => {
             },
           }}
         >
-          <DataGrid
-            rows={LeadsData}
-            columns={columns}
-            getRowId={(row) => row.id}
-            onSelectionModelChange={handleCheckboxChange}
-            rowHeight={40}
-            headerHeight={40}
-            // components={{
-            //   Toolbar: (props) => (
-            //     <GridToolbar
-            //       {...props}
-            //       sx={{
-            //         color: colors.greenAccent[200], 
-            //       }}
-            //     />
-            //   ),
-            // }}
-          />
+          <Box
+            gridColumn="span 12"
+            height="450px"
+            sx={{
+              "& .MuiDataGrid-root": { border: "none" },
+              "& .MuiDataGrid-columnHeaders": {
+                backgroundColor: colors.primary[400],
+                borderBottom: `1px solid ${colors.grey[700]}`,
+              },
+              "& .MuiDataGrid-footerContainer": {
+                borderTop: `1px solid ${colors.grey[700]}`,
+                backgroundColor: colors.primary[400],
+              },
+            }}
+          >
+            {loading ? (
+              <p
+                style={{
+                  padding: "1em",
+                }}
+              >
+                Loading data...
+              </p>
+            ) : error ? (
+              <p style={{ color: "red", padding: "1em" }}>Error: {error}</p>
+            ) : (
+              <DataGrid
+                rows={viewLeadersData}
+                columns={columns}
+                getRowId={(row) => row.id}
+                rowHeight={40}
+                headerHeight={40}
+                initialState={{
+                  sorting: {
+                    sortModel: [{ field: "id", sort: "asc" }],
+                  },
+                }}
+              />
+            )}
+          </Box>
         </Box>
       </Box>
+      <Snackbar
+        open={showNotification}
+        autoHideDuration={3000}
+        onClose={() => setShowNotification(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert severity={notificationType} sx={{ width: "100%" }}>
+          {notificationMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

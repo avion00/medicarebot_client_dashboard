@@ -290,7 +290,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/editPartners"
+                  path="/editPartners/:id"
                   element={
                     <PrivateRoute>
                       <EditPartners />

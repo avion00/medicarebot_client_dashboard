@@ -7,30 +7,43 @@ import {
   Snackbar,
   Alert,
   Typography,
-  CircularProgress,
 } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
 import { tokens } from "../../theme";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
+import HowToRegIcon from "@mui/icons-material/HowToReg";
+
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import "./phone-style.css";
-import axios from "axios";
 
-const AddPartners = () => {
+const EditPartners = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  // const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const isNonMobile = useMediaQuery("(min-width:600px)");
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+
+  const handleFormSubmit = (values) => {
+    setSnackbarOpen(true);
+    navigate("/addbot");
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  const handleSelectPartnerChange = (event, handleChange) => {
+    handleChange(event);
+  };
 
   const handlefullNameChange = (event, handleChange) => {
     handleChange(event);
@@ -40,10 +53,6 @@ const AddPartners = () => {
   };
 
   const handleCityChange = (event, handleChange) => {
-    handleChange(event);
-  };
-
-  const handleStateChange = (event, handleChange) => {
     handleChange(event);
   };
 
@@ -106,84 +115,12 @@ const AddPartners = () => {
     handleChange(event);
   };
 
-  // integration
-
-  const [showNotification, setShowNotification] = useState(false);
-  const [notificationType, setNotificationType] = useState("success");
-  const [notificationMessage, setNotificationMessage] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const handleFormSubmit = async (values) => {
-    setLoading(true);
-
-    const token = sessionStorage.getItem("authToken");
-
-    try {
-      const response = await axios.post(
-        "https://app.medicarebot.live/add-lead",
-        {
-          fullname: values.fullName,
-          email: values.email,
-          country_code: values.countryCode,
-          mobile_number: values.phoneNumber,
-          company_name: values.companyName,
-          city: values.city,
-          state: values.state,
-          country: values.country,
-          job_title: values.jobTitle,
-          company_size: values.companySize,
-          industry: values.industry,
-          interest: values.interest,
-          budget_from: values.budgetFrom,
-          budget_to: values.budgetTo,
-          timeline_to_purchase: values.timelineToPurchase,
-          preferred_contact_method: values.preferredContactMethod,
-          pain_points_challenges: values.painPointsChallanges,
-          existing_solution: values.existingSolution,
-          how_they_found_you: values.howTheyFoundYou,
-          marketing_communication: values.marketingCommunication,
-          preferred_frequency: values.preferredFrequency,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-            Accept: "application/json",
-          },
-        }
-      );
-
-      if (response.data.status === "success") {
-        setNotificationType("success");
-        setNotificationMessage("Lead added successfully!");
-        setShowNotification(true);
-        console.log(response);
-      } else {
-        throw new Error(response.data.message || "Lead addition failed.");
-      }
-    } catch (error) {
-      setNotificationType("error");
-      setNotificationMessage(
-        error.response?.data?.message || "An error occurred. Please try again."
-      );
-      setShowNotification(true);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCloseNotification = (event, reason) => {
-    if (reason === "clickaway") return;
-    setShowNotification(false);
-  };
-
   const initialValues = {
+    selectPartner: "",
     fullName: "",
     email: "",
-    countryCode: "",
     phoneNumber: "",
     city: "",
-    state: "",
     country: "",
     companyName: "",
     jobTitle: "",
@@ -202,95 +139,29 @@ const AddPartners = () => {
   };
 
   const checkoutSchema = yup.object().shape({
+    selectPartner: yup
+      .string()
+      .required("Preferred Contact Method is required"),
+
     fullName: yup.string().required("Bot Name is required"),
     email: yup.string().required("Email is required"),
     phoneNumber: yup.string().required("Phone Number is required"),
     city: yup.string().required("City is required"),
-    state: yup.string().required("State is required"),
     country: yup.string().required("Country is required"),
     companyName: yup.string().required("Company Name is required"),
     jobTitle: yup.string().required("Job Title is required"),
     companySize: yup.string().required("Company size is required"),
-
-    // these are optional in backend
-    industry: yup.string().nullable(),
-    interest: yup.string().nullable(),
-    budgetFrom: yup.string().nullable(),
-    budgetTo: yup.string().nullable(),
-    timelineToPurchase: yup.string().nullable(),
-    preferredContactMethod: yup.string().nullable(),
-
-    // these are optional in frontend as well
-    painPointsChallanges: yup.string().nullable(),
-    existingSolution: yup.string().nullable(),
-    howTheyFoundYou: yup.string().nullable(),
-    marketingCommunication: yup.string().nullable(),
-    preferredFrequency: yup.string().nullable(),
+    industry: yup.string().required("Industry size is required"),
+    interest: yup.string().required("Interest/Service of Interest is required"),
+    budgetFrom: yup.string().required("Budget From is required"),
+    budgetTo: yup.string().required("Budget To is required"),
+    timelineToPurchase: yup
+      .string()
+      .required("Timeline to purchase is required"),
+    preferredContactMethod: yup
+      .string()
+      .required("Preferred Contact Method is required"),
   });
-
-  // upload file
-  const payload = {
-    UploadLeadsviaFile: "",
-  };
-
-  const checkoutSchemaaa = yup.object().shape({
-    UploadLeadsviaFile: yup.string().nullable(),
-  });
-
-  const [UploadLeadsviaFile, setUploadLeadsviaFile] = useState(null);
-
-  const handleUploadLeadsviaFileChange = (event) => {
-    const file = event.target.files[0];
-    setUploadLeadsviaFile(file || null);
-  };
-
-  const handleFormUploadSubmit = async (values, { resetForm }) => {
-    if (!UploadLeadsviaFile) {
-      setNotificationType("error");
-      setNotificationMessage("Please select a file before uploading.");
-      setShowNotification(true);
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("file", UploadLeadsviaFile);
-
-    const token = sessionStorage.getItem("authToken");
-
-    setLoading(true); // Set loading state before request
-
-    try {
-      const response = await axios.post(
-        "https://app.medicarebot.live/upload-leads",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`, // Corrected template literal
-          },
-        }
-      );
-
-      if (response.data?.status === "success") {
-        // Ensure correct success key
-        setNotificationType("success");
-        setNotificationMessage(response.data.message);
-        setShowNotification(true);
-        resetForm();
-        setUploadLeadsviaFile(null);
-      } else {
-        throw new Error(response.data?.message || "Request failed.");
-      }
-    } catch (error) {
-      setNotificationType("error");
-      setNotificationMessage(
-        error.response?.data?.message || "An error occurred. Please try again."
-      );
-      setShowNotification(true);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <Box m="20px">
@@ -300,132 +171,23 @@ const AddPartners = () => {
         alignItems="center"
         flexWrap="wrap"
       >
-        <Header title="ADD NEW PARTNERS" subtitle="Add your new Partners" />
-
-        <Formik
-          initialValues={payload}
-          validationSchema={checkoutSchemaaa}
-          onSubmit={handleFormUploadSubmit}
-        >
-          {({
-            values,
-            errors,
-            touched,
-            handleBlur,
-            handleChange,
-            handleSubmit,
-            setFieldValue,
-            resetForm,
-          }) => (
-            <form onSubmit={handleSubmit}>
-              {/* Conditional content based on step  ookey*/}
-
-              <Box
-                display="flex"
-                justifyContent="center"
-                gap="20px"
-                alignItems="center"
-              >
-                <Box>
-                  <TextField
-                    label="Upload Partners via File"
-                    variant="filled"
-                    type="text"
-                    name="UploadLeadsviaFile"
-                    value={UploadLeadsviaFile ? UploadLeadsviaFile.name : ""}
-                    InputProps={{
-                      readOnly: true,
-                      endAdornment: (
-                        <Button
-                          variant="contained"
-                          component="label"
-                          sx={{
-                            backgroundColor: "transparent",
-                            color: "white",
-                            textTransform: "none",
-                            boxShadow: "none",
-                            width: "100%",
-                            height: "100%",
-                            position: "absolute",
-                            top: "0",
-                            left: "0",
-                            "&:hover": {
-                              backgroundColor: "transparent",
-                            },
-                          }}
-                        >
-                          <input
-                            type="file"
-                            hidden
-                            name="UploadLeadsviaFile"
-                            onChange={(e) => handleUploadLeadsviaFileChange(e)}
-                          />
-                        </Button>
-                      ),
-                    }}
-                    sx={{
-                      position: "relative",
-                      width: "100%",
-                      flexGrow: "1",
-                      gridColumn: "span 2",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: colors.primary[400],
-                        color: colors.grey[100],
-                      },
-                    }}
-                  />
-                </Box>
-                <Box>
-                  <Button
-                    type="submit"
-                    color="secondary"
-                    variant="contained"
-                    startIcon={
-                      loading ? (
-                        <CircularProgress size={20} color="inherit" />
-                      ) : (
-                        <AddIcon />
-                      )
-                    }
-                    disabled={loading}
-                    sx={{
-                      background: "linear-gradient(45deg, #062994, #0E72E1)",
-                      color: "#fff",
-                      fontSize: "14px",
-                      fontWeight: "bold",
-                      padding: "10px 20px",
-                      transition: "all 0.5s ease",
-                      "&:hover": {
-                        opacity: loading ? "1" : ".7",
-                      },
-                    }}
-                  >
-                    {loading ? "Uploading..." : "Upload File"}
-                  </Button>
-                </Box>
-              </Box>
-            </form>
-          )}
-        </Formik>
-
-        <Snackbar
-          open={showNotification}
-          autoHideDuration={6000}
-          onClose={handleCloseNotification}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        >
-          <Alert
-            onClose={handleCloseNotification}
-            severity={notificationType}
-            sx={{ width: "100%" }}
+        <Header title="EDIT PARTNERS" subtitle="Edit Your Partners Details" />
+        <Box>
+          <Button
+            type="submit"
+            sx={{
+              background: "linear-gradient(45deg, #062994, #0E72E1)",
+              color: "#fff",
+              fontSize: "14px",
+              fontWeight: "bold",
+              padding: "10px 20px",
+              marginBottom: isNonMobile ? undefined : "2em",
+            }}
           >
-            {notificationMessage}
-          </Alert>
-        </Snackbar>
+            <EditIcon sx={{ mr: "10px" }} />
+            EDIT PARTNERS
+          </Button>
+        </Box>
       </Box>
 
       <Box>
@@ -444,6 +206,95 @@ const AddPartners = () => {
             handleSubmit,
           }) => (
             <form onSubmit={handleSubmit}>
+              <Box mb="3em">
+                <Typography
+                  variant="h3"
+                  fontWeight="bold"
+                  gutterBottom
+                  sx={{ color: colors.grey[100] }}
+                >
+                  Select Your Partners
+                </Typography>
+
+                <Box
+                  display="grid"
+                  gap="30px"
+                  gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                  sx={{
+                    "& > div": {
+                      gridColumn: isNonMobile ? undefined : "span 4",
+                    },
+                  }}
+                >
+                  <FormControl
+                    fullWidth
+                    variant="filled"
+                    sx={{
+                      gridColumn: "span 2",
+                      "& .MuiFormLabel-root.Mui-focused": {
+                        color: colors.blueAccent[500],
+                        fontWeight: "bold",
+                      },
+                    }}
+                  >
+                    <InputLabel
+                      id="selectPartner"
+                      sx={{ color: colors.primary[100] }}
+                    >
+                      Select Partner
+                    </InputLabel>
+                    <Select
+                      labelId="selectPartner"
+                      id="selectPartner"
+                      value={values.selectPartner}
+                      name="selectPartner"
+                      onChange={(e) =>
+                        handleSelectPartnerChange(e, handleChange)
+                      }
+                      onBlur={handleBlur}
+                      error={!!touched.selectPartner && !!errors.selectPartner}
+                    >
+                      <MenuItem value="johnSmith">John Smith</MenuItem>
+                      <MenuItem value="Om">Om</MenuItem>
+                      <MenuItem value="Rusha">Rusha</MenuItem>
+                      <MenuItem value="David">David</MenuItem>
+                      <MenuItem value="Roshan">Roshan</MenuItem>
+                    </Select>
+                    {touched.selectPartner && errors.selectPartner && (
+                      <Box color="red" mt="4px" fontSize="11px" ml="1.5em">
+                        {errors.selectPartner}
+                      </Box>
+                    )}
+                  </FormControl>
+
+                  <Box
+                    display="flex"
+                    justifyContent="start"
+                    height="60px"
+                    alignItems="center"
+                    sx={
+                      {
+                        // gridColumn: "span 4",
+                      }
+                    }
+                  >
+                    <Button
+                      color="secondary"
+                      variant="outlined"
+                      style={{
+                        background: "linear-gradient(45deg, #062994, #0E72E1)",
+                        color: "#fff",
+                        borderRadius: "20px",
+                        marginRight: "8px",
+                      }}
+                    >
+                      <HowToRegIcon sx={{ mr: ".5em" }} />
+                      Select Partner
+                    </Button>
+                  </Box>
+                </Box>
+              </Box>
+
               <Box>
                 <Typography
                   variant="h3"
@@ -502,43 +353,32 @@ const AddPartners = () => {
                       },
                     }}
                   />
-
                   <Box
                     sx={{
-                      gridColumn: "span 1",
+                      gridColumn: "span 2",
                       width: "100%",
                     }}
                   >
                     <PhoneInput
                       country={"us"}
                       value={values.phoneNumber}
-                      onChange={(phone, country) => {
-                        // Extract country code and number separately
-                        const countryCode = `+${country.dialCode}`;
-                        const phoneNumber = phone
-                          .replace(countryCode, "")
-                          .trim();
-
-                        setFieldValue("countryCode", countryCode);
-                        setFieldValue("phoneNumber", phoneNumber);
-                      }}
+                      onChange={(phone) => setFieldValue("phoneNumber", phone)}
                       inputProps={{
                         name: "phone",
                         required: true,
                         autoFocus: false,
                       }}
                       containerStyle={{
-                        width: "65%",
-                        height: "53px",
+                        width: `65%`,
+                        height: "52px",
                         border: "none",
-                        // border: '1px solid red'
                       }}
                       inputStyle={{
                         width: "100%",
-                        marginLeft: "50%",
-                        height: "53px",
+                        marginLeft: "54%",
+                        height: "52px",
                         padding: "10px",
-                        paddingLeft: ".5em",
+                        paddingLeft: "1.5em",
                         fontSize: "14px",
                         borderRadius: "0 .3em 0 0",
                         backgroundColor: colors.primary[400],
@@ -568,7 +408,6 @@ const AddPartners = () => {
                       </Typography>
                     )}
                   </Box>
-
                   <TextField
                     fullWidth
                     variant="filled"
@@ -580,26 +419,6 @@ const AddPartners = () => {
                     name="city"
                     error={!!touched.city && !!errors.city}
                     helperText={touched.city && errors.city}
-                    sx={{
-                      gridColumn: "span 1",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="State"
-                    onBlur={handleBlur}
-                    onChange={(e) => handleStateChange(e, handleChange)}
-                    value={values.state}
-                    name="state"
-                    error={!!touched.state && !!errors.state}
-                    helperText={touched.state && errors.state}
                     sx={{
                       gridColumn: "span 1",
                       "& .MuiFormLabel-root.Mui-focused": {
@@ -691,7 +510,7 @@ const AddPartners = () => {
                   <TextField
                     fullWidth
                     variant="filled"
-                    type="text"
+                    type="number"
                     label="Company Size"
                     onBlur={handleBlur}
                     onChange={(e) => handleCompanySizeChange(e, handleChange)}
@@ -1109,51 +928,43 @@ const AddPartners = () => {
                 </Box>
               </Box>
 
-              <Box mt="2em">
+              <Box display="flex" justifyContent="start" mt="2em">
                 <Button
                   type="submit"
                   color="secondary"
-                  variant="contained"
-                  startIcon={
-                    loading ? (
-                      <CircularProgress
-                        size={24}
-                        sx={{ color: colors.grey[100] }}
-                      />
-                    ) : (
-                      <AddIcon />
-                    )
-                  }
-                  disabled={loading}
-                  sx={{
+                  variant="outlined"
+                  style={{
                     background: "linear-gradient(45deg, #062994, #0E72E1)",
                     color: "#fff",
-                    // width: isNonMobile ? "50%" : "100%",
-                    fontSize: "14px",
-                    fontWeight: "bold",
-                    padding: "10px 20px",
-                    transition: "all 0.5s ease",
-                    "&:hover": {
-                      opacity: ".7",
-                    },
+                    borderRadius: "20px",
+                    marginRight: "8px",
                   }}
                 >
-                  {loading ? `Adding...` : "Add New Partners"}
+                  <EditIcon sx={{ mr: ".5em" }} />
+                  Edit Partners
                 </Button>
               </Box>
 
               <Snackbar
-                open={showNotification}
-                autoHideDuration={6000}
-                onClose={handleCloseNotification}
-                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                open={snackbarOpen}
+                autoHideDuration={3000}
+                onClose={handleSnackbarClose}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "center",
+                }}
               >
                 <Alert
-                  onClose={handleCloseNotification}
-                  severity={notificationType}
-                  sx={{ width: "100%" }}
+                  onClose={handleSnackbarClose}
+                  severity="success"
+                  sx={{
+                    backgroundColor: colors.greenAccent[700],
+                    color: colors.greenAccent[200],
+                    fontWeight: "bold",
+                  }}
                 >
-                  {notificationMessage}
+                  Congratulations, you have created Your CRM:
+                  <strong>{values.fullName}</strong>
                 </Alert>
               </Snackbar>
             </form>
@@ -1164,4 +975,4 @@ const AddPartners = () => {
   );
 };
 
-export default AddPartners;
+export default EditPartners;

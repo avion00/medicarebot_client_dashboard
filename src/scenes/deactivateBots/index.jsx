@@ -16,7 +16,6 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import EditIcon from "@mui/icons-material/Edit";
 import SearchIcon from "@mui/icons-material/Search";
 
-
 const DeactivateBots = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);

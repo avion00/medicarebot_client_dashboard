@@ -426,7 +426,7 @@ const Sidebar = ({ isSidebar }) => {
                 }}
               >
                 <Link
-                  to="/editPartners"
+                  to="/editPartners/:id"
                   style={{
                     textDecoration: "none",
                     color: "inherit",
