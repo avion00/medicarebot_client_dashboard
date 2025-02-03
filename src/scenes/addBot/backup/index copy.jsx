@@ -16,8 +16,8 @@ import { Formik } from "formik";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import Header from "../../components/Header";
-import { tokens } from "../../theme";
+import Header from "../../../components/Header";
+import { tokens } from "../../../theme";
 // import { useNavigate } from "react-router-dom";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -69,7 +69,7 @@ const AddBot = () => {
     setLoading(true);
     setShowNotification(true);
     setSuccessBox(true);
-     e.preventDefault();
+    e.preventDefault();
 
     try {
       // Create a FormData object
@@ -324,9 +324,7 @@ const AddBot = () => {
     apiKey: yup.string().nullable("API key is required"),
     callbackURL: yup.string().url("Invalid URL format").nullable(), // Optional field
     startURL: yup.string().url("Invalid URL format").nullable(), // Optional field
-    depth: yup
-      .number()
-      .nullable(),
+    depth: yup.number().nullable(),
     focusKeywords: yup.string().nullable(), // Optional field
   });
 

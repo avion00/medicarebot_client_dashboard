@@ -10,8 +10,8 @@ import {
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import Header from "../../components/Header";
-import { tokens } from "../../theme";
+import Header from "../../../components/Header";
+import { tokens } from "../../../theme";
 import { useNavigate } from "react-router-dom";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -86,7 +86,7 @@ const AddBot = () => {
   const initialValues = {
     botName: "",
     botImage: "",
-    apiKey:"",
+    apiKey: "",
     channel: "",
     status: "",
     usageFrequency: "",

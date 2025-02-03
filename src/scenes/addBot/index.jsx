@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -24,7 +24,6 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import KeyboardTabIcon from "@mui/icons-material/KeyboardTab";
-import initialData from "./data.json";
 import axios from "axios";
 import BlockIcon from "@mui/icons-material/Block";
 import SyncIcon from "@mui/icons-material/Sync";
@@ -80,8 +79,20 @@ const AddBot = () => {
   };
 
   const handleLanguageSupportChange = (event, handleChange) => {
-    handleChange(event);
+    const {
+      target: { value },
+    } = event;
+
+    // Store a clean array (avoid unnecessary quotes)
+    handleChange({
+      target: {
+        name: "languageSupport",
+        value: value.map((v) => v.replace(/"/g, "")), // Ensure clean values
+      },
+    });
   };
+
+  // const formatPostgresArray = (array) => `{${array.join(",")}}`;
 
   const handleResponseTimeChange = (newValue, setFieldValue) => {
     setFieldValue("responseTime", newValue);
@@ -132,7 +143,7 @@ const AddBot = () => {
     channel: "",
     description: "",
     detailedRoleDescription: "",
-    languageSupport: "",
+    languageSupport: [],
     preTrainedTemplate: "",
     ExpectedOutcome: "",
     uploadKnowledgeBase: "",
@@ -152,7 +163,10 @@ const AddBot = () => {
     detailedRoleDescription: yup
       .string()
       .required("Detailed Role Description is required"),
-    languageSupport: yup.string().required("Language Support is required"),
+    languageSupport: yup
+      .array()
+      .of(yup.string().required("Language Support is required"))
+      .min(1, "Select at least one language"),
     preTrainedTemplate: yup.string().nullable(), // Optional field
     ExpectedOutcome: yup.string().required("Expected Outcome is required"),
     uploadKnowledgeBase: yup.string().nullable(), // Optional field
@@ -162,9 +176,9 @@ const AddBot = () => {
     uploadOptionalDocument: yup.mixed().nullable(),
 
     // email web bot
-    SMTPServerLink: yup.string().required("SMTP Server Link is required"),
-    emailAddress: yup.string().required("Email Address is required"),
-    password: yup.string().required("Password is required"),
+    SMTPServerLink: yup.string().nullable(),
+    emailAddress: yup.string().nullable(),
+    password: yup.string().nullable(),
   });
 
   // state 5 that is documents part
@@ -186,22 +200,6 @@ const AddBot = () => {
     const file = event.target.files[0];
     setUploadOptionalDocument(file || null);
   };
-
-
-  useEffect(() => {
-    setConversation(initialData);
-  }, []);
-
-  // Sthis tate for storing the conversation okey
-  const [conversation, setConversation] = useState([
-    { sender: "bot", message: "Hello! How can I help you today?" },
-  ]);
-
-  const conversationEndRef = useRef(null);
-
-  useEffect(() => {
-    conversationEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [conversation]);
 
   const handleDraft = async () => {
     setLoading(false);
@@ -265,6 +263,7 @@ const AddBot = () => {
   const handleFormSubmit = async (values, { resetForm }) => {
     setLoading(true);
     const formData = new FormData();
+    const formatPostgresArray = (array) => `{${array.join(",")}}`;
 
     // Append form fields
     formData.append("name", values.botName);
@@ -276,22 +275,29 @@ const AddBot = () => {
     formData.append("description", values.description);
     formData.append("role_description", values.detailedRoleDescription);
     formData.append("pretrained_template", values.preTrainedTemplate);
+    formData.append(
+      "language_support",
+      formatPostgresArray(values.languageSupport)
+    );
+
     formData.append("expectation", values.ExpectedOutcome);
 
     // email web bot
-    formData.append("SMTPServerLink", values.SMTPServerLink);
-    formData.append("emailAddress", values.emailAddress);
-    formData.append("password", values.password);
+    formData.append("smtp_address", values.SMTPServerLink);
+    formData.append("smtp_email_address", values.emailAddress);
+    formData.append("smtp_password", values.password);
 
     // Check and append the file fields
     formData.append(
       "upload_documents",
       attachDocuments || new File([""], "upload_documents.txt")
     );
+
     formData.append(
       "knowledge_base_file",
       uploadKnowledgeBase || new File([""], "upload_knowledge_base.txt")
     );
+
     formData.append(
       "upload_optional_document",
       uploadOptionalDocument || new File([""], "upload_optional_document.txt")
@@ -335,6 +341,7 @@ const AddBot = () => {
       setNotificationType("error");
       setNotificationMessage(errorMessage);
       setShowNotification(true);
+      console.log(error.response.data);
     } finally {
       setLoading(false);
     }
@@ -836,9 +843,11 @@ const AddBot = () => {
                     >
                       Language Support
                     </InputLabel>
+
                     <Select
                       labelId="language-support"
                       id="languageSupport"
+                      multiple
                       value={values.languageSupport}
                       name="languageSupport"
                       onChange={(e) =>
@@ -848,20 +857,23 @@ const AddBot = () => {
                       error={
                         !!touched.languageSupport && !!errors.languageSupport
                       }
+                      renderValue={(selected) => selected.join(", ")}
                     >
-                      <MenuItem value='{"eng"}'>English</MenuItem>
-                      <MenuItem value="italy">Italian</MenuItem>
-                      <MenuItem value="French">French</MenuItem>
-                      <MenuItem value="Gernan">German</MenuItem>
-                      <MenuItem value="Spanish">Spanish</MenuItem>
-                      <MenuItem value="Hindi">Hindi</MenuItem>
+                      <MenuItem value="en">English</MenuItem>
+                      <MenuItem value="it">Italian</MenuItem>
+                      <MenuItem value="fr">French</MenuItem>
+                      <MenuItem value="de">German</MenuItem>
+                      <MenuItem value="es">Spanish</MenuItem>
+                      <MenuItem value="hi">Hindi</MenuItem>
                     </Select>
+
                     {touched.languageSupport && errors.languageSupport && (
                       <Box color="red" mt="4px" fontSize="11px" ml="1.5em">
                         {errors.languageSupport}
                       </Box>
                     )}
                   </FormControl>
+
                   <FormControl
                     fullWidth
                     variant="filled"

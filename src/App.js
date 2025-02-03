@@ -45,6 +45,7 @@ import BotIntegration from "./scenes/botIntegration/index";
 import PrivateRoute from "./components/PrivateRoute";
 import TestComponent from "./scenes/test/index";
 import GmailChatHistory from "./scenes/gmailChatHistory/index";
+import CallingPage from "./scenes/bot-call/index";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -374,6 +375,14 @@ function App() {
                   element={
                     <PrivateRoute>
                       <TestComponent />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/bot-call"
+                  element={
+                    <PrivateRoute>
+                      <CallingPage />
                     </PrivateRoute>
                   }
                 />

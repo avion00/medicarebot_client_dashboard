@@ -9,28 +9,38 @@ import {
   IconButton,
   Typography,
   Slider,
+  CircularProgress,
 } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import Header from "../../components/Header";
-import { tokens } from "../../theme";
+import Header from "../../../components/Header";
+import { tokens } from "../../../theme";
 // import { useNavigate } from "react-router-dom";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import KeyboardTabIcon from "@mui/icons-material/KeyboardTab";
+import BlockIcon from "@mui/icons-material/Block";
+import SyncIcon from "@mui/icons-material/Sync";
+// import UploadIcon from "@mui/icons-material/Upload";
+
 import initialData from "./data.json";
 import axios from "axios";
 
 const steps = [
   { id: 1, label: "Bot Details", content: "Please fill out the form" },
+  { id: 2, label: "Visual Customization", content: "Please fill  the form" },
+
   {
     id: 2,
     label: "Configure Bot Behaviour",
     content: "Please fill as the form",
   },
+  { id: 3, label: "Knowledge Base", content: "Please fill fdf the form" },
+
+  { id: 4, label: "Advanced Settings", content: "Please fill dfdfdf the form" },
 ];
 
 const AddBot = () => {
@@ -79,11 +89,17 @@ const AddBot = () => {
       );
 
       // Check for success response
-      if (response.data?.success) {
+      if (response.data?.bot_id) {
+        const botId = response.data.bot_id;
+        console.log(botId);
         setNotificationType("success");
-        setNotificationMessage("Bot Create successful! Redirecting...");
+        setNotificationMessage(`Bot created successfully! Bot ID: ${botId}`);
         setShowNotification(true);
-        console.log("Success:", response.data.message);
+        console.log("Success:", response.data.message, "Bot ID:", botId);
+
+        // Perform further actions with bot_id (e.g., save it, redirect)
+        // Example: Redirect to a bot details page
+        // navigate(`/bot-details/${botId}`);
       } else {
         // Handle backend failure messages explicitly
         const errorMessage = response.data?.message || "Request failed.";
@@ -105,65 +121,6 @@ const AddBot = () => {
       console.log("finally");
     }
   };
-
-
-  //  const handleFormSubmit = async (values) => {
-  //     const formData = new FormData();
-  
-  //     // Append fields
-  //     formData.append("name", values.botName);
-  //     formData.append(
-  //       "avatar",
-  //       values.avatar || new File([""], "placeholder.jpg")
-  //     );
-  //     formData.append("type", values.channel);
-  //     formData.append("description", values.description);
-  //     formData.append("role_description", values.detailedRoleDescription);
-  //     // formData.append("language_support", JSON.stringify(values.languageSupport));
-  //     formData.append("pretrained_template", values.preTrainedTemplate);
-  //     formData.append("expectation", values.ExpectedOutcome);
-  //     formData.append(
-  //       "knowledge_base_file",
-  //       values.uploadKnowledgeBase || new File([""], "placeholder.txt")
-  //     );
-  
-  //     const token = localStorage.getItem("authToken");
-  
-  //     try {
-  //       const response = await axios.post(
-  //         "http://46.202.153.94:5000/create_bot",
-  //         formData,
-  //         {
-  //           headers: {
-  //             "Content-Type": "multipart/form-data",
-  //             Authorization: `Bearer ${token}`,
-  //           },
-  //         }
-  //       );
-  
-  //       if (response.data.success) {
-  //         console.log("Success:", response.data.message);
-  //       } else {
-  //         throw new Error(response.data.message || "Request failed.");
-  //       }
-  //     } catch (error) {
-  //       console.error("Error:", error.response?.data || error.message);
-  //     }
-  //   };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   const handleCloseNotification = (event, reason) => {
     if (reason === "clickaway") return;
@@ -208,6 +165,27 @@ const AddBot = () => {
     handleChange(event);
   };
 
+  // optional
+  const handleApiKeyChange = (event, handleChange) => {
+    handleChange(event);
+  };
+
+  const handleCallbackURLChange = (event, handleChange) => {
+    handleChange(event);
+  };
+
+  const handleStartURLChange = (event, handleChange) => {
+    handleChange(event);
+  };
+
+  const handleDepthChange = (event, handleChange) => {
+    handleChange(event);
+  };
+
+  const handleFocusKeywordsChange = (event, handleChange) => {
+    handleChange(event);
+  };
+
   const initialValues = {
     botName: "",
     avatar: "",
@@ -218,11 +196,27 @@ const AddBot = () => {
     preTrainedTemplate: "",
     ExpectedOutcome: "",
     uploadKnowledgeBase: "",
+
+    // optional
+    // imageOne: "",
+    // imageTwo: "",
+    // imageThree: "",
+
+    // roleAndPurposeExplanation: "",
+    // responseTime: 1,
+    // ExpectedAchieve: "",
+    // attachDocuments: "",
+    // uploadOptionalDocument: "",
+    // apiKey: "",
+    // callbackURL: "",
+    // startURL: "",
+    // depth: "",
+    // focusKeywords: "",
   };
 
   const checkoutSchema = yup.object().shape({
     botName: yup.string().required("Bot Name is required"),
-    avatar: yup.string().required("avatar Name is required"),
+    avatar: yup.string().nullable(),
 
     channel: yup.string().required("Channel is required"),
     description: yup.string().required("Description is required"),
@@ -230,9 +224,61 @@ const AddBot = () => {
       .string()
       .required("Detailed Role Description is required"),
     languageSupport: yup.string().required("Language Support is required"),
-    preTrainedTemplate: yup.string().nullable(), // Optional field
+    preTrainedTemplate: yup.string().nullable(),
     ExpectedOutcome: yup.string().required("Expected Outcome is required"),
-    uploadKnowledgeBase: yup.string().nullable(), // Optional field
+    uploadKnowledgeBase: yup.string().nullable(),
+
+    // optinal things
+    // imageOne: yup
+    //       .mixed()
+    //       .required("Avatar Image is required")
+    //       .test(
+    //         "fileSize",
+    //         "File too large",
+    //         (value) => value && value.size <= 5 * 1024 * 1024
+    //       ) // 5MB limit
+    //       .test("fileType", "Unsupported Format", (value) =>
+    //         ["image/jpeg", "image/png"].includes(value?.type)
+    //       ),
+
+    //     imageTwo: yup
+    //       .mixed()
+    //       .required("Icon is required")
+    //       .test(
+    //         "fileSize",
+    //         "File too large",
+    //         (value) => value && value.size <= 5 * 1024 * 1024
+    //       ) // 5MB limit
+    //       .test("fileType", "Unsupported Format", (value) =>
+    //         ["image/jpeg", "image/png"].includes(value?.type)
+    //       ),
+
+    //     imageThree: yup
+    //       .mixed()
+    //       .test(
+    //         "fileSize",
+    //         "File too large",
+    //         (value) => value && value.size <= 5 * 1024 * 1024
+    //       ) // 5MB limit
+    //       .test("fileType", "Unsupported Format", (value) =>
+    //         ["image/jpeg", "image/png"].includes(value?.type)
+    //       ),
+
+    roleAndPurposeExplanation: yup
+      .string()
+      .required("Role and Purpose Explanation is required"),
+    responseTime: yup
+      .number()
+      .required("Response Time is required")
+      .min(1, "Response Time must be at least 1 second"),
+    ExpectedAchieve: yup.string().required("Expected Achievement is required"),
+    attachDocuments: yup.mixed().nullable(), // Optional field for file upload
+    uploadOptionalDocument: yup.mixed().nullable(), // Optional field for file upload
+    apiKey: yup.string().nullable("API key is required"),
+    callbackURL: yup.string().url("Invalid URL format").nullable(), // Optional field
+    startURL: yup.string().url("Invalid URL format").nullable(), // Optional field
+    depth: yup.number().nullable(),
+    focusKeywords: yup.string().nullable(), // Optional field
   });
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -245,11 +291,30 @@ const AddBot = () => {
     if (currentStep > 1) setCurrentStep(currentStep - 1);
   };
 
+  const [attachDocuments, setAttachDocuments] = useState("");
   const [uploadKnowledgeBase, setUploadKnowledgeBase] = useState("");
+  const [avatar, setAvatar] = useState("");
+
+  const [uploadOptionalDocument, setUploadOptionalDocument] = useState("");
+
+  const handleattachDocumentsChange = (event) => {
+    const file = event.target.files[0];
+    setAttachDocuments(file ? file.name : "");
+  };
 
   const handleuploadKnowledgeBaseChange = (event) => {
     const file = event.target.files[0];
     setUploadKnowledgeBase(file ? file.name : "");
+  };
+
+  const handleAvatarrrrChange = (event) => {
+    const file = event.target.files[0];
+    setAvatar(file ? file.name : "");
+  };
+
+  const handleuploadOptionalDocumentChange = (event) => {
+    const file = event.target.files[0];
+    setUploadOptionalDocument(file ? file.name : "");
   };
 
   useEffect(() => {
@@ -266,6 +331,14 @@ const AddBot = () => {
   useEffect(() => {
     conversationEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [conversation]);
+
+  const handleDraft = () => {
+    console.log("Draft saved!");
+  };
+
+  const handleCancel = () => {
+    console.log("Action canceled!");
+  };
 
   return (
     <Box m="20px">
@@ -724,6 +797,83 @@ const AddBot = () => {
                       },
                     }}
                   />
+                </Box>
+              )}
+
+              {currentStep === 3 && (
+                <Box
+                  display="grid"
+                  gap="30px"
+                  gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                  sx={{
+                    "& > div": {
+                      gridColumn: isNonMobile ? undefined : "span 4",
+                    },
+                  }}
+                >
+                  <TextField
+                    gridColumn="span 2"
+                    label="Attach Documents"
+                    variant="filled"
+                    type="text"
+                    name="attachDocuments"
+                    value={attachDocuments}
+                    InputProps={{
+                      readOnly: true,
+                      endAdornment: (
+                        <Button
+                          variant="contained"
+                          component="label"
+                          sx={{
+                            backgroundColor: "transparent",
+                            color: "white",
+                            textTransform: "none",
+                            boxShadow: "none",
+                            width: "100%",
+                            height: "100%",
+                            position: "absolute",
+                            top: "0",
+                            left: "0",
+                            "&:hover": {
+                              backgroundColor: "transparent",
+                            },
+                          }}
+                        >
+                          <input
+                            type="file"
+                            hidden
+                            name="botImage"
+                            onChange={(e) => {
+                              handleattachDocumentsChange(e);
+                              handleChange(e);
+                            }}
+                          />
+                        </Button>
+                      ),
+                    }}
+                    onBlur={handleBlur}
+                    error={
+                      !!touched.attachDocuments && !!errors.attachDocuments
+                    }
+                    helperText={
+                      touched.attachDocuments && errors.attachDocuments
+                    }
+                    sx={{
+                      position: "relative",
+                      width: "100%",
+                      flexGrow: "1",
+                      gridColumn: "span 2",
+                      "& .MuiFormLabel-root.Mui-focused": {
+                        color: colors.blueAccent[500],
+                        fontWeight: "bold",
+                      },
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: colors.primary[400],
+                        color: colors.grey[100],
+                      },
+                    }}
+                  />
+
                   <TextField
                     gridColumn="span 2"
                     label="Upload Knowledge Base"
@@ -787,6 +937,257 @@ const AddBot = () => {
                       },
                     }}
                   />
+
+                  <Typography
+                    gridColumn="span 4"
+                    varient="h6"
+                    mt="-1.5em"
+                    ml="5px"
+                    color={colors.grey[300]}
+                  >
+                    Allowed format: PDF, Docx, txt, csv
+                  </Typography>
+
+                  <TextField
+                    gridColumn="span 2"
+                    label="Upload"
+                    variant="filled"
+                    type="text"
+                    name="uploadOptionalDocument"
+                    value={uploadOptionalDocument}
+                    InputProps={{
+                      readOnly: true,
+                      endAdornment: (
+                        <Button
+                          variant="contained"
+                          component="label"
+                          sx={{
+                            backgroundColor: "transparent",
+                            color: "white",
+                            textTransform: "none",
+                            boxShadow: "none",
+                            width: "100%",
+                            height: "100%",
+                            position: "absolute",
+                            top: "0",
+                            left: "0",
+                            "&:hover": {
+                              backgroundColor: "transparent",
+                            },
+                          }}
+                        >
+                          <input
+                            type="file"
+                            hidden
+                            name="botImage"
+                            onChange={(e) => {
+                              handleuploadOptionalDocumentChange(e);
+                              handleChange(e);
+                            }}
+                          />
+                        </Button>
+                      ),
+                    }}
+                    onBlur={handleBlur}
+                    error={
+                      !!touched.uploadOptionalDocument &&
+                      !!errors.uploadOptionalDocument
+                    }
+                    helperText={
+                      touched.uploadOptionalDocument &&
+                      errors.uploadOptionalDocument
+                    }
+                    sx={{
+                      position: "relative",
+                      width: "100%",
+                      flexGrow: "1",
+                      gridColumn: "span 2",
+                      "& .MuiFormLabel-root.Mui-focused": {
+                        color: colors.blueAccent[500],
+                        fontWeight: "bold",
+                      },
+                      "& .MuiFilledInput-root": {
+                        backgroundColor: colors.primary[400],
+                        color: colors.grey[100],
+                      },
+                    }}
+                  />
+
+                  <Typography
+                    gridColumn="span 4"
+                    varient="h6"
+                    mt="-1.5em"
+                    ml="5px"
+                    color={colors.grey[300]}
+                  >
+                    Optional: Upload files to seed the bot’s response and
+                    knowledge base
+                  </Typography>
+                </Box>
+              )}
+
+              {currentStep === 4 && (
+                <Box
+                  display="grid"
+                  rowGap="8px"
+                  columnGap="30px"
+                  gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                  sx={{
+                    "& > div": {
+                      gridColumn: isNonMobile ? undefined : "span 4",
+                    },
+                  }}
+                >
+                  <Typography
+                    fontWeight="bold"
+                    gridColumn="span 4"
+                    varient="h6"
+                  >
+                    API Integration (Optional)
+                  </Typography>
+                  <TextField
+                    fullWidth
+                    variant="filled"
+                    type="text"
+                    label="API Key"
+                    onBlur={handleBlur}
+                    onChange={(e) => handleApiKeyChange(e, handleChange)}
+                    value={values.apiKey}
+                    name="apiKey"
+                    error={!!touched.apiKey && !!errors.apiKey}
+                    helperText={touched.apiKey && errors.apiKey}
+                    sx={{
+                      gridColumn: "span 2",
+                      "& .MuiFormLabel-root.Mui-focused": {
+                        color: colors.blueAccent[500],
+                        fontWeight: "bold",
+                      },
+                    }}
+                  />
+
+                  <TextField
+                    fullWidth
+                    variant="filled"
+                    type="text"
+                    label="Callback URL"
+                    onBlur={handleBlur}
+                    onChange={(e) => handleCallbackURLChange(e, handleChange)}
+                    value={values.callbackURL}
+                    name="callbackURL"
+                    error={!!touched.callbackURL && !!errors.callbackURL}
+                    helperText={touched.callbackURL && errors.callbackURL}
+                    sx={{
+                      gridColumn: "span 2",
+                      "& .MuiFormLabel-root.Mui-focused": {
+                        color: colors.blueAccent[500],
+                        fontWeight: "bold",
+                      },
+                    }}
+                  />
+
+                  <Typography
+                    fontWeight="bold"
+                    gridColumn="span 4"
+                    varient="h6"
+                    mt="1.25em"
+                  >
+                    Web Crawling (Optional)
+                  </Typography>
+                  <TextField
+                    fullWidth
+                    variant="filled"
+                    type="text"
+                    label="Start URL"
+                    onBlur={handleBlur}
+                    onChange={(e) => handleStartURLChange(e, handleChange)}
+                    value={values.startURL}
+                    name="startURL"
+                    error={!!touched.startURL && !!errors.startURL}
+                    helperText={touched.startURL && errors.startURL}
+                    sx={{
+                      gridColumn: "span 2",
+                      "& .MuiFormLabel-root.Mui-focused": {
+                        color: colors.blueAccent[500],
+                        fontWeight: "bold",
+                      },
+                    }}
+                  />
+
+                  <FormControl
+                    fullWidth
+                    variant="filled"
+                    sx={{
+                      gridColumn: "span 2",
+                      "& .MuiFormLabel-root.Mui-focused": {
+                        color: colors.blueAccent[500],
+                        fontWeight: "bold",
+                      },
+                    }}
+                  >
+                    <InputLabel id="status" sx={{ color: colors.primary[100] }}>
+                      Depth
+                    </InputLabel>
+                    <Select
+                      labelId="depth"
+                      id="depth"
+                      value={values.depth}
+                      name="depth"
+                      onChange={(e) => handleDepthChange(e, handleChange)}
+                      onBlur={handleBlur}
+                      error={!!touched.depth && !!errors.depth}
+                    >
+                      <MenuItem value="1">Low</MenuItem>
+                      <MenuItem value="2">Medium</MenuItem>
+                      <MenuItem value="3">High</MenuItem>
+                    </Select>
+                    {touched.depth && errors.depth && (
+                      <Box color="red" mt="4px" fontSize="11px" ml="1.5em">
+                        {errors.depth}
+                      </Box>
+                    )}
+                  </FormControl>
+
+                  <TextField
+                    fullWidth
+                    variant="filled"
+                    type="text"
+                    label="Keywords to focus on (Optional)"
+                    onBlur={handleBlur}
+                    onChange={(e) => handleFocusKeywordsChange(e, handleChange)}
+                    value={values.focusKeywords}
+                    name="focusKeywords"
+                    error={!!touched.focusKeywords && !!errors.focusKeywords}
+                    helperText={touched.focusKeywords && errors.focusKeywords}
+                    sx={{
+                      gridColumn: "span 4",
+                      mt: "30px",
+                      "& .MuiFormLabel-root.Mui-focused": {
+                        color: colors.blueAccent[500],
+                        fontWeight: "bold",
+                      },
+                    }}
+                  />
+                  {/* <Button
+                    onClick={startCrawling}
+                    color="secondary"
+                    variant="outlined"
+                    sx={{
+                      mt: "1em",
+                      borderRadius: "20px",
+                      marginRight: "8px",
+                    }}
+                  >
+                    Start Crawling
+                  </Button> */}
+
+                  <Typography
+                    gridColumn="span 4"
+                    varient="h6"
+                    color={colors.grey[400]}
+                  >
+                    Optional: Specify a URL and crawl depth to populate the
+                    dynamic content for the bot.
+                  </Typography>
                 </Box>
               )}
 
@@ -852,7 +1253,18 @@ const AddBot = () => {
                       variant="contained"
                       color="success"
                       type="submit"
+                      disabled={loading}
                       onClick={handleSubmit}
+                      endIcon={
+                        loading ? (
+                          <CircularProgress
+                            size={24}
+                            sx={{ color: colors.grey[100] }}
+                          />
+                        ) : (
+                          <KeyboardTabIcon />
+                        )
+                      }
                       sx={{
                         background: "linear-gradient(45deg, #4caf50, #81c784)",
                         color: "#fff",
@@ -868,7 +1280,51 @@ const AddBot = () => {
                         },
                       }}
                     >
-                      save
+                      {loading ? `Saving...` : "Save & activate"}
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="warning"
+                      onClick={handleDraft}
+                      startIcon={<SyncIcon />}
+                      sx={{
+                        background: "linear-gradient(45deg, #ff9800, #ffc107)",
+                        color: "#fff",
+                        fontSize: "14px",
+                        fontWeight: "bold",
+                        padding: "10px 2em",
+                        mb: isNonMobile ? "0em" : "1em",
+                        transition: "all 0.5s ease",
+                        "&:hover": {
+                          background:
+                            "linear-gradient(45deg, #f57c00, #ffa000)",
+                          opacity: 0.9,
+                        },
+                      }}
+                    >
+                      Save as Draft
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="error"
+                      onClick={handleCancel}
+                      startIcon={<BlockIcon />}
+                      sx={{
+                        background: "linear-gradient(45deg, #f44336, #e57373)",
+                        color: "#fff",
+                        fontSize: "14px",
+                        fontWeight: "bold",
+                        padding: "10px 2em",
+                        mb: isNonMobile ? "0em" : "1em",
+                        transition: "all 0.5s ease",
+                        "&:hover": {
+                          background:
+                            "linear-gradient(45deg, #d32f2f, #ef5350)",
+                          opacity: 0.9,
+                        },
+                      }}
+                    >
+                      Cancel
                     </Button>
                   </Box>
                 )}

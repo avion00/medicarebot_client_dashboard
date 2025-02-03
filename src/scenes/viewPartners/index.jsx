@@ -6,17 +6,19 @@ import {
   InputBase,
   Snackbar,
   Alert,
+  Button,
 } from "@mui/material";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-// import useMediaQuery from "@mui/material/useMediaQuery";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { useNavigate } from "react-router-dom";
-
+import AddIcon from "@mui/icons-material/Add";
+import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
+import CircularProgress from "@mui/material/CircularProgress";
 import EditIcon from "@mui/icons-material/Edit";
 import SearchIcon from "@mui/icons-material/Search";
-// import { LeadsData } from "../../data/viewLeadsData";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
@@ -25,11 +27,12 @@ const ViewPartners = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const navigate = useNavigate();
-  // const isNonMobile = useMediaQuery("(min-width:768px)");
+  const isNonMobile = useMediaQuery("(min-width:768px)");
 
   const [viewLeadersData, setViewLeadersData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const [leads, setLeads] = useState([]); // State to store leads
   const [showNotification, setShowNotification] = useState(false); // State for snackbar visibility
@@ -176,6 +179,72 @@ const ViewPartners = () => {
     },
   ];
 
+  // const handleDownload = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       "https://app.medicarebot.live/list-leads?export=csv",
+  //       {
+  //         responseType: "blob", // Important for handling file downloads
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //           "Content-Type": "text/csv",
+  //         },
+  //       }
+  //     );
+
+  //     const blob = new Blob([response.data], { type: "text/csv" });
+  //     const url = window.URL.createObjectURL(blob);
+
+  //     // Create a temporary anchor element to trigger the download
+  //     const a = document.createElement("a");
+  //     a.href = url;
+  //     a.download = "partners.csv"; // Set the filename
+  //     document.body.appendChild(a);
+  //     a.click();
+
+  //     // Cleanup
+  //     document.body.removeChild(a);
+  //     window.URL.revokeObjectURL(url);
+  //   } catch (error) {
+  //     console.error("Download error:", error);
+  //   }
+  // };
+
+
+ const handleDownload = async () => {
+   setIsDownloading(true); // Start loading
+
+   try {
+     const response = await axios.get(
+       "https://app.medicarebot.live/list-leads?export=csv",
+       {
+         responseType: "blob",
+         headers: {
+           Authorization: `Bearer ${token}`,
+           "Content-Type": "text/csv",
+         },
+       }
+     );
+
+     const blob = new Blob([response.data], { type: "text/csv" });
+     const url = window.URL.createObjectURL(blob);
+
+     const a = document.createElement("a");
+     a.href = url;
+     a.download = "partners.csv";
+     document.body.appendChild(a);
+     a.click();
+
+     document.body.removeChild(a);
+     window.URL.revokeObjectURL(url);
+   } catch (error) {
+     console.error("Download error:", error);
+   } finally {
+     setIsDownloading(false); // Stop loading
+   }
+ };
+
+
   return (
     <Box m="20px">
       {/* HEADER */}
@@ -189,6 +258,31 @@ const ViewPartners = () => {
           title="VIEW PARTNERS"
           subtitle="List of Partners for Future Reference"
         />
+        <Box>
+          <Button
+            onClick={handleDownload}
+            sx={{
+              background: "linear-gradient(45deg, #062994, #0E72E1)",
+              color: "#fff",
+              fontSize: "14px",
+              fontWeight: "bold",
+              padding: "10px 20px",
+              mb: isNonMobile ? "0em" : "1em",
+              transition: "all 0.5s ease",
+              "&:hover": {
+                opacity: ".7",
+              },
+            }}
+            disabled={isDownloading}
+          >
+            {isDownloading ? (
+              <CircularProgress size={20} sx={{ color: "#fff", mr: "10px" }} />
+            ) : (
+              <DownloadOutlinedIcon sx={{ mr: "10px" }} />
+            )}
+            {isDownloading ? "DOWNLOADING....." : "DOWNLOAD PARTNERS"}
+          </Button>
+        </Box>
       </Box>
       <Box gridColumn="span 12" backgroundColor={colors.primary[400]} pt=".5em">
         <Box

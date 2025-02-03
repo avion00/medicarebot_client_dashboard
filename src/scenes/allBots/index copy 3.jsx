@@ -6,15 +6,6 @@ import {
   IconButton,
   InputBase,
   Switch,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Grid,
-  Chip,
-  Snackbar,
-  CircularProgress,
-  Alert,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { tokens } from "../../theme";
@@ -25,15 +16,9 @@ import SearchIcon from "@mui/icons-material/Search";
 import EditIcon from "@mui/icons-material/Edit";
 import { useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
-import CloseIcon from "@mui/icons-material/Close";
+
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import axios from "axios";
-
-import DetailCard from "../../components/DetailCard";
-import DetailItem from "../../components/DetailItem";
-import InfoIcon from "@mui/icons-material/Info";
-import DescriptionIcon from "@mui/icons-material/Description";
-import SendIcon from "@mui/icons-material/Send";
 
 const AllBots = () => {
   const theme = useTheme();
@@ -46,17 +31,6 @@ const AllBots = () => {
   const [botData, setBotData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  const [selectedBot, setSelectedBot] = useState(null);
-  const [dialogError, setDialogError] = useState(null);
-
-  // Snackbar state
-  const [showNotification, setShowNotification] = useState(false);
-  const [notificationType, setNotificationType] = useState("success");
-  const [notificationMessage, setNotificationMessage] = useState("");
-
-  // Individual loading states for each bot's "Send Email" button
-  const [loadingState, setLoadingState] = useState({});
 
   const token = sessionStorage.getItem("authToken");
 
@@ -74,9 +48,10 @@ const AllBots = () => {
         );
 
         if (response.data.bots) {
+          // Add a status field to each bot and set it to "Active" by default
           const botsWithStatus = response.data.bots.map((bot) => ({
             ...bot,
-            status: "Inactive", // Initialize status as "Inactive"
+            status: "Active", // Initialize status as "Active"
           }));
           setBotData(botsWithStatus);
         } else {
@@ -96,6 +71,10 @@ const AllBots = () => {
     console.log("Edit clicked for ID:", id);
   };
 
+  const handleView = (id) => {
+    console.log("View clicked for ID:", id);
+  };
+
   const handleToggle = (id) => {
     setBotData((prevData) =>
       prevData.map((row) =>
@@ -105,72 +84,6 @@ const AllBots = () => {
       )
     );
   };
-
-  const handleView = (id) => {
-    const selected = botData.find((bot) => bot.bot_id === id); 
-    if (selected) {
-      setSelectedBot(selected); 
-    } else {
-      setDialogError("Bot details not found");
-    }
-  };
-
-  const handleCloseDialog = () => {
-    setSelectedBot(null);
-    setDialogError(null);
-  };
-
-  // Send Email Function
-  const sendEmail = async (id) => {
-    const selected = botData.find((bot) => bot.bot_id === id); // Find the bot by bot_id
-    if (selected) {
-      try {
-        // Set loading state for the specific bot
-        setLoadingState((prev) => ({ ...prev, [id]: true }));
-
-        const response = await axios.post(
-          "https://app.medicarebot.live/activate-email-bot",
-          {
-            bot_id: selected.bot_id,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        if (response.status === 200) {
-          setNotificationType("success");
-          setNotificationMessage("Email sent successfully!");
-          setShowNotification(true);
-        } else {
-          setNotificationType("error");
-          setNotificationMessage("The bot is inactive or does not exist");
-          setShowNotification(true);
-        }
-      } catch (err) {
-        setNotificationType("error");
-        setNotificationMessage("An error occurred while sending the email.");
-        setShowNotification(true);
-        console.error(err);
-      } finally {
-        // Reset loading state for the specific bot
-        setLoadingState((prev) => ({ ...prev, [id]: false }));
-      }
-    } else {
-      setDialogError("Bot details not found"); // Handle case where bot is not found
-    }
-  };
-
-  // Calculate Total, Active, and Inactive Bots
-  const totalBots = botData.length;
-  const activeBots = botData.filter((bot) => bot.status === "Active").length;
-  const inactiveBots = totalBots - activeBots;
-
-  // Calculate Progress
-  const progressPercentage = (activeBots / totalBots) * 100;
-  const progressAngle = (progressPercentage / 100) * 360;
 
   // DataGrid Columns
   const columns = [
@@ -209,14 +122,12 @@ const AllBots = () => {
       },
     },
     {
-      field: "language_support",
-      headerName: "Language Support",
+      field: "lastInteraction",
+      headerName: "Last Interaction",
       flex: 0.5,
       renderCell: (params) => (
         <Typography variant="h6" color={colors.blueAccent[100]}>
-          {params.row.language_support
-            ? params.row.language_support.join(", ")
-            : "N/A"}
+          {params.row.lastInteraction || "N/A"} {/* Handle missing data */}
         </Typography>
       ),
     },
@@ -246,7 +157,7 @@ const AllBots = () => {
     {
       field: "Start/Stop",
       headerName: "Start/Stop",
-      flex: 0.35,
+      flex: 0.5,
       renderCell: (params) => {
         const isOn = params.row.status === "Active";
         return (
@@ -276,42 +187,16 @@ const AllBots = () => {
         );
       },
     },
-    {
-      field: "send email",
-      headerName: "Send Email",
-      flex: 0.5,
-      renderCell: (params) => {
-        if (params.row.type !== "Email") {
-          return null; // Hide button if channel is not "email"
-        }
-
-        return (
-          <Box display="flex" gap=".5em">
-            <IconButton
-              onClick={() => sendEmail(params.row.bot_id)}
-              aria-label="send"
-              sx={{ color: colors.greenAccent[300] }}
-              disabled={loadingState[params.row.bot_id]} // Disable button while loading
-            >
-              {loadingState[params.row.bot_id] ? (
-                <CircularProgress
-                  size={16}
-                  sx={{ color: colors.greenAccent[300] }}
-                /> // Show loading spinner
-              ) : (
-                <SendIcon sx={{ fontSize: "16px" }} /> // Show send icon
-              )}
-            </IconButton>
-          </Box>
-        );
-      },
-    },
   ];
 
-  const handleCloseNotification = (event, reason) => {
-    if (reason === "clickaway") return;
-    setShowNotification(false);
-  };
+  // Calculate Total, Active, and Inactive Bots
+  const totalBots = botData.length;
+  const activeBots = botData.filter((bot) => bot.status === "Active").length;
+  const inactiveBots = totalBots - activeBots;
+
+  // Calculate Progress
+  const progressPercentage = (activeBots / totalBots) * 100;
+  const progressAngle = (progressPercentage / 100) * 360;
 
   return (
     <Box m="20px">
@@ -373,6 +258,7 @@ const AllBots = () => {
           overflow="auto"
         >
           <Box
+            // gridColumn="span 4"
             gridRow="span 2"
             display="flex"
             flexDirection="column"
@@ -381,6 +267,7 @@ const AllBots = () => {
             position="relative"
             p={{ xs: "20px", md: "30px" }}
           >
+            {/* Dynamic Progress Circle */}
             <Box
               sx={{
                 background: `conic-gradient(
@@ -394,7 +281,7 @@ const AllBots = () => {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)", // Optional: to add depth
                 "&::after": {
                   content: '""',
                   position: "absolute",
@@ -408,6 +295,7 @@ const AllBots = () => {
               }}
             />
 
+            {/* Data Boxes */}
             <Box
               sx={{
                 position: "absolute",
@@ -562,185 +450,11 @@ const AllBots = () => {
               headerHeight={40}
               loading={loading}
             />
-
-            <Snackbar
-              open={showNotification}
-              autoHideDuration={6000}
-              onClose={handleCloseNotification}
-              anchorOrigin={{ vertical: "top", horizontal: "center" }}
-            >
-              <Alert
-                onClose={handleCloseNotification}
-                severity={notificationType}
-                sx={{ width: "100%" }}
-              >
-                {notificationMessage}
-              </Alert>
-            </Snackbar>
           </Box>
         </Box>
       </Box>
-
-      {/* Bot Details Dialog */}
-      <Dialog
-        open={!!selectedBot} // Open when selectedBot is not null
-        onClose={handleCloseDialog}
-        fullWidth
-        maxWidth="md"
-        PaperProps={{
-          sx: {
-            background: `linear-gradient(45deg, ${colors.primary[400]}, ${colors.blueAccent[500]})`,
-            borderRadius: "12px",
-            boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.25)",
-          },
-        }}
-      >
-        <DialogTitle
-          sx={{
-            color: "white",
-            fontSize: "24px",
-            fontWeight: "bold",
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-          }}
-        >
-          <VisibilityIcon sx={{ fontSize: "28px" }} />
-          Bot Details
-          <IconButton
-            onClick={handleCloseDialog}
-            sx={{
-              position: "absolute",
-              right: 16,
-              top: 16,
-              color: "white",
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-
-        <DialogContent dividers sx={{ backgroundColor: colors.primary[400] }}>
-          {dialogError ? (
-            <Typography color="error" variant="h6" align="center">
-              {dialogError}
-            </Typography>
-          ) : (
-            selectedBot && (
-              <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
-                  <DetailCard
-                    title="Basic Information"
-                    icon={<InfoIcon sx={{ color: colors.blueAccent[500] }} />}
-                  >
-                    <DetailItem label="Bot ID" value={selectedBot.bot_id} />
-                    <DetailItem label="Name" value={selectedBot.name} />
-                    <DetailItem label="Type" value={selectedBot.type} />
-                    <DetailItem
-                      label="Status"
-                      value={selectedBot.status}
-                      color={
-                        selectedBot.status === "Active" ? "success" : "error"
-                      }
-                    />
-                    <DetailItem
-                      label="Description"
-                      value={selectedBot.description}
-                    />
-                  </DetailCard>
-                </Grid>
-
-                <Grid item xs={12} md={6}>
-                  <DetailCard
-                    title="Additional Information"
-                    icon={
-                      <DescriptionIcon sx={{ color: colors.blueAccent[500] }} />
-                    }
-                  >
-                    <DetailItem
-                      label="Template"
-                      value={selectedBot.pretrained_template}
-                    />
-                    <DetailItem
-                      label="Role Description"
-                      value={selectedBot.role_description}
-                    />
-                    <DetailItem
-                      label="Expectation"
-                      value={selectedBot.expectation}
-                    />
-                    <DetailItem
-                      label="Languages"
-                      value={
-                        <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
-                          {selectedBot.language_support?.map((lang) => (
-                            <Chip
-                              key={lang}
-                              label={lang.toUpperCase()}
-                              size="small"
-                              sx={{
-                                backgroundColor: colors.blueAccent[700],
-                                color: "white",
-                              }}
-                            />
-                          ))}
-                        </Box>
-                      }
-                    />
-                    <DetailItem
-                      label="Website ID"
-                      value={selectedBot.website_id}
-                    />
-                  </DetailCard>
-                </Grid>
-              </Grid>
-            )
-          )}
-        </DialogContent>
-
-        <DialogActions sx={{ backgroundColor: colors.primary[400] }}>
-          <Button
-            onClick={handleCloseDialog}
-            sx={{
-              color: "white",
-              backgroundColor: colors.blueAccent[700],
-              "&:hover": {
-                backgroundColor: colors.blueAccent[800],
-              },
-            }}
-          >
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Box>
   );
 };
-
-// Reusable DetailItem component
-// const DetailItem = ({ label, value, color }) => (
-//   <Box mb={2}>
-//     <Typography variant="subtitle2" color="textSecondary">
-//       {label}
-//     </Typography>
-//     {typeof value === "string" ? (
-//       <Typography
-//         variant="body1"
-//         sx={{
-//           color:
-//             color === "success"
-//               ? "#4caf50"
-//               : color === "error"
-//               ? "#f44336"
-//               : "inherit",
-//         }}
-//       >
-//         {value || "N/A"}
-//       </Typography>
-//     ) : (
-//       value
-//     )}
-//   </Box>
-// );
 
 export default AllBots;
