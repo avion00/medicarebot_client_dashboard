@@ -1,12 +1,18 @@
 import {
   Box,
   useTheme,
-  // Typography,
   IconButton,
   InputBase,
   Snackbar,
   Alert,
   Button,
+  Dialog,
+  Grid,
+  DialogTitle,
+  Typography,
+  DialogContent,
+  DialogActions,
+  Chip,
 } from "@mui/material";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
@@ -14,13 +20,17 @@ import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useNavigate } from "react-router-dom";
-import AddIcon from "@mui/icons-material/Add";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import CircularProgress from "@mui/material/CircularProgress";
 import EditIcon from "@mui/icons-material/Edit";
 import SearchIcon from "@mui/icons-material/Search";
+import CloseIcon from "@mui/icons-material/Close";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import DeleteIcon from "@mui/icons-material/Delete";
+import DetailCard from "../../components/DetailCard";
+import DetailItem from "../../components/DetailItem";
+import DescriptionIcon from "@mui/icons-material/Description";
+import InfoIcon from "@mui/icons-material/Info";
 import axios from "axios";
 
 const ViewPartners = () => {
@@ -83,10 +93,6 @@ const ViewPartners = () => {
   const handleEdit = (id) => {
     console.log("Edit clicked for ID:", id);
     navigate(`/editPartners/${id}`);
-  };
-
-  const handleView = (id) => {
-    console.log("Edit clicked for ID:", id);
   };
 
   const handleDelete = async (id) => {
@@ -179,71 +185,56 @@ const ViewPartners = () => {
     },
   ];
 
-  // const handleDownload = async () => {
-  //   try {
-  //     const response = await axios.get(
-  //       "https://app.medicarebot.live/list-leads?export=csv",
-  //       {
-  //         responseType: "blob", // Important for handling file downloads
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //           "Content-Type": "text/csv",
-  //         },
-  //       }
-  //     );
+  const handleDownload = async () => {
+    setIsDownloading(true); // Start loading
 
-  //     const blob = new Blob([response.data], { type: "text/csv" });
-  //     const url = window.URL.createObjectURL(blob);
+    try {
+      const response = await axios.get(
+        "https://app.medicarebot.live/list-leads?export=csv",
+        {
+          responseType: "blob",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "text/csv",
+          },
+        }
+      );
 
-  //     // Create a temporary anchor element to trigger the download
-  //     const a = document.createElement("a");
-  //     a.href = url;
-  //     a.download = "partners.csv"; // Set the filename
-  //     document.body.appendChild(a);
-  //     a.click();
+      const blob = new Blob([response.data], { type: "text/csv" });
+      const url = window.URL.createObjectURL(blob);
 
-  //     // Cleanup
-  //     document.body.removeChild(a);
-  //     window.URL.revokeObjectURL(url);
-  //   } catch (error) {
-  //     console.error("Download error:", error);
-  //   }
-  // };
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "partners.csv";
+      document.body.appendChild(a);
+      a.click();
 
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Download error:", error);
+    } finally {
+      setIsDownloading(false); // Stop loading
+    }
+  };
 
- const handleDownload = async () => {
-   setIsDownloading(true); // Start loading
+  // View leads detailly
+  const handleView = (id) => {
+    const selected = viewLeadersData.find((lead) => lead.id === id);
+    if (selected) {
+      setSelectedLead(selected);
+    } else {
+      setDialogError("Lead details not found");
+    }
+  };
 
-   try {
-     const response = await axios.get(
-       "https://app.medicarebot.live/list-leads?export=csv",
-       {
-         responseType: "blob",
-         headers: {
-           Authorization: `Bearer ${token}`,
-           "Content-Type": "text/csv",
-         },
-       }
-     );
+  const [selectedLead, setSelectedLead] = useState(null);
+  const [dialogError, setDialogError] = useState(null);
 
-     const blob = new Blob([response.data], { type: "text/csv" });
-     const url = window.URL.createObjectURL(blob);
-
-     const a = document.createElement("a");
-     a.href = url;
-     a.download = "partners.csv";
-     document.body.appendChild(a);
-     a.click();
-
-     document.body.removeChild(a);
-     window.URL.revokeObjectURL(url);
-   } catch (error) {
-     console.error("Download error:", error);
-   } finally {
-     setIsDownloading(false); // Stop loading
-   }
- };
-
+  const handleCloseDialog = () => {
+    setSelectedLead(null);
+    setDialogError(null);
+  };
 
   return (
     <Box m="20px">
@@ -255,8 +246,8 @@ const ViewPartners = () => {
         alignItems="center"
       >
         <Header
-          title="VIEW PARTNERS"
-          subtitle="List of Partners for Future Reference"
+          title="VIEW LEADS"
+          subtitle="List of Leads for Future Reference"
         />
         <Box>
           <Button
@@ -280,7 +271,7 @@ const ViewPartners = () => {
             ) : (
               <DownloadOutlinedIcon sx={{ mr: "10px" }} />
             )}
-            {isDownloading ? "DOWNLOADING....." : "DOWNLOAD PARTNERS"}
+            {isDownloading ? "DOWNLOADING....." : "DOWNLOAD LEADS"}
           </Button>
         </Box>
       </Box>
@@ -367,7 +358,10 @@ const ViewPartners = () => {
               <p style={{ color: "red", padding: "1em" }}>Error: {error}</p>
             ) : (
               <DataGrid
-                rows={viewLeadersData}
+                rows={viewLeadersData.map((lead) => ({
+                  ...lead,
+                  id: lead.id,
+                }))}
                 columns={columns}
                 getRowId={(row) => row.id}
                 rowHeight={40}
@@ -382,6 +376,119 @@ const ViewPartners = () => {
           </Box>
         </Box>
       </Box>
+
+      {/* Lead Details Dialog */}
+      <Dialog
+        open={!!selectedLead} // Open when selectedLead is not null
+        onClose={handleCloseDialog}
+        fullWidth
+        maxWidth="md"
+        PaperProps={{
+          sx: {
+            background: "linear-gradient(45deg, #062994, #0E72E1)",
+            borderRadius: "4px",
+            boxShadow: "4px 4px 20px rgba(0, 0, 0, 0.25)",
+          },
+        }}
+      >
+        <DialogTitle
+          sx={{
+            color: "white",
+            fontWeight: "bold",
+            display: "flex",
+            alignItems: "center",
+            gap: "1em",
+            margin: "0 1em",
+            padding: "1em 2.5em",
+          }}
+        >
+          <VisibilityIcon />
+          <Typography
+            variant="h2"
+            sx={{
+              color: colors.grey[100],
+              fontWeight: "bold",
+              textAlign: "center",
+              flexGrow: "1",
+            }}
+          >
+            LEAD DETAILS
+          </Typography>
+          <IconButton
+            onClick={handleCloseDialog}
+            sx={{
+              position: "absolute",
+              right: 16,
+              top: 16,
+              color: "white",
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+
+        <DialogContent dividers sx={{ backgroundColor: colors.primary[400] }}>
+          {dialogError ? (
+            <Typography color="error" variant="h6" align="center">
+              {dialogError}
+            </Typography>
+          ) : (
+            selectedLead && (
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={6}>
+                  <DetailCard
+                    title="Basic Information"
+                    icon={<InfoIcon sx={{ color: colors.blueAccent[400] }} />}
+                  >
+                    <DetailItem label="ID" value={selectedLead.id} />
+                    <DetailItem
+                      label="Full Name"
+                      value={selectedLead.fullname}
+                    />
+                    <DetailItem label="Email" value={selectedLead.email} />
+                    <DetailItem
+                      label="Mobile Number"
+                      value={` ${"+"}${selectedLead.country_code} ${" "}${
+                        selectedLead.mobile_number
+                      }`}
+                    />
+                    <DetailItem label="Country" value={selectedLead.country} />
+                    <DetailItem label="State" value={selectedLead.state} />
+                    <DetailItem label="City" value={selectedLead.city} />
+                  </DetailCard>
+                </Grid>
+
+                <Grid item xs={12} md={6}>
+                  <DetailCard
+                    title="Additional Information"
+                    icon={
+                      <DescriptionIcon sx={{ color: colors.blueAccent[400] }} />
+                    }
+                  >
+                    <DetailItem
+                      label="Company Name"
+                      value={selectedLead.company_name}
+                    />
+                    <DetailItem
+                      label="Company Size"
+                      value={selectedLead.company_size}
+                    />
+                    <DetailItem
+                      label="Job Title"
+                      value={selectedLead.job_title}
+                    />
+                  </DetailCard>
+                </Grid>
+              </Grid>
+            )
+          )}
+        </DialogContent>
+
+        <DialogActions
+          sx={{ backgroundColor: colors.primary[400], padding: "1.75em" }}
+        ></DialogActions>
+      </Dialog>
+
       <Snackbar
         open={showNotification}
         autoHideDuration={3000}

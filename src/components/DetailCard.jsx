@@ -12,6 +12,7 @@ const DetailCard = ({ title, icon, children }) => {
         borderRadius: "8px",
         padding: "16px",
         boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+        // border: '1px solid red'
       }}
     >
       <Box
@@ -23,7 +24,7 @@ const DetailCard = ({ title, icon, children }) => {
         }}
       >
         {icon}
-        <Typography variant="h6" sx={{ color: "white", fontWeight: "bold" }}>
+        <Typography variant="h6" sx={{ color: colors.grey[100], fontWeight: "bold" }}>
           {title}
         </Typography>
       </Box>

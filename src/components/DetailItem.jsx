@@ -26,7 +26,7 @@ const DetailItem = ({ label, value, color }) => {
                 ? "#4caf50"
                 : color === "error"
                 ? "#f44336"
-                : "white",
+                : colors.grey[100],
             fontWeight: 500, // Numeric value for medium weight
           }}
         >

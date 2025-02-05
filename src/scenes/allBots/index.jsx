@@ -107,9 +107,9 @@ const AllBots = () => {
   };
 
   const handleView = (id) => {
-    const selected = botData.find((bot) => bot.bot_id === id); 
+    const selected = botData.find((bot) => bot.bot_id === id);
     if (selected) {
-      setSelectedBot(selected); 
+      setSelectedBot(selected);
     } else {
       setDialogError("Bot details not found");
     }
@@ -561,6 +561,23 @@ const AllBots = () => {
               rowHeight={40}
               headerHeight={40}
               loading={loading}
+              pagination
+              // pageSize={100}
+              rowsPerPageOptions={[25, 50, 100]}
+              initialState={{
+                pagination: {
+                  paginationModel: { pageSize: 100, page: 0 },
+                },
+                // sorting: {
+                //   sortModel: [{ field: "bot_id", sort: "asc" }],
+                // },
+              }}
+              localeText={{
+                footerPaginationRowsPerPage: "More Bot:",
+                footerPaginationOf: "of", // Customize "of" text
+                footerRowSelected: (count) =>
+                  `${count} bot${count !== 1 ? "s" : ""} selected`, // Customize selected rows text
+              }}
             />
 
             <Snackbar
@@ -589,24 +606,35 @@ const AllBots = () => {
         maxWidth="md"
         PaperProps={{
           sx: {
-            background: `linear-gradient(45deg, ${colors.primary[400]}, ${colors.blueAccent[500]})`,
-            borderRadius: "12px",
-            boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.25)",
+            background: "linear-gradient(45deg, #062994, #0E72E1)",
+            borderRadius: "4px",
+            boxShadow: "4px 4px 20px rgba(0, 0, 0, 0.25)",
           },
         }}
       >
         <DialogTitle
           sx={{
             color: "white",
-            fontSize: "24px",
             fontWeight: "bold",
             display: "flex",
             alignItems: "center",
-            gap: "8px",
+            gap: "1em",
+            margin: "0 1em",
+            padding: "1em 2.5em",
           }}
         >
-          <VisibilityIcon sx={{ fontSize: "28px" }} />
-          Bot Details
+          <VisibilityIcon />
+          <Typography
+            variant="h2"
+            sx={{
+              color: colors.grey[100],
+              fontWeight: "bold",
+              textAlign: "center",
+              flexGrow: "1",
+            }}
+          >
+            BOT DETAILS
+          </Typography>
           <IconButton
             onClick={handleCloseDialog}
             sx={{
@@ -679,7 +707,8 @@ const AllBots = () => {
                               label={lang.toUpperCase()}
                               size="small"
                               sx={{
-                                backgroundColor: colors.blueAccent[700],
+                                background:
+                                  "linear-gradient(-45deg, #062994, #0E72E1)",
                                 color: "white",
                               }}
                             />
@@ -698,8 +727,10 @@ const AllBots = () => {
           )}
         </DialogContent>
 
-        <DialogActions sx={{ backgroundColor: colors.primary[400] }}>
-          <Button
+        <DialogActions
+          sx={{ backgroundColor: colors.primary[400], padding: "1.75em" }}
+        >
+          {/* <Button
             onClick={handleCloseDialog}
             sx={{
               color: "white",
@@ -710,37 +741,11 @@ const AllBots = () => {
             }}
           >
             Close
-          </Button>
+          </Button> */}
         </DialogActions>
       </Dialog>
     </Box>
   );
 };
-
-// Reusable DetailItem component
-// const DetailItem = ({ label, value, color }) => (
-//   <Box mb={2}>
-//     <Typography variant="subtitle2" color="textSecondary">
-//       {label}
-//     </Typography>
-//     {typeof value === "string" ? (
-//       <Typography
-//         variant="body1"
-//         sx={{
-//           color:
-//             color === "success"
-//               ? "#4caf50"
-//               : color === "error"
-//               ? "#f44336"
-//               : "inherit",
-//         }}
-//       >
-//         {value || "N/A"}
-//       </Typography>
-//     ) : (
-//       value
-//     )}
-//   </Box>
-// );
 
 export default AllBots;
