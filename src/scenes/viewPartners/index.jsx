@@ -12,7 +12,7 @@ import {
   Typography,
   DialogContent,
   DialogActions,
-  Chip,
+  // Chip,
 } from "@mui/material";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
@@ -143,12 +143,18 @@ const ViewPartners = () => {
     { field: "id", headerName: "ID", flex: 0.5 },
     { field: "fullname", headerName: "Full Name", flex: 1 },
     { field: "email", headerName: "Email", flex: 1.25 },
-    { field: "mobile_number", headerName: "Phone Number", flex: 1 },
+    {
+      field: "phone_number",
+      headerName: "Phone Number",
+      flex: 1,
+      valueGetter: (params) =>
+        `${params.row.country_code} ${params.row.mobile_number}`,
+    },
     { field: "city", headerName: "City", flex: 0.75 },
     { field: "state", headerName: "State", flex: 0.5 },
     { field: "country", headerName: "Country", flex: 0.75 },
     { field: "company_name", headerName: "Company Name", flex: 1 },
-    { field: "job_title", headerName: "Job Title", flex: 1 },
+    { field: "job_title", headerName: "Job Title", flex: 0.75 },
     { field: "company_size", headerName: "Company Size", flex: 0.75 },
 
     {
@@ -156,7 +162,7 @@ const ViewPartners = () => {
       headerName: "Action",
       flex: 1,
       renderCell: (params) => (
-        <Box display="flex" gap=".25em" justifyContent="center">
+        <Box display="flex" gap=".15em" justifyContent="center">
           <IconButton
             onClick={() => handleEdit(params.row.id)}
             aria-label="edit"

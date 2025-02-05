@@ -416,7 +416,7 @@ const Sidebar = ({ isSidebar }) => {
                   Add Partners
                 </Link>
               </MenuItem>
-              <MenuItem
+              {/* <MenuItem
                 icon={<EditIcon />}
                 onClick={() => setSelected("editPartners")}
                 style={{
@@ -435,7 +435,7 @@ const Sidebar = ({ isSidebar }) => {
                 >
                   Edit Partners
                 </Link>
-              </MenuItem>
+              </MenuItem> */}
               <MenuItem
                 icon={<PaddingIcon />}
                 onClick={() => setSelected("viewPartners")}

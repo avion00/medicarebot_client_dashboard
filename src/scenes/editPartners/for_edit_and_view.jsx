@@ -116,7 +116,7 @@ const EditPartners = () => {
   const [initialValues, setInitialValues] = useState({
     fullname: "",
     email: "",
-    country_code: "7",
+    country_code: "",
     mobile_number: "",
     city: "",
     state: "",
