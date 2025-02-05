@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -14,7 +14,7 @@ import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
 import { tokens } from "../../theme";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -30,7 +30,7 @@ const AddPartners = () => {
   const colors = tokens(theme.palette.mode);
   // const [snackbarOpen, setSnackbarOpen] = useState(false);
   const isNonMobile = useMediaQuery("(min-width:600px)");
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handlefullNameChange = (event, handleChange) => {
     handleChange(event);
@@ -113,6 +113,15 @@ const AddPartners = () => {
   const [notificationMessage, setNotificationMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const [countdown, setCountdown] = useState(5);
+
+  useEffect(() => {
+    if (countdown > 0) {
+      const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [countdown]);
+
   const handleFormSubmit = async (values) => {
     setLoading(true);
 
@@ -155,11 +164,19 @@ const AddPartners = () => {
 
       if (response.data.status === "success") {
         setNotificationType("success");
-        setNotificationMessage("Lead added successfully!");
+        setNotificationMessage(
+          `Lead added successfully! Redirecting in ${countdown}s...`
+        );
         setShowNotification(true);
-        console.log(response);
-      } else {
-        throw new Error(response.data.message || "Lead addition failed.");
+
+        const timer = setInterval(() => {
+          setCountdown((prev) => prev - 1);
+        }, 1000);
+
+        setTimeout(() => {
+          navigate("/viewPartners");
+          clearInterval(timer);
+        }, 5000);
       }
     } catch (error) {
       setNotificationType("error");

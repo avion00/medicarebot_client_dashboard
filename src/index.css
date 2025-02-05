@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 
 html,
 body,
@@ -36,4 +36,27 @@ body,
   background: #555;
 }
 
+@media screen and (max-width: 768px) {
+  /* Hide scrollbar on mobile */
+  ::-webkit-scrollbar {
+    width: auto;
+    display: none; /* Hide scrollbar completely */
+  }
 
+  ::-webkit-scrollbar-track {
+    background: inherit;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: inherit;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: inherit;
+  }
+
+  /* Firefox Scrollbar */
+  * {
+    scrollbar-width: none; /* Hides scrollbar in Firefox */
+  }
+}

@@ -92,7 +92,11 @@ const CallingPage = () => {
   // live session --- 3rd paper
   // Sample conversation data
   const [conversation, setConversation] = useState([
-    { sender: "Person A", message: "Hello, how  asf asf esa df as ef as  you?", time: "10:00 AM" },
+    {
+      sender: "Person A",
+      message: "Hello, how  asf asf esa df as ef as  you?",
+      time: "10:00 AM",
+    },
     {
       sender: "Person B",
       message: "I'm good, thank you! How about you?",
@@ -116,6 +120,23 @@ const CallingPage = () => {
     }, 5000); // Add a new message every 5 seconds
 
     return () => clearInterval(interval); // Cleanup interval on unmount
+  }, []);
+
+  // for dynamic URL images
+  const [imageUrl, setImageUrl] = useState("");
+
+  useEffect(() => {
+    // Example: Fetching a random profile image from an API
+    fetch("https://randomuser.me/api/")
+      .then((response) => response.json())
+      .then((data) => {
+        const fetchedImageUrl = data.results[0].picture.large; // Get profile image
+        setImageUrl(fetchedImageUrl);
+      })
+      .catch((error) => {
+        console.error("Error fetching image:", error);
+        setImageUrl("https://via.placeholder.com/100"); // Fallback image
+      });
   }, []);
 
   return (
@@ -260,7 +281,7 @@ const CallingPage = () => {
                       background: colors.primary[400],
                       padding: ".5em 0",
                       overflow: "hidden",
-                      zIndex: "10"
+                      zIndex: "10",
                     }}
                   >
                     <Typography
@@ -334,11 +355,12 @@ const CallingPage = () => {
                 >
                   <Box sx={{ display: "flex", alignItems: "center" }}>
                     <img
-                      src={`../../assets/user.png`}
-                      alt="Logo"
+                      alt="profile-user"
+                      width="42px"
+                      height="42px"
+                      src={imageUrl || "https://via.placeholder.com/100"} // Fallback for empty state
                       style={{
-                        width: "42px",
-                        height: "42px",
+                        cursor: "pointer",
                         borderRadius: "50%",
                         objectFit: "cover",
                       }}

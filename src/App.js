@@ -90,19 +90,22 @@ function App() {
               display: "flex",
             }}
           >
-            <Sidebar isSidebar={isSidebar} />
+            {/* <Sidebar isSidebar={isSidebar} /> */}
+            <Sidebar isSidebar={isSidebar} setIsSidebar={setIsSidebar} />
+
             <main
               className="content"
               style={{
                 flex: 1,
                 overflowY: "auto",
                 padding: isNonMobile ? "20px" : "20px 0",
-                marginLeft: isNonMobile ? "0" : "80px",
+                marginLeft: isNonMobile ? "0" : "0px",
                 position: "relative",
                 transition: "margin-left 0.3s ease",
               }}
             >
               <Topbar setIsSidebar={setIsSidebar} />
+
               <Routes>
                 <Route path="*" element={<Navigate to="/logIn" />} />
                 <Route

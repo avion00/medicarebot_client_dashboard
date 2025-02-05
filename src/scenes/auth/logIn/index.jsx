@@ -65,52 +65,51 @@ const LogIn = () => {
     setShowNotification(false);
   };
 
-  const handleFormSubmit = async (values, { setSubmitting }) => {
-    try {
-      const response = await fetch("https://app.medicarebot.live/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          username: values.username,
-          password: values.password,
-        }),
-      });
+ const handleFormSubmit = async (values, { setSubmitting }) => {
+   try {
+     const response = await fetch("https://app.medicarebot.live/login", {
+       method: "POST",
+       headers: {
+         "Content-Type": "application/json",
+         Accept: "application/json",
+       },
+       body: JSON.stringify({
+         username: values.username,
+         password: values.password,
+       }),
+     });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Invalid credentials");
-      }
+     const data = await response.json(); // Parse response JSON
 
-      const data = await response.json();
+     if (!response.ok) {
+       throw new Error(data.error || "Login failed. Please try again.");
+     }
+     
+     setNotificationType("success");
+     setNotificationMessage(` ${data.message} ~ ${values.username}`);
+     setShowNotification(true);
 
-      // Show success notification with the server message and token
-      setNotificationType("success");
-      setNotificationMessage(`Login Successful: ${data.message}`);
+     // Store token in cookies and local storage
+     document.cookie = `authToken=${data.token};path=/;secure`;
+     sessionStorage.setItem("authToken", data.token);
 
-      setShowNotification(true);
+     // Wait for 3 seconds before navigating
+     setTimeout(() => {
+       navigate("/dashboard");
+     }, 2000);
+   } catch (error) {
+     console.error("Error during login:", error.message);
 
-      // Store token in cookies and local storage
-      document.cookie = `authToken=${data.token};path=/;secure`;
-      sessionStorage.setItem("authToken", data.token);
+     setNotificationType("error");
+     setNotificationMessage(
+       error.message || "An error occurred. Please try again."
+     );
+     setShowNotification(true);
+   } finally {
+     setSubmitting(false);
+   }
+ };
 
-      // Wait for 1 minute before navigating
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 1000);
-    } catch (error) {
-      console.error("Error during login:", error.message);
-      setNotificationType("error");
-      setNotificationMessage(
-        error.message || "An error occurred. Please try again later."
-      );
-      setShowNotification(true);
-    } finally {
-      setSubmitting(false);
-    }
-  };
 
   // const buttonStyles = {
   //   flexGrow: 1,

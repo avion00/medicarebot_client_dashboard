@@ -62,33 +62,43 @@ const ViewPartners = () => {
       });
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get(
-          "https://app.medicarebot.live/list-leads",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        if (response.data.status === "success") {
-          setViewLeadersData(response.data.leads);
-        } else {
-          throw new Error("Failed to fetch leads");
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        "https://app.medicarebot.live/list-leads",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+      );
 
-    fetchData();
-  }, [token]);
+      if (response.data.status === "success") {
+        setViewLeadersData(response.data.leads);
+      } else {
+        throw new Error(response.data.message || "Failed to fetch leads");
+      }
+    } catch (err) {
+      if (err.response && err.response.status === 404) {
+        setViewLeadersData([]); // Ensure the data is empty
+        setNotificationType("warning");
+        setNotificationMessage(
+          err.response.data.message || "No leads found for this user"
+        );
+        setShowNotification(true);
+      } else {
+        setError(err.message);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchData();
+}, [token]);
+
 
   const handleEdit = (id) => {
     console.log("Edit clicked for ID:", id);

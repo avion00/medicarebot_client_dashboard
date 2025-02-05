@@ -37,7 +37,7 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const isNonMobile = useMediaQuery("(min-width:768px)");
-
+  
   return (
     <MenuItem
       active={selected === title}
@@ -83,18 +83,15 @@ const Sidebar = ({ isSidebar, setIsSidebar }) => {
 
   return (
     <Box
-      className="sidebar_for_scroll"
       sx={{
         position: isNonMobile ? "sticky" : "fixed",
         top: 0,
         left: 0,
-        width: isSidebar ? "270px" : isNonMobile ? "80px" : "0px",
+        width: isSidebar ? "270px" : "0px", // Control width with isSidebar
         height: "100vh",
         zIndex: isNonMobile ? 1 : 1000,
         overflowY: "auto",
-        overflowX: "hidden",
-        transition: "width 0.3s ease-in-out",
-
+        transition: "width 0.3s ease-in-out", // Smooth animation
         "& .pro-sidebar-inner": {
           backgroundColor: colors.primary[400],
         },
@@ -102,7 +99,7 @@ const Sidebar = ({ isSidebar, setIsSidebar }) => {
           backgroundColor: "transparent !important",
         },
         "& .pro-inner-item": {
-          padding: "0px 32px 6px 16px !important",
+          padding: "0px 35px 5px 20px !important",
         },
         "& .pro-inner-item:hover": {
           color: "#868dfb !important",
@@ -115,14 +112,16 @@ const Sidebar = ({ isSidebar, setIsSidebar }) => {
         },
       }}
     >
-      <ProSidebar collapsed={!isSidebar}>
+      <ProSidebar collapsed={isCollapsed}>
         <Menu iconShape="square">
           {/* LOGO AND MENU ICON */}
           <MenuItem
+            // onClick={() => setIsCollapsed(!isCollapsed)}
             onClick={() => setIsSidebar((prev) => !prev)}
-            icon={!isSidebar ? <MenuOutlinedIcon /> : undefined}
+            icon={isCollapsed ? <MenuOutlinedIcon /> : undefined}
             style={{
-              margin: isSidebar ? "12px 0 20px 0" : "29px 0 20px 1px",
+              margin: isCollapsed ? "30px 0 20px 0" : "15px 0 20px 0",
+              color: colors.grey[100],
             }}
           >
             {isSidebar && (
@@ -191,13 +190,13 @@ const Sidebar = ({ isSidebar, setIsSidebar }) => {
             </Box>
           )}
 
-          <Box paddingLeft={!isSidebar ? undefined : "10%"}>
+          <Box paddingLeft={isCollapsed ? undefined : "10%"}>
             {/* <Typography
               variant="h6"
               color={colors.grey[300]}
               sx={{
-                margin: isSidebar ? 0 : "12px 0 5px 20px",
-                textAlign: isSidebar ? "center" : "left",
+                margin: isCollapsed ? 0 : "12px 0 5px 20px",
+                textAlign: isCollapsed ? "center" : "left",
               }}
             >
               Client Dashboard
