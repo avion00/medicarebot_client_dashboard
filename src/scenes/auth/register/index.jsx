@@ -250,7 +250,7 @@ const Register = () => {
             <Box
               sx={{
                 color: colors.blueAccent[200],
-                marginBottom: "2.5em",
+                marginBottom: isNonMobile ? "2.5em" : " 0.5em",
                 padding: ".5em",
                 cursor: "pointer",
               }}

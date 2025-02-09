@@ -79,7 +79,7 @@ const LogIn = () => {
        }),
      });
 
-     const data = await response.json(); // Parse response JSON
+     const data = await response.json(); 
 
      if (!response.ok) {
        throw new Error(data.error || "Login failed. Please try again.");
@@ -212,11 +212,17 @@ const LogIn = () => {
               flexWrap: "wrap",
             }}
           >
-            <Header title="LOGIN PAGE" />
+            <Header
+              style={{
+                fontSize: isNonMobile ? "1em" : "0.5em", // Changed "auto" to valid value
+              }}
+              title="LOGIN PAGE"
+            />
+
             <Box
               sx={{
                 color: colors.blueAccent[200],
-                marginBottom: "2.5em",
+                marginBottom: isNonMobile ? "2.5em" : " 0.5em",
                 padding: ".5em",
                 cursor: "pointer",
               }}

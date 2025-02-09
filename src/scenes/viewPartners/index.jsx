@@ -85,7 +85,7 @@ useEffect(() => {
         setViewLeadersData([]); // Ensure the data is empty
         setNotificationType("warning");
         setNotificationMessage(
-          err.response.data.message || "No leads found for this user"
+          err.response.data.message || "No Partner found for this user. Please Create or Upload your Partners"
         );
         setShowNotification(true);
       } else {

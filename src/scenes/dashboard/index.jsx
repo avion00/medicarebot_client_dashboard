@@ -33,7 +33,12 @@ const Dashboard = () => {
           subtitle="Welcome to your Medicare Bot dashboard"
         />
 
-        <Box>
+        <Box
+          sx={{
+            // width: "100%",
+            mt: isNonMobile ? undefined : " 1em"
+          }}
+        >
           <Button
             sx={{
               background: "linear-gradient(45deg, #062994, #0E72E1)",
@@ -44,6 +49,7 @@ const Dashboard = () => {
               padding: "10px 20px",
               mb: isNonMobile ? "0em" : "1em",
               transition: "all 0.5s ease",
+              float: "right",
               "&:hover": {
                 opacity: ".7",
               },
@@ -418,7 +424,7 @@ const Dashboard = () => {
             alignItems="center"
             borderBottom={`2px solid ${colors.primary[500]}`}
             colors={colors.grey[100]}
-            p= "  24px 15px"
+            p="  24px 15px"
           >
             <Typography color={colors.grey[100]} variant="h5" fontWeight="600">
               Quick Actions
