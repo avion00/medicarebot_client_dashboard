@@ -153,10 +153,12 @@ const TrainBots = () => {
     }
   };
 
-  // upload knowledge base file
+
+
+
+
 
   const [uploadKnowledgeBase, setUploadKnowledgeBase] = useState(null);
-  const [loadingUpload, setLoadingUpload] = useState(false);
 
   const handleuploadKnowledgeBaseChange = (event) => {
     const file = event.target.files[0];
@@ -171,7 +173,7 @@ const TrainBots = () => {
       return;
     }
 
-    setLoadingUpload(true);
+    setLoading(true);
     const formData = new FormData();
     formData.append("bot_id", selectedBots[0]); // First selected bot
     formData.append("knowledge_base_file", uploadKnowledgeBase);
@@ -193,7 +195,6 @@ const TrainBots = () => {
       setSnackbarMessage(
         response.data.message || "File uploaded successfully."
       );
-      setUploadKnowledgeBase(null);
       setSnackbarSeverity("success");
     } catch (error) {
       console.error("Upload Error:", error.response || error);
@@ -201,9 +202,10 @@ const TrainBots = () => {
       setSnackbarSeverity("error");
     } finally {
       setOpenSnackbar(true);
-      setLoadingUpload(false);
+      setLoading(false);
     }
   };
+
 
   return (
     <Box m="20px">
@@ -551,7 +553,6 @@ const TrainBots = () => {
                   <input
                     type="file"
                     hidden
-                    accept=".pdf,.doc,.docx"
                     name="uploadKnowledgeBase"
                     onChange={(e) => handleuploadKnowledgeBaseChange(e)}
                   />
@@ -577,7 +578,7 @@ const TrainBots = () => {
         <Box mt="1.5em">
           <Button
             variant="outlined"
-            disabled={loadingUpload}
+            disabled={loading}
             onClick={uploadKnowledgeBaseFile}
             sx={{
               width: "160px",
@@ -595,7 +596,17 @@ const TrainBots = () => {
               },
             }}
           >
-            {loadingUpload ? <CircularProgress size={20} /> : "Upload File"}
+            {loading ? (
+              <>
+                <CircularProgress
+                  size={20}
+                  sx={{ color: colors.blueAccent[300] }}
+                />
+                Uploading...
+              </>
+            ) : (
+              "Upload File"
+            )}
           </Button>
         </Box>
       </Box>

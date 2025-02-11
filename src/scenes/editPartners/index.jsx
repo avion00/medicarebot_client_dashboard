@@ -56,44 +56,45 @@ const EditPartners = () => {
     how_they_found_you: "",
     marketing_communication: "",
     preferred_frequency: "",
+    partner_definition: "",
   });
 
   const token = sessionStorage.getItem("authToken");
 
   // Fetch lead data on page load
-useEffect(() => {
-  const fetchLeadData = async () => {
-    try {
-      const response = await axios.get(
-        "https://app.medicarebot.live/list-leads",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
-      if (response.data.leads) {
-        const foundLead = response.data.leads.find(
-          (lead) => lead.id === Number(id)
+  useEffect(() => {
+    const fetchLeadData = async () => {
+      try {
+        const response = await axios.get(
+          "https://app.medicarebot.live/list-leads",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
         );
 
-        if (foundLead) {
-          setInitialValues(foundLead);
-        } else {
-          throw new Error("Lead not found");
-        }
-      } else {
-        throw new Error("Failed to fetch leads");
-      }
-    } catch (error) {
-      console.error("Error fetching lead data:", error);
-      setNotificationType("error");
-      setNotificationMessage("Failed to fetch lead data. Please try again.");
-      setShowNotification(true);
-    }
-  };
+        if (response.data.leads) {
+          const foundLead = response.data.leads.find(
+            (lead) => lead.id === Number(id)
+          );
 
-  fetchLeadData();
-}, [id, token]);
+          if (foundLead) {
+            setInitialValues(foundLead);
+          } else {
+            throw new Error("Lead not found");
+          }
+        } else {
+          throw new Error("Failed to fetch leads");
+        }
+      } catch (error) {
+        console.error("Error fetching lead data:", error);
+        setNotificationType("error");
+        setNotificationMessage("Failed to fetch lead data. Please try again.");
+        setShowNotification(true);
+      }
+    };
+
+    fetchLeadData();
+  }, [id, token]);
 
   // Handle form submission
   const handleSubmit = async (values, { setSubmitting }) => {
@@ -340,6 +341,68 @@ useEffect(() => {
                     },
                   }}
                 />
+              </Box>
+            </Box>
+
+            <Box>
+              <Typography
+                variant="h3"
+                fontWeight="bold"
+                gutterBottom
+                sx={{ mt: "2em", color: colors.grey[100] }}
+              >
+                Partners Definition
+              </Typography>
+
+              <Box
+                display="grid"
+                gap="30px"
+                gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                sx={{
+                  "& > div": {
+                    gridColumn: isNonMobile ? undefined : "span 4",
+                  },
+                }}
+              >
+                <FormControl
+                  fullWidth
+                  variant="filled"
+                  sx={{
+                    gridColumn: "span 2",
+                    "& .MuiFormLabel-root.Mui-focused": {
+                      color: colors.blueAccent[500],
+                      fontWeight: "bold",
+                    },
+                  }}
+                >
+                  <InputLabel
+                    id="partner_definition"
+                    sx={{ color: colors.primary[100] }}
+                  >
+                    Partners Definition
+                  </InputLabel>
+                  <Select
+                    labelId="partner_definition"
+                    id="partner_definition"
+                    value={values.partner_definition}
+                    name="partner_definition"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={
+                      !!touched.partner_definition &&
+                      !!errors.partner_definition
+                    }
+                  >
+                    <MenuItem value="vendors">Vendors</MenuItem>
+                    <MenuItem value="clients ">Clients</MenuItem>
+                  </Select>
+                  {touched.partner_definition &&
+                    errors.partner_definition && (
+                      <Box color="red" mt="4px" fontSize="11px" ml="1.5em">
+                        {errors.partner_definition}
+                      </Box>
+                    )}
+                </FormControl>
               </Box>
             </Box>
 
@@ -640,7 +703,7 @@ useEffect(() => {
                     )}
                 </FormControl>
               </Box>
-            </Box> 
+            </Box>
 
             <Box>
               <Typography
@@ -806,7 +869,7 @@ useEffect(() => {
                   }}
                 />
               </Box>
-            </Box> 
+            </Box>
 
             <Box display="flex" justifyContent="start" mt="2em">
               <Button

@@ -15,7 +15,6 @@ const Topbar = ({ setIsSidebar }) => {
   const theme = useTheme();
   const colorMode = useContext(ColorModeContext);
   const isNonMobile = useMediaQuery("(min-width:768px)");
-
   const dropdownItems = ["Profile", "Change Password", "Log out"];
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -103,7 +102,9 @@ const Topbar = ({ setIsSidebar }) => {
         </IconButton>
 
         {/* Settings */}
-        <IconButton aria-label="Settings">
+        <IconButton sx={{
+          display: isNonMobile ? "block" : "none"
+        }} aria-label="Settings">
           <SettingsOutlinedIcon />
         </IconButton>
 

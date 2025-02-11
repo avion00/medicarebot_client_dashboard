@@ -10,7 +10,7 @@ const Header = ({ title, subtitle, titleFontSize, subtitleFontSize }) => {
   return (
     <Box
       sx={{
-        mb: isNonMobile ? "30px" : "0",
+        mb: isNonMobile ? "30px" : "1em",
       }}
     >
       <Typography

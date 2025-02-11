@@ -1,6 +1,5 @@
 import { Box, Button, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
-// import { RecentActivityData } from "../../data/mockData";
 import { BotPerformanceData } from "../../data/botPerformData";
 import { RecentActivityData } from "../../data/RecentActivityData";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -27,6 +26,7 @@ const Dashboard = () => {
         justifyContent="space-between"
         alignItems="center"
         flexWrap="wrap"
+        gap="10px"
       >
         <Header
           title="DASHBOARD"
@@ -35,21 +35,20 @@ const Dashboard = () => {
 
         <Box
           sx={{
-            // width: "100%",
-            mt: isNonMobile ? undefined : " 1em"
+            display: "flex",
+            justifyContent: "flex-end", 
+            width: isNonMobile ? "auto" : "100%",
           }}
         >
           <Button
             sx={{
               background: "linear-gradient(45deg, #062994, #0E72E1)",
               color: "#fff",
-              // width: isNonMobile ? "50%" : "100%",
               fontSize: "14px",
               fontWeight: "bold",
               padding: "10px 20px",
               mb: isNonMobile ? "0em" : "1em",
               transition: "all 0.5s ease",
-              float: "right",
               "&:hover": {
                 opacity: ".7",
               },

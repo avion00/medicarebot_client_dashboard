@@ -167,9 +167,9 @@ const AddBot = () => {
       .array()
       .of(yup.string().required("Language Support is required"))
       .min(1, "Select at least one language"),
-    preTrainedTemplate: yup.string().nullable(), // Optional field
+    preTrainedTemplate: yup.string().nullable(),
     ExpectedOutcome: yup.string().required("Expected Outcome is required"),
-    uploadKnowledgeBase: yup.string().nullable(), // Optional field
+    uploadKnowledgeBase: yup.string().nullable(),
 
     // optional
     attachDocuments: yup.mixed().nullable(),
@@ -227,7 +227,7 @@ const AddBot = () => {
 
       console.error("Error saving draft:", error);
     } finally {
-      setLoading(false); // Set loading back to false when done
+      setLoading(false);
     }
   };
 
@@ -407,8 +407,9 @@ const AddBot = () => {
           display="flex"
           justifyContent="flex-start"
           alignItems="center"
-          gap="4em"
-          mb="2em"
+          gap={isNonMobile ? "4em" : "2em"}
+          mb={isNonMobile ? "2em" : undefined}
+          mt={isNonMobile ? undefined : "2em"}
         >
           {steps.map((step) => (
             <Box key={step.id} textAlign="center" position="relative">
@@ -420,9 +421,9 @@ const AddBot = () => {
                       ? colors.blueAccent[100]
                       : colors.primary[500],
                   border: `2px solid ${colors.grey[400]}`,
-                  width: "50px",
-                  height: "50px",
-                  fontSize: "14px",
+                  width: isNonMobile ? "50px" : "42px",
+                  height: isNonMobile ? "50px" : "42px",
+                  fontSize: isNonMobile ? "14px" : "13px",
                   fontWeight: "500",
                   color:
                     currentStep === step.id
@@ -438,14 +439,14 @@ const AddBot = () => {
                   sx={{
                     position: "absolute",
                     left: "0em",
-                    width: "40px",
+                    width: isNonMobile ? "40px" : "20px",
                     height: "4px",
                     backgroundColor:
                       currentStep >= step.id + 1
                         ? colors.blueAccent[400]
                         : "#dae6fe",
-                    marginTop: "-1.9em",
-                    marginLeft: "4.2em",
+                    marginTop: isNonMobile ? "-1.9em" : "-1.7em",
+                    marginLeft: isNonMobile ? "4.2em" : "3.3em",
                   }}
                 />
               )}
@@ -1235,7 +1236,7 @@ const AddBot = () => {
                   }}
                 >
                   {values.channel !== "Email" && (
-                    <>
+                    <Box gridColumn={"span 4"}>
                       <Typography
                         fontWeight="bold"
                         gridColumn="span 4"
@@ -1244,48 +1245,60 @@ const AddBot = () => {
                         API Integration (Optional)
                       </Typography>
 
-                      <TextField
-                        fullWidth
-                        variant="filled"
-                        type="text"
-                        label="API Key"
-                        onBlur={handleBlur}
-                        onChange={(e) => handleApiKeyChange(e, handleChange)}
-                        value={values.apiKey}
-                        name="apiKey"
-                        error={!!touched.apiKey && !!errors.apiKey}
-                        helperText={touched.apiKey && errors.apiKey}
+                      <Box
+                        display="grid"
+                        gap="30px"
+                        mt="1em"
+                        gridTemplateColumns="repeat(4, minmax(0, 1fr))"
                         sx={{
-                          gridColumn: "span 2",
-                          "& .MuiFormLabel-root.Mui-focused": {
-                            color: colors.blueAccent[500],
-                            fontWeight: "bold",
+                          "& > div": {
+                            gridColumn: isNonMobile ? undefined : "span 4",
                           },
                         }}
-                      />
+                      >
+                        <TextField
+                          fullWidth
+                          variant="filled"
+                          type="text"
+                          label="API Key"
+                          onBlur={handleBlur}
+                          onChange={(e) => handleApiKeyChange(e, handleChange)}
+                          value={values.apiKey}
+                          name="apiKey"
+                          error={!!touched.apiKey && !!errors.apiKey}
+                          helperText={touched.apiKey && errors.apiKey}
+                          sx={{
+                            gridColumn: "span 2",
+                            "& .MuiFormLabel-root.Mui-focused": {
+                              color: colors.blueAccent[500],
+                              fontWeight: "bold",
+                            },
+                          }}
+                        />
 
-                      <TextField
-                        fullWidth
-                        variant="filled"
-                        type="text"
-                        label="Callback URL"
-                        onBlur={handleBlur}
-                        onChange={(e) =>
-                          handleCallbackURLChange(e, handleChange)
-                        }
-                        value={values.callbackURL}
-                        name="callbackURL"
-                        error={!!touched.callbackURL && !!errors.callbackURL}
-                        helperText={touched.callbackURL && errors.callbackURL}
-                        sx={{
-                          gridColumn: "span 2",
-                          "& .MuiFormLabel-root.Mui-focused": {
-                            color: colors.blueAccent[500],
-                            fontWeight: "bold",
-                          },
-                        }}
-                      />
-                    </>
+                        <TextField
+                          fullWidth
+                          variant="filled"
+                          type="text"
+                          label="Callback URL"
+                          onBlur={handleBlur}
+                          onChange={(e) =>
+                            handleCallbackURLChange(e, handleChange)
+                          }
+                          value={values.callbackURL}
+                          name="callbackURL"
+                          error={!!touched.callbackURL && !!errors.callbackURL}
+                          helperText={touched.callbackURL && errors.callbackURL}
+                          sx={{
+                            gridColumn: "span 2",
+                            "& .MuiFormLabel-root.Mui-focused": {
+                              color: colors.blueAccent[500],
+                              fontWeight: "bold",
+                            },
+                          }}
+                        />
+                      </Box>
+                    </Box>
                   )}
 
                   <Typography
@@ -1296,81 +1309,96 @@ const AddBot = () => {
                   >
                     Web Crawling (Optional)
                   </Typography>
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="Start URL"
-                    onBlur={handleBlur}
-                    onChange={(e) => handleStartURLChange(e, handleChange)}
-                    value={values.startURL}
-                    name="startURL"
-                    error={!!touched.startURL && !!errors.startURL}
-                    helperText={touched.startURL && errors.startURL}
+                  <Box
+                  gridColumn={"span 4"}
+                    display="grid"
+                    gap="30px"
+                    gridTemplateColumns="repeat(4, minmax(0, 1fr))"
                     sx={{
-                      gridColumn: "span 2",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-
-                  <FormControl
-                    fullWidth
-                    variant="filled"
-                    sx={{
-                      gridColumn: "span 2",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
+                      "& > div": {
+                        gridColumn: isNonMobile ? undefined : "span 4",
                       },
                     }}
                   >
-                    <InputLabel id="status" sx={{ color: colors.primary[100] }}>
-                      Depth
-                    </InputLabel>
-                    <Select
-                      labelId="depth"
-                      id="depth"
-                      value={values.depth}
-                      name="depth"
-                      onChange={(e) => handleDepthChange(e, handleChange)}
+                    <TextField
+                      fullWidth
+                      variant="filled"
+                      type="text"
+                      label="Start URL"
                       onBlur={handleBlur}
-                      error={!!touched.depth && !!errors.depth}
-                    >
-                      <MenuItem value="1">Low</MenuItem>
-                      <MenuItem value="2">Medium</MenuItem>
-                      <MenuItem value="3">High</MenuItem>
-                    </Select>
-                    {touched.depth && errors.depth && (
-                      <Box color="red" mt="4px" fontSize="11px" ml="1.5em">
-                        {errors.depth}
-                      </Box>
-                    )}
-                  </FormControl>
+                      onChange={(e) => handleStartURLChange(e, handleChange)}
+                      value={values.startURL}
+                      name="startURL"
+                      error={!!touched.startURL && !!errors.startURL}
+                      helperText={touched.startURL && errors.startURL}
+                      sx={{
+                        gridColumn: "span 2",
+                        "& .MuiFormLabel-root.Mui-focused": {
+                          color: colors.blueAccent[500],
+                          fontWeight: "bold",
+                        },
+                      }}
+                    />
 
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="Keywords to focus on (Optional)"
-                    onBlur={handleBlur}
-                    onChange={(e) => handleFocusKeywordsChange(e, handleChange)}
-                    value={values.focusKeywords}
-                    name="focusKeywords"
-                    error={!!touched.focusKeywords && !!errors.focusKeywords}
-                    helperText={touched.focusKeywords && errors.focusKeywords}
-                    sx={{
-                      gridColumn: "span 4",
-                      mt: "30px",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-                  {/* <Button
+                    <FormControl
+                      fullWidth
+                      variant="filled"
+                      sx={{
+                        gridColumn: "span 2",
+                        "& .MuiFormLabel-root.Mui-focused": {
+                          color: colors.blueAccent[500],
+                          fontWeight: "bold",
+                        },
+                      }}
+                    >
+                      <InputLabel
+                        id="status"
+                        sx={{ color: colors.primary[100] }}
+                      >
+                        Depth
+                      </InputLabel>
+                      <Select
+                        labelId="depth"
+                        id="depth"
+                        value={values.depth}
+                        name="depth"
+                        onChange={(e) => handleDepthChange(e, handleChange)}
+                        onBlur={handleBlur}
+                        error={!!touched.depth && !!errors.depth}
+                      >
+                        <MenuItem value="1">Low</MenuItem>
+                        <MenuItem value="2">Medium</MenuItem>
+                        <MenuItem value="3">High</MenuItem>
+                      </Select>
+                      {touched.depth && errors.depth && (
+                        <Box color="red" mt="4px" fontSize="11px" ml="1.5em">
+                          {errors.depth}
+                        </Box>
+                      )}
+                    </FormControl>
+
+                    <TextField
+                      fullWidth
+                      variant="filled"
+                      type="text"
+                      label="Keywords to focus on (Optional)"
+                      onBlur={handleBlur}
+                      onChange={(e) =>
+                        handleFocusKeywordsChange(e, handleChange)
+                      }
+                      value={values.focusKeywords}
+                      name="focusKeywords"
+                      error={!!touched.focusKeywords && !!errors.focusKeywords}
+                      helperText={touched.focusKeywords && errors.focusKeywords}
+                      sx={{
+                        gridColumn: "span 4",
+                        "& .MuiFormLabel-root.Mui-focused": {
+                          color: colors.blueAccent[500],
+                          fontWeight: "bold",
+                        },
+                      }}
+                    />
+                    {/* <Button
                     onClick={startCrawling}
                     color="secondary"
                     variant="outlined"
@@ -1383,14 +1411,15 @@ const AddBot = () => {
                     Start Crawling
                   </Button> */}
 
-                  <Typography
-                    gridColumn="span 4"
-                    varient="h6"
-                    color={colors.grey[400]}
-                  >
-                    Optional: Specify a URL and crawl depth to populate the
-                    dynamic content for the bot.
-                  </Typography>
+                    <Typography
+                      gridColumn="span 4"
+                      varient="h6"
+                      color={colors.grey[400]}
+                    >
+                      Optional: Specify a URL and crawl depth to populate the
+                      dynamic content for the bot.
+                    </Typography>
+                  </Box>
                 </Box>
               )}
 
@@ -1445,11 +1474,12 @@ const AddBot = () => {
                   <Box
                     sx={{
                       display: "flex",
-                      justifyContent: "center",
+                      // justifyContent: "center",
                       alignItems: "center",
                       flexWrap: "wrap",
                       gap: "1em",
                       height: "100%",
+                      border: '1px solid red'
                     }}
                   >
                     <Button

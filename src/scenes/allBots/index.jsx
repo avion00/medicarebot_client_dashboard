@@ -28,12 +28,12 @@ import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import axios from "axios";
-
 import DetailCard from "../../components/DetailCard";
 import DetailItem from "../../components/DetailItem";
 import InfoIcon from "@mui/icons-material/Info";
 import DescriptionIcon from "@mui/icons-material/Description";
 import SendIcon from "@mui/icons-material/Send";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 
 const AllBots = () => {
   const theme = useTheme();
@@ -41,6 +41,8 @@ const AllBots = () => {
   const isNonMobile = useMediaQuery("(min-width: 768px)");
   const isTab = useMediaQuery("(min-width: 1200px)");
   const isSmallTab = useMediaQuery("(min-width: 961px)");
+  const isMobile = useMediaQuery("(max-width: 768px)"); 
+
   const navigate = useNavigate();
 
   const [botData, setBotData] = useState([]);
@@ -76,7 +78,7 @@ const AllBots = () => {
         if (response.data.bots) {
           const botsWithStatus = response.data.bots.map((bot) => ({
             ...bot,
-            status: "Inactive", // Initialize status as "Inactive"
+            status: "Inactive", 
           }));
           setBotData(botsWithStatus);
         } else {
@@ -114,6 +116,39 @@ const AllBots = () => {
       setDialogError("Bot details not found");
     }
   };
+
+  const handleDelete = async (botId) => {
+    if (!botId) return;
+
+    try {
+      const response = await axios.delete(
+        "https://app.medicarebot.live/delete-bots",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          data: { bot_ids: [botId] },
+        }
+      );
+
+      // Extract server message and deleted bot IDs
+      const { message, deleted_bot_ids } = response.data;
+
+      setBotData((prevBots) =>
+        prevBots.filter((bot) => !deleted_bot_ids.includes(bot.bot_id))
+      );
+
+      // Show success message in Snackbar
+      setNotificationType("success");
+      setNotificationMessage(message || "Bot deleted successfully.");
+    } catch (error) {
+      setNotificationType("error");
+      setNotificationMessage(
+        error.response?.data?.message || "Failed to delete bot."
+      );
+    } finally {
+      setShowNotification(true);
+    }
+  };
+
 
   const handleCloseDialog = () => {
     setSelectedBot(null);
@@ -172,24 +207,99 @@ const AllBots = () => {
   const progressPercentage = (activeBots / totalBots) * 100;
   const progressAngle = (progressPercentage / 100) * 360;
 
+  const handleCloseNotification = (event, reason) => {
+    if (reason === "clickaway") return;
+    setShowNotification(false);
+  };
+
+  // copy the clipboard
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [copiedBotId, setCopiedBotId] = useState("");
+
+  const handleCopyBotId = (botId) => {
+    navigator.clipboard.writeText(botId);
+    setCopiedBotId(botId);
+    setSnackbarOpen(true);
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  };
+
   // DataGrid Columns
   const columns = [
-    { field: "id", headerName: "Bot ID", flex: 1 },
+    {
+      field: "primary_id",
+      headerName: "S.N",
+      flex: isMobile ? 0.1 : 0.2,
+      headerAlign: "center",
+      minWidth: 50,
+      align: "center",
+      valueGetter: (params) => params.api.getRowIndex(params.id) + 1,
+    },
+    {
+      field: "id",
+      headerName: "Bot ID",
+      flex: isMobile ? 0.5 : 1,
+      minWidth: 100,
+      renderCell: (params) => (
+        <Typography
+          variant="body2"
+          sx={{
+            cursor: "pointer",
+            color: colors.blueAccent[200],
+            transition: "all 0.3s ease-out",
+            "&:hover": { color: colors.blueAccent[500] },
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+          onClick={() => handleCopyBotId(params.value)}
+        >
+          {params.value}
+        </Typography>
+      ),
+    },
     {
       field: "name",
       headerName: "Bot Name",
-      flex: 0.75,
+      flex: isMobile ? 0.35 : 0.5,
+      minWidth: 100,
       cellClassName: "bot-name-column--cell",
     },
+
     {
       field: "type",
       headerName: "Channel",
-      flex: 0.5,
+      flex: 0.35,
+      minWidth: 80,
+      headerAlign: "center",
+      align: "center",
     },
+    {
+      field: "language_support",
+      headerName: "Language Support",
+      flex: 0.5,
+      minWidth: 100,
+      headerAlign: "center",
+      align: "center",
+      renderCell: (params) => (
+        <Typography variant="body2" color={colors.blueAccent[100]}>
+          {params.row.language_support
+            ? params.row.language_support.join(", ")
+            : "N/A"}
+        </Typography>
+      ),
+    },
+
     {
       field: "status",
       headerName: "Status",
-      flex: 0.5,
+      flex: isMobile ? 0.3 : 0.4,
+      minWidth: 80,
+      headerAlign: "center",
+      align: "center",
       renderCell: (params) => {
         const isActive = params.row.status === "Active";
         return (
@@ -199,8 +309,8 @@ const AllBots = () => {
               backgroundColor: isActive
                 ? colors.greenAccent[700]
                 : colors.redAccent[700],
-              borderRadius: "20px",
-              padding: "2px 10px",
+              borderRadius: "25px",
+              padding: "2px 8px",
             }}
           >
             {params.row.status}
@@ -209,36 +319,39 @@ const AllBots = () => {
       },
     },
     {
-      field: "language_support",
-      headerName: "Language Support",
-      flex: 0.5,
-      renderCell: (params) => (
-        <Typography variant="h6" color={colors.blueAccent[100]}>
-          {params.row.language_support
-            ? params.row.language_support.join(", ")
-            : "N/A"}
-        </Typography>
-      ),
-    },
-    {
       field: "action",
       headerName: "Action",
-      flex: 0.5,
+      flex: isMobile ? 0.25 : 0.5,
+      headerAlign: "center",
+      minWidth: 80,
+      align: "center",
       renderCell: (params) => (
-        <Box display="flex" gap=".5em">
+        <Box display="flex" gap={isNonMobile ? "0.5em" : ".1em"}>
           <IconButton
             onClick={() => handleEdit(params.row.bot_id)}
             aria-label="edit"
             sx={{ color: colors.greenAccent[300] }}
           >
-            <EditIcon sx={{ fontSize: "16px" }} />
+            <EditIcon sx={{ fontSize: isNonMobile ? "16px" : "14px" }} />
           </IconButton>
           <IconButton
             onClick={() => handleView(params.row.bot_id)}
             aria-label="view"
             sx={{ color: colors.grey[200] }}
           >
-            <VisibilityIcon sx={{ fontSize: "16px" }} />
+            <VisibilityIcon sx={{ fontSize: isNonMobile ? "16px" : "14px" }} />
+          </IconButton>
+          <IconButton
+            onClick={() => handleDelete(params.row.bot_id)} 
+            aria-label="delete"
+            sx={{ color: colors.grey[200] }}
+          >
+            <DeleteOutlineOutlinedIcon
+              sx={{
+                fontSize: isNonMobile ? "16px" : "14px",
+                color: colors.redAccent[500],
+              }}
+            />
           </IconButton>
         </Box>
       ),
@@ -246,7 +359,10 @@ const AllBots = () => {
     {
       field: "Start/Stop",
       headerName: "Start/Stop",
-      flex: 0.35,
+      flex: isMobile ? 0.25 : 0.4,
+      headerAlign: "center",
+      minWidth: 80,
+      align: "center",
       renderCell: (params) => {
         const isOn = params.row.status === "Active";
         return (
@@ -278,11 +394,14 @@ const AllBots = () => {
     },
     {
       field: "send email",
-      headerName: "Send Email",
-      flex: 0.5,
+      headerName: "Email Send",
+      flex: isMobile ? 0.25 : 0.35,
+      headerAlign: "center",
+      minWidth: 50,
+      align: "center",
       renderCell: (params) => {
         if (params.row.type !== "Email") {
-          return null; // Hide button if channel is not "email"
+          return null;
         }
 
         return (
@@ -291,15 +410,15 @@ const AllBots = () => {
               onClick={() => sendEmail(params.row.bot_id)}
               aria-label="send"
               sx={{ color: colors.greenAccent[300] }}
-              disabled={loadingState[params.row.bot_id]} // Disable button while loading
+              disabled={loadingState[params.row.bot_id]}
             >
               {loadingState[params.row.bot_id] ? (
                 <CircularProgress
                   size={16}
                   sx={{ color: colors.greenAccent[300] }}
-                /> // Show loading spinner
+                />
               ) : (
-                <SendIcon sx={{ fontSize: "16px" }} /> // Show send icon
+                <SendIcon sx={{ fontSize: "16px" }} />
               )}
             </IconButton>
           </Box>
@@ -307,11 +426,6 @@ const AllBots = () => {
       },
     },
   ];
-
-  const handleCloseNotification = (event, reason) => {
-    if (reason === "clickaway") return;
-    setShowNotification(false);
-  };
 
   return (
     <Box m="20px">
@@ -321,12 +435,19 @@ const AllBots = () => {
         justifyContent="space-between"
         alignItems="center"
         flexWrap="wrap"
+        gap="10px"
       >
         <Header
           title="ALL BOTS OVERVIEW"
           subtitle="Welcome to All Bots Overview"
         />
-        <Box>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            width: isNonMobile ? "auto" : "100%",
+          }}
+        >
           <Button
             onClick={() => navigate("/addbot")}
             sx={{
@@ -555,30 +676,30 @@ const AllBots = () => {
             }}
           >
             <DataGrid
-              checkboxSelection
+              // checkboxSelection
               rows={botData.map((bot) => ({ ...bot, id: bot.bot_id }))}
               columns={columns}
               rowHeight={40}
               headerHeight={40}
               loading={loading}
               pagination
-              // pageSize={100}
               rowsPerPageOptions={[25, 50, 100]}
-              initialState={{
-                pagination: {
-                  paginationModel: { pageSize: 100, page: 0 },
-                },
-                // sorting: {
-                //   sortModel: [{ field: "bot_id", sort: "asc" }],
-                // },
-              }}
-              localeText={{
-                footerPaginationRowsPerPage: "More Bot:",
-                footerPaginationOf: "of", // Customize "of" text
-                footerRowSelected: (count) =>
-                  `${count} bot${count !== 1 ? "s" : ""} selected`, // Customize selected rows text
-              }}
             />
+
+            <Snackbar
+              open={snackbarOpen}
+              autoHideDuration={3000}
+              onClose={handleCloseSnackbar}
+              anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            >
+              <Alert
+                onClose={handleCloseSnackbar}
+                severity="success"
+                sx={{ width: "100%" }}
+              >
+                You copied your bot ID: {copiedBotId}
+              </Alert>
+            </Snackbar>
 
             <Snackbar
               open={showNotification}
@@ -588,6 +709,21 @@ const AllBots = () => {
             >
               <Alert
                 onClose={handleCloseNotification}
+                severity={notificationType}
+                sx={{ width: "100%" }}
+              >
+                {notificationMessage}
+              </Alert>
+            </Snackbar>
+
+            <Snackbar
+              open={showNotification}
+              autoHideDuration={6000}
+              onClose={() => setShowNotification(false)}
+              anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            >
+              <Alert
+                onClose={() => setShowNotification(false)}
                 severity={notificationType}
                 sx={{ width: "100%" }}
               >

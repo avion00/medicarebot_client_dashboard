@@ -166,6 +166,7 @@ useEffect(() => {
     { field: "company_name", headerName: "Company Name", flex: 1 },
     { field: "job_title", headerName: "Job Title", flex: 0.75 },
     { field: "company_size", headerName: "Company Size", flex: 0.75 },
+    { field: "partner_definition", headerName: "Parner defination", flex: 0.75 },
 
     {
       field: "action",
@@ -492,6 +493,10 @@ useEffect(() => {
                     <DetailItem
                       label="Job Title"
                       value={selectedLead.job_title}
+                    />
+                    <DetailItem
+                      label="Partner Definition"
+                      value={selectedLead.partner_definition}
                     />
                   </DetailCard>
                 </Grid>

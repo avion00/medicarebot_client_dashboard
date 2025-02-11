@@ -51,6 +51,10 @@ const AddPartners = () => {
     handleChange(event);
   };
 
+  const HandlePartnerDefinitionChange = (event, handleChange) => {
+    handleChange(event);
+  };
+
   const handleCompanyNameChange = (event, handleChange) => {
     handleChange(event);
   };
@@ -152,6 +156,7 @@ const AddPartners = () => {
           how_they_found_you: values.howTheyFoundYou,
           marketing_communication: values.marketingCommunication,
           preferred_frequency: values.preferredFrequency,
+          partner_definition: values.partnerDefinition,
         },
         {
           headers: {
@@ -216,6 +221,7 @@ const AddPartners = () => {
     howTheyFoundYou: "",
     marketingCommunication: "",
     preferredFrequency: "",
+    partnerDefinition: "",
   };
 
   const checkoutSchema = yup.object().shape({
@@ -228,6 +234,9 @@ const AddPartners = () => {
     companyName: yup.string().required("Company Name is required"),
     jobTitle: yup.string().required("Job Title is required"),
     companySize: yup.string().required("Company size is required"),
+    partnerDefinition: yup
+      .string()
+      .required("Partners Definition is required"),
 
     // these are optional in backend
     industry: yup.string().nullable(),
@@ -644,6 +653,70 @@ const AddPartners = () => {
                       },
                     }}
                   />
+                </Box>
+              </Box>
+
+              <Box>
+                <Typography
+                  variant="h3"
+                  fontWeight="bold"
+                  gutterBottom
+                  sx={{ mt: "2em", color: colors.grey[100] }}
+                >
+                  Partners Definition
+                </Typography>
+
+                <Box
+                  display="grid"
+                  gap="30px"
+                  gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                  sx={{
+                    "& > div": {
+                      gridColumn: isNonMobile ? undefined : "span 4",
+                    },
+                  }}
+                >
+                  <FormControl
+                    fullWidth
+                    variant="filled"
+                    sx={{
+                      gridColumn: "span 2",
+                      "& .MuiFormLabel-root.Mui-focused": {
+                        color: colors.blueAccent[500],
+                        fontWeight: "bold",
+                      },
+                    }}
+                  >
+                    <InputLabel
+                      id="partnerDefinition"
+                      sx={{ color: colors.primary[100] }}
+                    >
+                      Partners Definition
+                    </InputLabel>
+                    <Select
+                      labelId="partnerDefinition"
+                      id="partnerDefinition"
+                      value={values.partnerDefinition}
+                      name="partnerDefinition"
+                      onChange={(e) =>
+                        HandlePartnerDefinitionChange(e, handleChange)
+                      }
+                      onBlur={handleBlur}
+                      error={
+                        !!touched.partnerDefinition &&
+                        !!errors.partnerDefinition
+                      }
+                    >
+                      <MenuItem value="vendors">Vendors</MenuItem>
+                      <MenuItem value="clients ">Clients</MenuItem>
+                    </Select>
+                    {touched.partnerDefinition &&
+                      errors.partnerDefinition && (
+                        <Box color="red" mt="4px" fontSize="11px" ml="1.5em">
+                          {errors.partnerDefinition}
+                        </Box>
+                      )}
+                  </FormControl>
                 </Box>
               </Box>
 
