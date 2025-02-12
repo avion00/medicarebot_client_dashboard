@@ -160,9 +160,15 @@ const TrainBots = () => {
 
   const handleuploadKnowledgeBaseChange = (event) => {
     const file = event.target.files[0];
+    if (!file) return; // Prevent empty selection
+
     console.log("Selected file:", file); // Debugging file selection
-    setUploadKnowledgeBase(file || null);
+    setUploadKnowledgeBase(file);
+
+    // Reset the file input so the same file can be selected again
+    event.target.value = null;
   };
+
 
   const uploadKnowledgeBaseFile = async () => {
     if (!selectedBots.length || !uploadKnowledgeBase) {
@@ -184,12 +190,14 @@ const TrainBots = () => {
 
     try {
       const response = await axios.post(
-        "https://app.medicarebot.live/knowledge_base",
+        "https://app.medicarebot.live/knowledge_base/",
         formData,
         {
           headers: {
+            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
           },
+          withCredentials: true,
         }
       );
 
@@ -198,8 +206,10 @@ const TrainBots = () => {
       setSnackbarMessage(
         response.data.message || "File uploaded successfully."
       );
-      setUploadKnowledgeBase(null);
       setSnackbarSeverity("success");
+
+      // ✅ Clear the file selection after upload
+      setUploadKnowledgeBase(null);
     } catch (error) {
       console.error("Upload Error:", error.response || error);
       setSnackbarMessage(error.response?.data?.message || "Upload failed.");
@@ -209,6 +219,7 @@ const TrainBots = () => {
       setLoadingUpload(false);
     }
   };
+
 
   return (
     <Box m="20px">
@@ -556,9 +567,8 @@ const TrainBots = () => {
                   <input
                     type="file"
                     hidden
-                    // accept=".pdf,.doc,.docx"
                     name="uploadKnowledgeBase"
-                    onChange={(e) => handleuploadKnowledgeBaseChange(e)}
+                    onChange={handleuploadKnowledgeBaseChange}
                   />
                 </Button>
               ),
@@ -600,7 +610,17 @@ const TrainBots = () => {
               },
             }}
           >
-            {loadingUpload ? <CircularProgress size={20} /> : "Upload File"}
+            {loadingUpload ? (
+              <>
+                <CircularProgress
+                  size={20}
+                  sx={{ color: colors.blueAccent[300] }}
+                />
+                Uploading...
+              </>
+            ) : (
+              "Upload File"
+            )}
           </Button>
         </Box>
       </Box>
