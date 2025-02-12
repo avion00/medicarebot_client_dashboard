@@ -160,6 +160,7 @@ const TrainBots = () => {
 
   const handleuploadKnowledgeBaseChange = (event) => {
     const file = event.target.files[0];
+    console.log("Selected file:", file); // Debugging file selection
     setUploadKnowledgeBase(file || null);
   };
 
@@ -176,6 +177,11 @@ const TrainBots = () => {
     formData.append("bot_id", selectedBots[0]); // First selected bot
     formData.append("knowledge_base_file", uploadKnowledgeBase);
 
+    // Debugging FormData before sending
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}:`, value);
+    }
+
     try {
       const response = await axios.post(
         "https://app.medicarebot.live/knowledge_base",
@@ -183,7 +189,7 @@ const TrainBots = () => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
+            // 🚨 DO NOT manually set Content-Type here!
           },
         }
       );
@@ -551,7 +557,7 @@ const TrainBots = () => {
                   <input
                     type="file"
                     hidden
-                    accept=".pdf,.doc,.docx"
+                    // accept=".pdf,.doc,.docx"
                     name="uploadKnowledgeBase"
                     onChange={(e) => handleuploadKnowledgeBaseChange(e)}
                   />
