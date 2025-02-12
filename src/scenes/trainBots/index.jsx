@@ -189,7 +189,6 @@ const TrainBots = () => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            // 🚨 DO NOT manually set Content-Type here!
           },
         }
       );
