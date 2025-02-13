@@ -350,8 +350,6 @@ const AddPartners = () => {
             resetForm,
           }) => (
             <form onSubmit={handleSubmit}>
-              {/* Conditional content based on step  ookey*/}
-
               <Box
                 display="flex"
                 justifyContent="center"
@@ -359,58 +357,6 @@ const AddPartners = () => {
                 alignItems="center"
               >
                 <Box>
-                  {/* <TextField
-                    label="Upload Partners via File"
-                    variant="filled"
-                    type="text"
-                    name="UploadLeadsviaFile"
-                    value={UploadLeadsviaFile ? UploadLeadsviaFile.name : ""}
-                    InputProps={{
-                      readOnly: true,
-                      endAdornment: (
-                        <Button
-                          variant="contained"
-                          component="label"
-                          sx={{
-                            backgroundColor: "transparent",
-                            color: "white",
-                            textTransform: "none",
-                            boxShadow: "none",
-                            width: "100%",
-                            height: "100%",
-                            position: "absolute",
-                            top: "0",
-                            left: "0",
-                            "&:hover": {
-                              backgroundColor: "transparent",
-                            },
-                          }}
-                        >
-                          <input
-                            type="file"
-                            hidden
-                            name="UploadLeadsviaFile"
-                            onChange={(e) => handleUploadLeadsviaFileChange(e)}
-                          />
-                        </Button>
-                      ),
-                    }}
-                    sx={{
-                      position: "relative",
-                      width: "100%",
-                      flexGrow: "1",
-                      gridColumn: "span 2",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: colors.primary[400],
-                        color: colors.grey[100],
-                      },
-                    }}
-                  /> */}
-
                   <TextField
                     fullWidth
                     label="Upload Partners via File"
@@ -418,19 +364,19 @@ const AddPartners = () => {
                     type="text"
                     name="UploadLeadsviaFile"
                     value={UploadLeadsviaFile ? UploadLeadsviaFile.name : ""}
-                    placeholder="No file selected" // ✅ Adds a visible placeholder
+                    placeholder="No file selected"
                     InputProps={{
                       readOnly: true,
                       sx: {
                         backgroundColor: "#1E1E2D",
                         color: "#FFFFFF",
                         borderRadius: "8px",
-                        textAlign: "center", // ✅ Centers text
+                        textAlign: "center",
                         "& .MuiOutlinedInput-root": {
                           "& input": {
-                            textAlign: "center", // ✅ Centers text inside input
+                            textAlign: "center",
                             fontWeight: "bold",
-                            color: UploadLeadsviaFile ? "#FFFFFF" : "#999999", // ✅ Dimmed text if empty
+                            color: UploadLeadsviaFile ? "#FFFFFF" : "#999999",
                           },
                           "& fieldset": {
                             borderColor: "#4F4F5A",
@@ -609,18 +555,36 @@ const AddPartners = () => {
                       width: "100%",
                     }}
                   >
+                   
+
                     <PhoneInput
                       country={"us"}
-                      value={values.phoneNumber}
-                      onChange={(phone, country) => {
-                        // Extract country code and number separately
-                        const countryCode = `+${country.dialCode}`;
-                        const phoneNumber = phone
-                          .replace(countryCode, "")
+                      value={`${values.countryCode}${values.phoneNumber}`} // Combine for display
+                      onChange={(phone, country, e) => {
+                        let countryCode = `${country.dialCode}`;
+                        let phoneNumber = phone
+                          .replace(new RegExp(`^\\+?${country.dialCode}`), "")
                           .trim();
 
+                        // If user manually enters a country code, detect it dynamically
+                        const manualCountryMatch = phone.match(/^\+(\d{1,4})/);
+                        if (manualCountryMatch) {
+                          countryCode = manualCountryMatch[0]; // Extract the matched country code
+                          phoneNumber = phone.replace(countryCode, "").trim(); // Get the rest of the number
+                        }
+
+                        // Ensure country code doesn't duplicate in the input
                         setFieldValue("countryCode", countryCode);
                         setFieldValue("phoneNumber", phoneNumber);
+                      }}
+                      onBlur={() => {
+                        // Ensure phoneNumber doesn't store country code again
+                        setFieldValue(
+                          "phoneNumber",
+                          values.phoneNumber
+                            .replace(values.countryCode, "")
+                            .trim()
+                        );
                       }}
                       inputProps={{
                         name: "phone",
@@ -654,6 +618,7 @@ const AddPartners = () => {
                         borderBottom: `1px solid ${colors.primary[100]}`,
                       }}
                     />
+
                     {touched.phoneNumber && errors.phoneNumber && (
                       <Typography
                         variant="caption"

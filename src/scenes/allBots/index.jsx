@@ -33,7 +33,7 @@ import DetailItem from "../../components/DetailItem";
 import InfoIcon from "@mui/icons-material/Info";
 import DescriptionIcon from "@mui/icons-material/Description";
 import SendIcon from "@mui/icons-material/Send";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const AllBots = () => {
   const theme = useTheme();
@@ -337,19 +337,20 @@ const AllBots = () => {
           <IconButton
             onClick={() => handleView(params.row.bot_id)}
             aria-label="view"
-            sx={{ color: colors.grey[200] }}
           >
-            <VisibilityIcon sx={{ fontSize: isNonMobile ? "16px" : "14px" }} />
+            <VisibilityIcon
+              color="success"
+              sx={{ fontSize: isNonMobile ? "16px" : "14px" }}
+            />
           </IconButton>
           <IconButton
-            onClick={() => handleDelete(params.row.bot_id)} 
+            onClick={() => handleDelete(params.row.bot_id)}
             aria-label="delete"
-            sx={{ color: colors.grey[200] }}
           >
-            <DeleteOutlineOutlinedIcon
+            <DeleteIcon
+              color="error"
               sx={{
                 fontSize: isNonMobile ? "16px" : "14px",
-                color: colors.redAccent[500],
               }}
             />
           </IconButton>

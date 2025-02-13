@@ -48,14 +48,14 @@ const ViewPartners = () => {
   const isMobile = useMediaQuery("(min-width:521px)");
 
   const [viewLeadersData, setViewLeadersData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]); // Filtered data for search
-  const [searchQuery, setSearchQuery] = useState(""); // Search input state
+  const [filteredData, setFilteredData] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isDownloading, setIsDownloading] = useState(false);
 
-  const [leads, setLeads] = useState([]); // State to store leads
-  const [showNotification, setShowNotification] = useState(false); // State for snackbar visibility
+  const [leads, setLeads] = useState([]);
+  const [showNotification, setShowNotification] = useState(false);
   const [notificationType, setNotificationType] = useState("success");
   const [notificationMessage, setNotificationMessage] = useState("");
   const token = sessionStorage.getItem("authToken");
@@ -116,49 +116,46 @@ const ViewPartners = () => {
     navigate(`/editPartners/${id}`);
   };
 
-  const handleDelete = async (id) => {
-    setLoading(true); // Show loading state
-    try {
-      const token = sessionStorage.getItem("authToken");
+ const handleDelete = async (id) => {
+   setLoading(true); 
+   try {
+     const token = sessionStorage.getItem("authToken");
 
-      const response = await axios.delete(
-        `https://app.medicarebot.live/delete-lead/${id}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+     const response = await axios.delete(
+       `https://app.medicarebot.live/delete-lead/${id}`,
+       {
+         headers: { Authorization: `Bearer ${token}` },
+       }
+     );
 
-      // Show success message from the server
-      setNotificationType("success");
-      setNotificationMessage(
-        response.data.message || "Lead deleted successfully!"
-      );
+     // Show success message from the server
+     setNotificationType("success");
+     setNotificationMessage(
+       response.data.message || "Lead deleted successfully!"
+     );
 
-      // Remove the deleted lead from the UI by filtering it out of both leads and viewLeadersData
-      setLeads((prevLeads) => prevLeads.filter((lead) => lead.id !== id));
-      setViewLeadersData((prevData) =>
-        prevData.filter((lead) => lead.id !== id)
-      ); // Update the DataGrid state
-    } catch (error) {
-      let errorMessage = "Error deleting lead. Please try again.";
+     // Remove the deleted lead from the UI immediately
+     setViewLeadersData((prevData) =>
+       prevData.filter((lead) => lead.id !== id)
+     );
+     setFilteredData((prevData) => prevData.filter((lead) => lead.id !== id));
+   } catch (error) {
+     let errorMessage = "Error deleting lead. Please try again.";
 
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        errorMessage = error.response.data.message; // Get the error message from the server
-      }
+     if (error.response && error.response.data && error.response.data.message) {
+       errorMessage = error.response.data.message; 
+     }
 
-      // Show error message
-      setNotificationType("error");
-      setNotificationMessage(errorMessage);
-      console.error("Error deleting lead:", error);
-    } finally {
-      setLoading(false);
-      setShowNotification(true); // Show the snackbar with message
-    }
-  };
+     // Show error message
+     setNotificationType("error");
+     setNotificationMessage(errorMessage);
+     console.error("Error deleting lead:", error);
+   } finally {
+     setLoading(false);
+     setShowNotification(true); // Show the snackbar with message
+   }
+ };
+
 
   // 🔍 Search Function
   const handleSearch = (event) => {
@@ -175,34 +172,51 @@ const ViewPartners = () => {
   };
 
   const columns = [
-    { field: "id", headerName: "ID", flex: 0.5 },
-    { field: "fullname", headerName: "Full Name", flex: 1 },
-    { field: "email", headerName: "Email", flex: 1.25 },
+    {
+      field: "id",
+      headerName: "ID",
+      flex: 0.5,
+      headerAlign: "center",
+      minWidth: 50,
+      align: "center",
+    },
+    { field: "fullname", minWidth: 120, headerName: "Full Name", flex: 1 },
+    { field: "email", minWidth: 130, headerName: "Email", flex: 1.25 },
     {
       field: "phone_number",
       headerName: "Phone Number",
       flex: 1,
+      minWidth: 120,
       valueGetter: (params) =>
-        `${params.row.country_code} ${params.row.mobile_number}`,
+        `+${params.row.country_code} ${params.row.mobile_number}`,
     },
-    { field: "city", headerName: "City", flex: 0.75 },
-    { field: "state", headerName: "State", flex: 0.5 },
-    { field: "country", headerName: "Country", flex: 0.75 },
-    { field: "company_name", headerName: "Company Name", flex: 1 },
-    { field: "job_title", headerName: "Job Title", flex: 0.75 },
-    { field: "company_size", headerName: "Company Size", flex: 0.75 },
+    // { field: "city", headerName: "City", flex: 0.75 },
+    // { field: "state", headerName: "State", flex: 0.5 },
+    // { field: "country", headerName: "Country", flex: 0.75 },
+    {
+      field: "company_name",
+      minWidth: 120,
+      headerName: "Company Name",
+      flex: 1,
+    },
+    // { field: "job_title", headerName: "Job Title", flex: 0.75 },
+    // { field: "company_size", headerName: "Company Size", flex: 0.75 },
     {
       field: "partner_definition",
       headerName: "Parner defination",
       flex: 0.75,
+      minWidth: 100,
     },
 
     {
       field: "action",
       headerName: "Action",
-      flex: 1,
+      flex: 0.75,
+      headerAlign: "center",
+      minWidth: 100,
+      align: "center",
       renderCell: (params) => (
-        <Box display="flex" gap=".15em" justifyContent="center">
+        <Box display="flex" gap=".1em" justifyContent="center">
           <IconButton
             onClick={() => handleEdit(params.row.id)}
             aria-label="edit"
@@ -213,18 +227,16 @@ const ViewPartners = () => {
           <IconButton
             onClick={() => handleView(params.row.id)}
             aria-label="view"
-            sx={{ color: colors.grey[100] }}
+            // sx={{ color: colors.grey[100] }}
           >
-            <VisibilityIcon sx={{ fontSize: "14px" }} />
+            <VisibilityIcon color="success" sx={{ fontSize: "14px" }} />
           </IconButton>
           <IconButton
             onClick={() => handleDelete(params.row.id)}
             aria-label="view"
-            sx={{ color: colors.grey[100] }}
+            // sx={{ color: colors.grey[100] }}
           >
-            <DeleteIcon
-              sx={{ fontSize: "14px", color: colors.redAccent[400] }}
-            />
+            <DeleteIcon color="error" sx={{ fontSize: "14px" }} />
           </IconButton>
         </Box>
       ),
@@ -282,7 +294,7 @@ const ViewPartners = () => {
     setDialogError(null);
   };
 
-  const totalPartners = viewLeadersData.length; // Total partners
+  const totalPartners = viewLeadersData.length;
 
   const totalVendors = viewLeadersData.filter(
     (partner) => partner.partner_definition.trim().toLowerCase() === "vendors"
@@ -298,14 +310,21 @@ const ViewPartners = () => {
       <Box
         display="flex"
         justifyContent="space-between"
-        flexWrap="wrap"
         alignItems="center"
+        flexWrap="wrap"
+        gap="10px"
       >
         <Header
           title="VIEW PARTNERS"
           subtitle="List of Partners for Future Reference"
         />
-        <Box>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            width: isNonMobile ? "auto" : "100%",
+          }}
+        >
           <Button
             onClick={handleDownload}
             sx={{
@@ -484,6 +503,8 @@ const ViewPartners = () => {
           gridColumn="span 12"
           height="450px"
           sx={{
+            overflowX: "auto",
+            overflowY: "hidden",
             "& .MuiDataGrid-root": {
               border: "none",
             },

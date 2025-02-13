@@ -228,7 +228,7 @@ const EditPartners = () => {
                     country={"us"}
                     value={`${values.country_code}${values.mobile_number}`} // Combine for correct display
                     onChange={(phone, country) => {
-                      const countryCode = `+${country.dialCode}`;
+                      const countryCode = `${country.dialCode}`;
 
                       // Remove ANY extra country code occurrences at the beginning of the number
                       const mobileNumber = phone
