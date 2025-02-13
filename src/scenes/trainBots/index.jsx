@@ -23,7 +23,10 @@ import axios from "axios";
 const TrainBots = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const isTab = useMediaQuery("(max-width:1234px)");
+  
   const isNonMobile = useMediaQuery("(min-width:768px)");
+
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
@@ -31,12 +34,12 @@ const TrainBots = () => {
     setOpenSnackbar(false);
   };
 
-  const [crawlSettings, setCrawlSettings] = useState({
-    websiteURL: "",
-    depth: "",
-    uploadData: "",
-    includeSitemap: false,
-  });
+  // const [crawlSettings, setCrawlSettings] = useState({
+  //   websiteURL: "",
+  //   depth: "",
+  //   uploadData: "",
+  //   includeSitemap: false,
+  // });
 
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
@@ -254,11 +257,15 @@ const TrainBots = () => {
 
       <Box
         display="grid"
-        gridTemplateColumns="repeat(12, 1fr)"
-        gridAutoRows="140px"
-        gap="20px"
+        gap="30px"
+        gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+        sx={{
+          "& > div": {
+            gridColumn: isNonMobile ? undefined : "span 4",
+          },
+        }}
       >
-        <Box gridColumn={"span 4"}>
+        <Box gridColumn={isTab ? "span 2" : "span 1"} mb={"2em"}>
           <Typography variant="h3" fontWeight="bold" gutterBottom>
             Configure Bots
           </Typography>
@@ -270,6 +277,7 @@ const TrainBots = () => {
                 "&.Mui-focused": {
                   color: colors.grey[100],
                   fontWeight: "bold",
+
                 },
               }}
             >

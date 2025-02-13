@@ -396,15 +396,16 @@ const EditPartners = () => {
                     <MenuItem value="vendors">Vendors</MenuItem>
                     <MenuItem value="clients ">Clients</MenuItem>
                   </Select>
-                  {touched.partner_definition &&
-                    errors.partner_definition && (
-                      <Box color="red" mt="4px" fontSize="11px" ml="1.5em">
-                        {errors.partner_definition}
-                      </Box>
-                    )}
+                  {touched.partner_definition && errors.partner_definition && (
+                    <Box color="red" mt="4px" fontSize="11px" ml="1.5em">
+                      {errors.partner_definition}
+                    </Box>
+                  )}
                 </FormControl>
               </Box>
             </Box>
+
+            
 
             <Box>
               <Typography

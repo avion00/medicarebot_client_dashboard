@@ -48,8 +48,6 @@ const ViewPartners = () => {
   const isMobile = useMediaQuery("(min-width:521px)");
 
   const [viewLeadersData, setViewLeadersData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]); // Filtered data for search
-  const [searchQuery, setSearchQuery] = useState(""); // Search input state
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isDownloading, setIsDownloading] = useState(false);
@@ -87,13 +85,12 @@ const ViewPartners = () => {
 
         if (response.data.status === "success") {
           setViewLeadersData(response.data.leads);
-          setFilteredData(response.data.leads); // Set default filtered data
         } else {
           throw new Error(response.data.message || "Failed to fetch leads");
         }
       } catch (err) {
         if (err.response && err.response.status === 404) {
-          setViewLeadersData([]);
+          setViewLeadersData([]); 
           setNotificationType("warning");
           setNotificationMessage(
             err.response.data.message ||
@@ -160,20 +157,6 @@ const ViewPartners = () => {
     }
   };
 
-  // 🔍 Search Function
-  const handleSearch = (event) => {
-    const query = event.target.value.toLowerCase();
-    setSearchQuery(query);
-
-    const filteredResults = viewLeadersData.filter(
-      (partner) =>
-        partner.fullname.toLowerCase().includes(query) || // Search by name
-        partner.email.toLowerCase().includes(query) // Search by email
-    );
-
-    setFilteredData(filteredResults);
-  };
-
   const columns = [
     { field: "id", headerName: "ID", flex: 0.5 },
     { field: "fullname", headerName: "Full Name", flex: 1 },
@@ -232,7 +215,7 @@ const ViewPartners = () => {
   ];
 
   const handleDownload = async () => {
-    setIsDownloading(true);
+    setIsDownloading(true); 
 
     try {
       const response = await axios.get(
@@ -291,6 +274,10 @@ const ViewPartners = () => {
   const totalClients = viewLeadersData.filter(
     (partner) => partner.partner_definition.trim().toLowerCase() === "clients"
   ).length;
+
+
+  
+
 
   return (
     <Box m="20px">
@@ -442,8 +429,6 @@ const ViewPartners = () => {
               <InputBase
                 sx={{ ml: 2, flex: 1, color: "#000" }}
                 placeholder="Search Partner name or email"
-                value={searchQuery}
-                onChange={handleSearch}
               />
               <IconButton type="button" sx={{ p: 1 }}>
                 <SearchIcon sx={{ color: "#000" }} />
@@ -539,7 +524,10 @@ const ViewPartners = () => {
               <p style={{ color: "red", padding: "1em" }}>Error: {error}</p>
             ) : (
               <DataGrid
-                rows={filteredData} // ✅ Display filtered results
+                rows={viewLeadersData.map((lead) => ({
+                  ...lead,
+                  id: lead.id,
+                }))}
                 columns={columns}
                 getRowId={(row) => row.id}
                 rowHeight={40}

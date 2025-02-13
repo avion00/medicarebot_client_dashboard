@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { ProSidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "react-pro-sidebar/dist/css/styles.css";
 import { tokens } from "../../theme";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
@@ -27,7 +27,6 @@ import ForumIcon from "@mui/icons-material/Forum";
 import PersonIcon from "@mui/icons-material/Person";
 import FaceIcon from "@mui/icons-material/Face";
 import CallIcon from "@mui/icons-material/Call";
-// import EditIcon from "@mui/icons-material/Edit";
 import LayersIcon from "@mui/icons-material/Layers";
 import EmojiPeopleIcon from "@mui/icons-material/EmojiPeople";
 import FlagIcon from "@mui/icons-material/Flag";
@@ -37,7 +36,7 @@ import { useRef } from "react";
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const isNonMobile = useMediaQuery("(min-width:768px)");
+  // const isNonMobile = useMediaQuery("(min-width:768px)");
 
   return (
     <MenuItem
@@ -57,32 +56,34 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
 const Sidebar = ({ isSidebar, setIsSidebar }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const [selected, setSelected] = useState("Dashboard");
   const isNonMobile = useMediaQuery("(min-width:768px)");
-
-  // useEffect(() => {
-  //   setIsCollapsed(!isSidebar); // Sync with state from Topbar
-  // }, [isSidebar]);
+  const location = useLocation(); 
 
   // for dynamic URL images
   const [imageUrl, setImageUrl] = useState("");
 
   useEffect(() => {
-    // Example: Fetching a random profile image from an API
     fetch("https://randomuser.me/api/")
       .then((response) => response.json())
       .then((data) => {
-        const fetchedImageUrl = data.results[0].picture.large; // Get profile image
+        const fetchedImageUrl = data.results[0].picture.large; 
         setImageUrl(fetchedImageUrl);
       })
       .catch((error) => {
         console.error("Error fetching image:", error);
-        setImageUrl("https://via.placeholder.com/100"); // Fallback image
+        setImageUrl("https://via.placeholder.com/100"); 
       });
   }, []);
 
   const sidebarRef = useRef(null);
+
+  useEffect(() => {
+    if (!isNonMobile) {
+      setIsSidebar(false);
+    }
+  }, [isNonMobile, setIsSidebar]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -99,6 +100,52 @@ const Sidebar = ({ isSidebar, setIsSidebar }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isSidebar, isNonMobile, setIsSidebar]);
+
+  // Update the selected state based on the current URL
+  useEffect(() => {
+    const path = location.pathname;
+    if (path === "/dashboard") {
+      setSelected("Dashboard");
+    } else if (path === "/allBots") {
+      setSelected("All Bots");
+    } else if (path === "/addbot") {
+      setSelected("Add Bots");
+    } else if (path === "/trainBots") {
+      setSelected("Train Bots");
+    } else if (path === "/testBots") {
+      setSelected("Test Bots");
+    } else if (path === "/deactivateBots") {
+      setSelected("Deactivate Bots");
+    } else if (path === "/addPartners") {
+      setSelected("addPartners");
+    } else if (path === "/viewPartners") {
+      setSelected("viewPartners");
+    } else if (path === "/chatHistory") {
+      setSelected("chatHistory");
+    } else if (path === "/gmailChatHistory") {
+      setSelected("gmailChatHistory");
+    } else if (path === "/humanHandoffs") {
+      setSelected("humanHandoffs");
+    } else if (path === "/reports") {
+      setSelected("reports");
+    } else if (path === "/interactionStats") {
+      setSelected("interactionStats");
+    } else if (path === "/billing") {
+      setSelected("Billing");
+    } else if (path === "/viewProfile") {
+      setSelected("viewProfile");
+    } else if (path === "/editProfile") {
+      setSelected("editProfile");
+    } else if (path === "/changePassword") {
+      setSelected("changePassword");
+    } else if (path === "/customerSupport") {
+      setSelected("customerSupport");
+    } else if (path === "/contactUs") {
+      setSelected("contactUs");
+    } else if (path === "/faq") {
+      setSelected("faq");
+    }
+  }, [location]);
 
   return (
     <>
@@ -130,7 +177,6 @@ const Sidebar = ({ isSidebar, setIsSidebar }) => {
           overflowY: "auto",
           overflowX: "hidden",
           transition: "width 0.3s ease-in-out",
-          // border: "1px solid red",
           "& .pro-sidebar-inner": {
             backgroundColor: colors.primary[400],
           },
@@ -200,7 +246,7 @@ const Sidebar = ({ isSidebar, setIsSidebar }) => {
                     alt="profile-user"
                     width="100px"
                     height="100px"
-                    src={imageUrl || "https://via.placeholder.com/100"} // Fallback for empty state
+                    src={imageUrl || "https://via.placeholder.com/100"}
                     style={{
                       cursor: "pointer",
                       borderRadius: "50%",
@@ -230,22 +276,13 @@ const Sidebar = ({ isSidebar, setIsSidebar }) => {
             <Box
               paddingLeft={!isSidebar ? undefined : "10%"}
               sx={{
-                height: isSidebar ? "calc(100dvh - 350px)" : "calc(100dvh - 110px)",
+                height: isSidebar
+                  ? "calc(100dvh - 350px)"
+                  : "calc(100dvh - 110px)",
                 overflowY: "auto",
                 overflowX: "hidden",
               }}
             >
-              {/* <Typography
-              variant="h6"
-              color={colors.grey[300]}
-              sx={{
-                margin: isSidebar ? 0 : "12px 0 5px 20px",
-                textAlign: isSidebar ? "center" : "left",
-              }}
-            >
-              Client Dashboard
-            </Typography> */}
-
               <Item
                 title="Dashboard"
                 to="/dashboard"
@@ -265,10 +302,6 @@ const Sidebar = ({ isSidebar, setIsSidebar }) => {
                   "& .pro-sub-menu-item.active": {
                     color: "#6870fa !important",
                   },
-                  "& .pro-inner-item:focus": {
-                    // color: 'red',
-                  },
-                  // .pro-sidebar .pro-menu .pro-menu-item > .pro-inner-item:focus
                 }}
               >
                 <MenuItem
@@ -311,49 +344,6 @@ const Sidebar = ({ isSidebar, setIsSidebar }) => {
                     Add Bots
                   </Link>
                 </MenuItem>
-                {/* <MenuItem
-                icon={<SmartToyIcon />}
-                onClick={() => setSelected("Client Profile")}
-                style={{
-                  marginBottom: ".5em",
-                  color:
-                    selected === "Client Profile"
-                      ? "#6870fa"
-                      : colors.grey[100],
-                }}
-              >
-                <Link
-                  to="/activeBots"
-                  style={{
-                    textDecoration: "none",
-                    color: "inherit",
-                    fontSize: "13px",
-                  }}
-                >
-                  Active Bots
-                </Link>
-              </MenuItem> */}
-
-                {/* <MenuItem
-                icon={<PrecisionManufacturingIcon />}
-                onClick={() => setSelected("Assign Bot")}
-                style={{
-                  marginBottom: ".5em",
-                  color:
-                    selected === "Assign Bot" ? "#6870fa" : colors.grey[100],
-                }}
-              >
-                <Link
-                  to="/configureSettings"
-                  style={{
-                    textDecoration: "none",
-                    color: "inherit",
-                    fontSize: "13px",
-                  }}
-                >
-                  Train Bots
-                </Link>
-              </MenuItem> */}
                 <MenuItem
                   icon={<SettingsIcon />}
                   onClick={() => setSelected("Train Bots")}
@@ -374,7 +364,6 @@ const Sidebar = ({ isSidebar, setIsSidebar }) => {
                     Train Bots
                   </Link>
                 </MenuItem>
-
                 <MenuItem
                   icon={<SpeedIcon />}
                   onClick={() => setSelected("Test Bots")}
@@ -395,27 +384,6 @@ const Sidebar = ({ isSidebar, setIsSidebar }) => {
                     Test Bots
                   </Link>
                 </MenuItem>
-
-                {/* <MenuItem
-                icon={<UpdateIcon />}
-                onClick={() => setSelected("Train Bots")}
-                style={{
-                  marginBottom: "1em",
-                  color: selected === "TrainBots" ? "#6870fa" : colors.grey[100],
-                }}
-              >
-                <Link
-                  to="/updateTraining"
-                  style={{
-                    textDecoration: "none",
-                    color: "inherit",
-                    fontSize: "13px",
-                  }}
-                >
-                  Train Bots
-                </Link>
-              </MenuItem> */}
-
                 <MenuItem
                   icon={<BlurOffIcon />}
                   onClick={() => setSelected("Deactivate Bots")}
@@ -439,17 +407,6 @@ const Sidebar = ({ isSidebar, setIsSidebar }) => {
                   </Link>
                 </MenuItem>
               </SubMenu>
-
-              {/* <Typography
-              variant="h6"
-              color={colors.grey[300]}
-              sx={{
-                margin: isCollapsed ? 0 : "12px 0 5px 20px",
-                textAlign: isCollapsed ? "center" : "left",
-              }}
-            >
-              Chat Logs
-            </Typography> */}
 
               <SubMenu
                 title="Partners Hub"
@@ -485,26 +442,6 @@ const Sidebar = ({ isSidebar, setIsSidebar }) => {
                     Add Partners
                   </Link>
                 </MenuItem>
-                {/* <MenuItem
-                icon={<EditIcon />}
-                onClick={() => setSelected("editPartners")}
-                style={{
-                  marginBottom: ".5em",
-                  color:
-                    selected === "editPartners" ? "#6870fa" : colors.grey[100],
-                }}
-              >
-                <Link
-                  to="/editPartners/:id"
-                  style={{
-                    textDecoration: "none",
-                    color: "inherit",
-                    fontSize: "13px",
-                  }}
-                >
-                  Edit Partners
-                </Link>
-              </MenuItem> */}
                 <MenuItem
                   icon={<PaddingIcon />}
                   onClick={() => setSelected("viewPartners")}

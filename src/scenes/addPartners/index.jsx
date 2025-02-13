@@ -8,6 +8,7 @@ import {
   Alert,
   Typography,
   CircularProgress,
+  InputAdornment,
 } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -19,6 +20,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import UploadFileIcon from "@mui/icons-material/UploadFile"; // ✅ Import the missing icon
 import AddIcon from "@mui/icons-material/Add";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
@@ -304,6 +306,10 @@ const AddPartners = () => {
         setShowNotification(true);
         resetForm();
         setUploadLeadsviaFile(null);
+        // ✅ Redirect to viewPartners after 2 seconds
+        setTimeout(() => {
+          navigate("/viewPartners");
+        }, 2000);
       } else {
         throw new Error(response.data?.message || "Request failed.");
       }
@@ -353,7 +359,7 @@ const AddPartners = () => {
                 alignItems="center"
               >
                 <Box>
-                  <TextField
+                  {/* <TextField
                     label="Upload Partners via File"
                     variant="filled"
                     type="text"
@@ -402,6 +408,74 @@ const AddPartners = () => {
                         backgroundColor: colors.primary[400],
                         color: colors.grey[100],
                       },
+                    }}
+                  /> */}
+
+                  <TextField
+                    fullWidth
+                    label="Upload Partners via File"
+                    variant="outlined"
+                    type="text"
+                    name="UploadLeadsviaFile"
+                    value={UploadLeadsviaFile ? UploadLeadsviaFile.name : ""}
+                    placeholder="No file selected" // ✅ Adds a visible placeholder
+                    InputProps={{
+                      readOnly: true,
+                      sx: {
+                        backgroundColor: "#1E1E2D",
+                        color: "#FFFFFF",
+                        borderRadius: "8px",
+                        textAlign: "center", // ✅ Centers text
+                        "& .MuiOutlinedInput-root": {
+                          "& input": {
+                            textAlign: "center", // ✅ Centers text inside input
+                            fontWeight: "bold",
+                            color: UploadLeadsviaFile ? "#FFFFFF" : "#999999", // ✅ Dimmed text if empty
+                          },
+                          "& fieldset": {
+                            borderColor: "#4F4F5A",
+                          },
+                          "&:hover fieldset": {
+                            borderColor: "#0A74DA",
+                          },
+                          "&.Mui-focused fieldset": {
+                            borderColor: "#0A74DA",
+                            borderWidth: "2px",
+                          },
+                        },
+                      },
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <UploadFileIcon sx={{ color: "#0A74DA" }} />
+                        </InputAdornment>
+                      ),
+                      endAdornment: (
+                        <Button
+                          variant="contained"
+                          component="label"
+                          sx={{
+                            backgroundColor: "transparent",
+                            color: "white",
+                            textTransform: "none",
+                            boxShadow: "none",
+                            width: "100%",
+                            height: "100%",
+                            position: "absolute",
+                            top: "0",
+                            left: "0",
+                            "&:hover": {
+                              backgroundColor: "transparent",
+                            },
+                          }}
+                        >
+                          <input
+                            type="file"
+                            hidden
+                            name="UploadLeadsviaFile"
+                            onChange={(e) => handleUploadLeadsviaFileChange(e)}
+                          />
+                        </Button>
+                      ),
                     }}
                   />
                 </Box>
@@ -708,14 +782,13 @@ const AddPartners = () => {
                       }
                     >
                       <MenuItem value="vendors">Vendors</MenuItem>
-                      <MenuItem value="clients ">Clients</MenuItem>
+                      <MenuItem value="clients">Clients</MenuItem>
                     </Select>
-                    {touched.partnerDefinition &&
-                      errors.partnerDefinition && (
-                        <Box color="red" mt="4px" fontSize="11px" ml="1.5em">
-                          {errors.partnerDefinition}
-                        </Box>
-                      )}
+                    {touched.partnerDefinition && errors.partnerDefinition && (
+                      <Box color="red" mt="4px" fontSize="11px" ml="1.5em">
+                        {errors.partnerDefinition}
+                      </Box>
+                    )}
                   </FormControl>
                 </Box>
               </Box>
