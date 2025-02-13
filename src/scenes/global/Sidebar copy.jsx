@@ -118,7 +118,7 @@ const Sidebar = ({ isSidebar, setIsSidebar }) => {
         />
       )}
       <Box
-        ref={sidebarRef}
+        ref={sidebarRef} 
         className="sidebar_for_scroll"
         sx={{
           position: isNonMobile ? "sticky" : "fixed",
@@ -227,14 +227,7 @@ const Sidebar = ({ isSidebar, setIsSidebar }) => {
               </Box>
             )}
 
-            <Box
-              paddingLeft={!isSidebar ? undefined : "10%"}
-              sx={{
-                height: isSidebar ? "calc(100dvh - 350px)" : "calc(100dvh - 110px)",
-                overflowY: "auto",
-                overflowX: "hidden",
-              }}
-            >
+            <Box paddingLeft={!isSidebar ? undefined : "10%"}>
               {/* <Typography
               variant="h6"
               color={colors.grey[300]}

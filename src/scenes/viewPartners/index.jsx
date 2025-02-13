@@ -29,8 +29,15 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DetailCard from "../../components/DetailCard";
 import DetailItem from "../../components/DetailItem";
+import StatBox from "../../components/StatBox";
 import DescriptionIcon from "@mui/icons-material/Description";
 import InfoIcon from "@mui/icons-material/Info";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import Inventory2Icon from "@mui/icons-material/Inventory2";
+
 import axios from "axios";
 
 const ViewPartners = () => {
@@ -38,6 +45,7 @@ const ViewPartners = () => {
   const colors = tokens(theme.palette.mode);
   const navigate = useNavigate();
   const isNonMobile = useMediaQuery("(min-width:768px)");
+  const isMobile = useMediaQuery("(min-width:521px)");
 
   const [viewLeadersData, setViewLeadersData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -62,43 +70,43 @@ const ViewPartners = () => {
       });
   }, []);
 
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get(
-        "https://app.medicarebot.live/list-leads",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.data.status === "success") {
-        setViewLeadersData(response.data.leads);
-      } else {
-        throw new Error(response.data.message || "Failed to fetch leads");
-      }
-    } catch (err) {
-      if (err.response && err.response.status === 404) {
-        setViewLeadersData([]); // Ensure the data is empty
-        setNotificationType("warning");
-        setNotificationMessage(
-          err.response.data.message || "No Partner found for this user. Please Create or Upload your Partners"
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(
+          "https://app.medicarebot.live/list-leads",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
-        setShowNotification(true);
-      } else {
-        setError(err.message);
+
+        if (response.data.status === "success") {
+          setViewLeadersData(response.data.leads);
+        } else {
+          throw new Error(response.data.message || "Failed to fetch leads");
+        }
+      } catch (err) {
+        if (err.response && err.response.status === 404) {
+          setViewLeadersData([]); // Ensure the data is empty
+          setNotificationType("warning");
+          setNotificationMessage(
+            err.response.data.message ||
+              "No Partner found for this user. Please Create or Upload your Partners"
+          );
+          setShowNotification(true);
+        } else {
+          setError(err.message);
+        }
+      } finally {
+        setLoading(false);
       }
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
-  fetchData();
-}, [token]);
-
+    fetchData();
+  }, [token]);
 
   const handleEdit = (id) => {
     console.log("Edit clicked for ID:", id);
@@ -166,7 +174,11 @@ useEffect(() => {
     { field: "company_name", headerName: "Company Name", flex: 1 },
     { field: "job_title", headerName: "Job Title", flex: 0.75 },
     { field: "company_size", headerName: "Company Size", flex: 0.75 },
-    { field: "partner_definition", headerName: "Parner defination", flex: 0.75 },
+    {
+      field: "partner_definition",
+      headerName: "Parner defination",
+      flex: 0.75,
+    },
 
     {
       field: "action",
@@ -203,7 +215,7 @@ useEffect(() => {
   ];
 
   const handleDownload = async () => {
-    setIsDownloading(true); // Start loading
+    setIsDownloading(true); 
 
     try {
       const response = await axios.get(
@@ -263,8 +275,8 @@ useEffect(() => {
         alignItems="center"
       >
         <Header
-          title="VIEW LEADS"
-          subtitle="List of Leads for Future Reference"
+          title="VIEW PARTNERS"
+          subtitle="List of Partners for Future Reference"
         />
         <Box>
           <Button
@@ -292,28 +304,151 @@ useEffect(() => {
           </Button>
         </Box>
       </Box>
-      <Box gridColumn="span 12" backgroundColor={colors.primary[400]} pt=".5em">
+      <Box
+        display="grid"
+        gridTemplateColumns="repeat(12, 1fr)"
+        gridAutoRows="140px"
+        gap="20px"
+      >
+        {/* ROW 1 */}
+
+        <Box
+          gridColumn={isNonMobile ? "span 4" : isMobile ? "span 8" : "span 12"}
+          backgroundColor={colors.primary[400]}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          borderRadius="8px"
+        >
+          <StatBox
+            title="50"
+            subtitle="Total Patners"
+            progress="0.3"
+            increase="+30%"
+            icon={
+              <PersonOutlineIcon
+                sx={{ color: colors.grey[200], fontSize: "26px" }}
+              />
+            }
+          />
+        </Box>
+        <Box
+          gridColumn={isNonMobile ? "span 4" : isMobile ? "span 6" : "span 12"}
+          backgroundColor={colors.primary[400]}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          borderRadius="8px"
+        >
+          <StatBox
+            title="30"
+            subtitle="Total Vendors"
+            progress="0.25"
+            increase="+25%"
+            icon={
+              <Inventory2Icon
+                sx={{ color: colors.grey[200], fontSize: "26px" }}
+              />
+            }
+          />
+        </Box>
+        <Box
+          gridColumn={isNonMobile ? "span 4" : isMobile ? "span 6" : "span 12"}
+          backgroundColor={colors.primary[400]}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          borderRadius="8px"
+        >
+          <StatBox
+            title="11"
+            subtitle="Total Clients"
+            progress="0.11"
+            increase="+11%"
+            icon={
+              <SupervisorAccountIcon
+                sx={{ color: colors.grey[200], fontSize: "26px" }}
+              />
+            }
+          />
+        </Box>
+      </Box>
+      <Box
+        gridColumn="span 12"
+        backgroundColor={colors.primary[400]}
+        pt=".5em"
+        mt={"20px"}
+        borderRadius={"4px"}
+      >
         <Box
           display="flex"
-          backgroundColor={colors.grey[500]}
-          borderRadius="0px"
-          width="250px"
-          sx={{
-            width: "220px",
-            borderRadius: "25px",
-            margin: ".5em .5em .5em 3em",
-            backgroundColor: "#ccc",
-            border: `1px solid white`,
-            color: "#000",
-          }}
+          justifyContent="end"
+          alignItems="center"
+          flexWrap="wrap"
+          p="0 2em"
         >
-          <InputBase
-            sx={{ ml: 2, flex: 1, color: "#000" }}
-            placeholder="Search"
-          />
-          <IconButton type="button" sx={{ p: 1 }}>
-            <SearchIcon sx={{ color: "#000" }} />
-          </IconButton>
+          {/* <Typography variant="h3" fontWeight="bold">
+            Patner List
+          </Typography> */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "end",
+              gap: "1em",
+            }}
+          >
+            <Box
+              display="flex"
+              backgroundColor={colors.grey[500]}
+              borderRadius="0px"
+              width="250px"
+              sx={{
+                width: "220px",
+                borderRadius: "25px",
+                margin: ".5em .5em .5em 3em",
+                backgroundColor: "#ccc",
+                border: `1px solid white`,
+                color: "#000",
+              }}
+            >
+              <InputBase
+                sx={{ ml: 2, flex: 1, color: "#000" }}
+                placeholder="Search Partner name or email"
+              />
+              <IconButton type="button" sx={{ p: 1 }}>
+                <SearchIcon sx={{ color: "#000" }} />
+              </IconButton>
+            </Box>
+            <Box
+              onClick={() => console.log("Filter By Clicked")}
+              sx={{
+                flex: 0.25,
+                padding: "0.6em 1em ",
+                width: "fit-content",
+                position: "relative",
+                background: "linear-gradient(45deg, #062994, #0E72E1)",
+                color: "#fff",
+                borderRadius: "20px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: ".5em",
+                cursor: "pointer",
+              }}
+            >
+              <FilterAltIcon />
+              <Typography
+                variant="h6"
+                fontWeight="bold"
+                textAlign="center"
+                width="60px"
+              >
+                Filter By
+              </Typography>
+              <ArrowDropDownIcon />
+            </Box>
+          </Box>
         </Box>
 
         <Box

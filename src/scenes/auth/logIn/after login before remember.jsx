@@ -1,5 +1,4 @@
-import { useContext, useState, useEffect } from "react";
-
+import { useContext, useState } from "react";
 import {
   Box,
   Button,
@@ -49,31 +48,12 @@ const LogIn = () => {
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const isNonMobile = useMediaQuery("(min-width:768px)");
-  const navigate = useNavigate(); // Initialize navigate hook
 
   const [showPassword, setShowPassword] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [notificationType, setNotificationType] = useState("success");
   const [notificationMessage, setNotificationMessage] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
-  const [savedUsername, setSavedUsername] = useState("");
-
-  // ✅ Load saved credentials from localStorage on component mount
-  useEffect(() => {
-    const storedUsername = localStorage.getItem("username");
-    if (storedUsername) {
-      setSavedUsername(storedUsername);
-      setRememberMe(true);
-    }
-  }, []);
-
-  // ✅ When "Remember Me" is unchecked, clear stored username
-  useEffect(() => {
-    if (!rememberMe) {
-      localStorage.removeItem("username");
-      setSavedUsername("");
-    }
-  }, [rememberMe]);
+  const navigate = useNavigate(); // Initialize navigate hook
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = (event) => {
@@ -85,55 +65,51 @@ const LogIn = () => {
     setShowNotification(false);
   };
 
-  const handleFormSubmit = async (values, { setSubmitting }) => {
-    try {
-      const response = await fetch("https://app.medicarebot.live/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          username: values.username,
-          password: values.password,
-        }),
-      });
+ const handleFormSubmit = async (values, { setSubmitting }) => {
+   try {
+     const response = await fetch("https://app.medicarebot.live/login", {
+       method: "POST",
+       headers: {
+         "Content-Type": "application/json",
+         Accept: "application/json",
+       },
+       body: JSON.stringify({
+         username: values.username,
+         password: values.password,
+       }),
+     });
 
-      const data = await response.json();
+     const data = await response.json(); 
 
-      if (!response.ok) {
-        throw new Error(data.error || "Login failed. Please try again.");
-      }
+     if (!response.ok) {
+       throw new Error(data.error || "Login failed. Please try again.");
+     }
+     
+     setNotificationType("success");
+     setNotificationMessage(` ${data.message} ~ ${values.username}`);
+     setShowNotification(true);
 
-      setNotificationType("success");
-      setNotificationMessage(` ${data.message} ~ ${values.username}`);
-      setShowNotification(true);
+     // Store token in cookies and local storage
+     document.cookie = `authToken=${data.token};path=/;secure`;
+     sessionStorage.setItem("authToken", data.token);
 
-      // Store token in cookies and local storage
-      document.cookie = `authToken=${data.token};path=/;secure`;
-      sessionStorage.setItem("authToken", data.token);
+     // Wait for 3 seconds before navigating
+     setTimeout(() => {
+       navigate("/dashboard");
+     }, 2000);
+   } catch (error) {
+     console.error("Error during login:", error.message);
 
-      // ✅ Save only username in localStorage if "Remember Me" is checked
-      if (rememberMe) {
-        localStorage.setItem("username", values.username);
-      }
+     setNotificationType("error");
+     setNotificationMessage(
+       error.message || "An error occurred. Please try again."
+     );
+     setShowNotification(true);
+   } finally {
+     setSubmitting(false);
+   }
+ };
 
-      // Wait for 3 seconds before navigating
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 2000);
-    } catch (error) {
-      console.error("Error during login:", error.message);
-
-      setNotificationType("error");
-      setNotificationMessage(
-        error.message || "An error occurred. Please try again."
-      );
-      setShowNotification(true);
-    } finally {
-      setSubmitting(false);
-    }
-  };
 
   // const buttonStyles = {
   //   flexGrow: 1,
@@ -268,7 +244,7 @@ const LogIn = () => {
 
           <Formik
             onSubmit={handleFormSubmit}
-            initialValues={{ username: savedUsername, password: "" }}
+            initialValues={initialValues}
             validationSchema={checkoutSchema}
           >
             {({
@@ -280,7 +256,7 @@ const LogIn = () => {
               handleSubmit,
               isSubmitting,
             }) => (
-              <form onSubmit={handleSubmit} action="">
+              <form onSubmit={handleSubmit}>
                 <Box
                   display="grid"
                   gap="30px"
@@ -299,8 +275,7 @@ const LogIn = () => {
                     onBlur={handleBlur}
                     onChange={handleChange}
                     value={values.username}
-                    name="username" 
-                    autoComplete="username" 
+                    name="username"
                     error={!!touched.username && !!errors.username}
                     helperText={touched.username && errors.username}
                     sx={{
@@ -319,8 +294,7 @@ const LogIn = () => {
                     onBlur={handleBlur}
                     onChange={handleChange}
                     value={values.password}
-                    name="password" 
-                    autoComplete="current-password" 
+                    name="password"
                     error={!!touched.password && !!errors.password}
                     helperText={touched.password && errors.password}
                     sx={{
@@ -365,8 +339,6 @@ const LogIn = () => {
                           required
                           control={
                             <Checkbox
-                              checked={rememberMe}
-                              onChange={(e) => setRememberMe(e.target.checked)}
                               sx={{
                                 color: colors.blueAccent[100],
                                 "&.Mui-checked": {
