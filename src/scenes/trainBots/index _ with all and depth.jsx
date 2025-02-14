@@ -34,7 +34,12 @@ const TrainBots = () => {
     setOpenSnackbar(false);
   };
 
- 
+  // const [crawlSettings, setCrawlSettings] = useState({
+  //   websiteURL: "",
+  //   depth: "",
+  //   uploadData: "",
+  //   includeSitemap: false,
+  // });
 
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
@@ -44,6 +49,7 @@ const TrainBots = () => {
   const [botsList, setBotsList] = useState([]);
   const [feedback, setFeedback] = useState("");
   const [loading, setLoading] = useState(false);
+  const [depth, setDepth] = useState("");
   const [websiteURL, setWebsiteURL] = useState("");
 
   const token = sessionStorage.getItem("authToken");
@@ -85,7 +91,7 @@ const TrainBots = () => {
         "https://app.medicarebot.live/feedback",
         {
           content: feedback,
-          bot_id: selectedBots[0],
+          bot_id: selectedBots[0], // Assuming only one bot is selected
         },
         {
           headers: {
@@ -106,11 +112,11 @@ const TrainBots = () => {
     }
   };
 
-
+  // 🟢 Start Website Crawling API Call
   const startCrawling = async () => {
-    if (!selectedBots.length || !websiteURL ) {
+    if (!selectedBots.length || !websiteURL || !depth) {
       setSnackbarMessage(
-        "Please select a bot, enter a website URL."
+        "Please select a bot, enter a website URL, and choose a depth."
       );
       setSnackbarSeverity("error");
       setOpenSnackbar(true);
@@ -127,6 +133,7 @@ const TrainBots = () => {
         {
           bot_id: botId,
           base_url: websiteURL,
+          max_pages: parseInt(depth, 10),
         },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -449,6 +456,37 @@ const TrainBots = () => {
             }}
           />
 
+          <FormControl
+            fullWidth
+            variant="filled"
+            sx={{
+              gridColumn: "span 2",
+              "& .MuiFormLabel-root.Mui-focused": {
+                color: colors.blueAccent[500],
+                fontWeight: "bold",
+              },
+            }}
+          >
+            <InputLabel id="depth-label" sx={{ color: colors.primary[100] }}>
+              Depth
+            </InputLabel>
+            <Select
+              labelId="depth-label"
+              id="depth"
+              value={depth}
+              name="depth"
+              onChange={(e) => setDepth(e.target.value)}
+              sx={{
+                backgroundColor: colors.primary[400],
+                color: colors.grey[100],
+                "& .MuiSelect-icon": { color: colors.grey[100] },
+              }}
+            >
+              <MenuItem value="20">20</MenuItem>
+              <MenuItem value="30">30</MenuItem>
+              <MenuItem value="50">50</MenuItem>
+            </Select>
+          </FormControl>
         </Box>
         <Box mt="1.5em">
           <Button
