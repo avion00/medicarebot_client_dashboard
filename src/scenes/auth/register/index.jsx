@@ -246,11 +246,11 @@ const Register = () => {
               flexWrap: "wrap",
             }}
           >
-            <Header title="REGISTER PAGE" />
+            <Header title="REGISTER" />
             <Box
               sx={{
                 color: colors.blueAccent[200],
-                marginBottom: isNonMobile ? "2.5em" : " 0.5em",
+                marginBottom: isNonMobile ? "2.5em" : " 1.25em",
                 padding: ".5em",
                 cursor: "pointer",
               }}

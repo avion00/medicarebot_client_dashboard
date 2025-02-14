@@ -33,10 +33,10 @@ import { Link } from "react-router-dom";
 // import GitHubIcon from "@mui/icons-material/GitHub";
 
 // Initial values for Formik
-const initialValues = {
-  username: "",
-  password: "",
-};
+// const initialValues = {
+//   username: "",
+//   password: "",
+// };
 
 // Validation schema using Yup
 const checkoutSchema = yup.object().shape({
@@ -232,23 +232,28 @@ const LogIn = () => {
             sx={{
               display: "flex",
               justifyContent: "space-between",
-              alignItems: "center",
+              // alignItems: "center",
               flexWrap: "wrap",
             }}
           >
             <Header
               style={{
-                fontSize: isNonMobile ? "1em" : "0.5em", // Changed "auto" to valid value
+                fontSize: isNonMobile ? "1em" : "0.5em",
               }}
-              title="LOGIN PAGE"
+              title="LOGIN"
             />
 
             <Box
               sx={{
                 color: colors.blueAccent[200],
-                marginBottom: isNonMobile ? "2.5em" : " 0.5em",
-                padding: ".5em",
+                marginTop: isNonMobile ? "1.5em" : " 0.5em",
+                // padding: ".5em",
                 cursor: "pointer",
+                // display: "flex",
+                // justifyContent: "start",
+                // alignContent: "start",
+                // justifyItems: "start",
+                // alignItems: "start",
               }}
             >
               <Link
@@ -299,8 +304,8 @@ const LogIn = () => {
                     onBlur={handleBlur}
                     onChange={handleChange}
                     value={values.username}
-                    name="username" 
-                    autoComplete="username" 
+                    name="username"
+                    autoComplete="username"
                     error={!!touched.username && !!errors.username}
                     helperText={touched.username && errors.username}
                     sx={{
@@ -319,8 +324,8 @@ const LogIn = () => {
                     onBlur={handleBlur}
                     onChange={handleChange}
                     value={values.password}
-                    name="password" 
-                    autoComplete="current-password" 
+                    name="password"
+                    autoComplete="current-password"
                     error={!!touched.password && !!errors.password}
                     helperText={touched.password && errors.password}
                     sx={{
