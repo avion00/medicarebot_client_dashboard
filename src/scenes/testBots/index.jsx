@@ -97,12 +97,14 @@ const TestBots = () => {
           display: "flex",
           justifyContent: "space-between",
           gap: "20px",
+          flexWrap: "wrap",
         }}
       >
         {/* First Box */}
         <Box
           sx={{
             flex: 1,
+            minWidth: "420px",
           }}
         >
           <Box
@@ -1247,6 +1249,7 @@ const TestBots = () => {
         <Box
           sx={{
             flex: 1,
+            minWidth: "420px",
             border: `1px solid ${colors.grey[700]}`,
           }}
         >

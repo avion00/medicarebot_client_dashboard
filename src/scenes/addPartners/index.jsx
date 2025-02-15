@@ -236,9 +236,7 @@ const AddPartners = () => {
     companyName: yup.string().required("Company Name is required"),
     jobTitle: yup.string().required("Job Title is required"),
     companySize: yup.string().required("Company size is required"),
-    partnerDefinition: yup
-      .string()
-      .required("Partners Definition is required"),
+    partnerDefinition: yup.string().required("Partners Definition is required"),
 
     // these are optional in backend
     industry: yup.string().nullable(),
@@ -352,11 +350,13 @@ const AddPartners = () => {
             <form onSubmit={handleSubmit}>
               <Box
                 display="flex"
-                justifyContent="center"
+                flexWrap="wrap"
+                justifyContent="flex-end"
                 gap="20px"
                 alignItems="center"
+                m={"1.5em 0"}
               >
-                <Box>
+                <Box flex={"1"} minWidth={"180px"}>
                   <TextField
                     fullWidth
                     label="Upload Partners via File"
@@ -555,8 +555,6 @@ const AddPartners = () => {
                       width: "100%",
                     }}
                   >
-                   
-
                     <PhoneInput
                       country={"us"}
                       value={`${values.countryCode}${values.phoneNumber}`} // Combine for display

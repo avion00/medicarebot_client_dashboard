@@ -230,7 +230,7 @@ const TrainBots = () => {
           subtitle=" Train Your bots to perform your task"
         />
 
-        <Button
+        {/* <Button
           sx={{
             background: "linear-gradient(45deg, #062994, #0E72E1)",
             color: "#fff",
@@ -245,7 +245,7 @@ const TrainBots = () => {
         >
           <SettingsIcon sx={{ mr: "10px" }} />
           Configure
-        </Button>
+        </Button> */}
       </Box>
 
       <Box

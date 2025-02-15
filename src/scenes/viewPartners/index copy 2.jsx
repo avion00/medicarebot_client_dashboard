@@ -54,12 +54,23 @@ const ViewPartners = () => {
   const [error, setError] = useState(null);
   const [isDownloading, setIsDownloading] = useState(false);
 
+  // const [leads, setLeads] = useState([]);
   const [showNotification, setShowNotification] = useState(false);
   const [notificationType, setNotificationType] = useState("success");
   const [notificationMessage, setNotificationMessage] = useState("");
   const token = sessionStorage.getItem("authToken");
 
- 
+  // Fetch leads (you can add your API call logic here)
+  // useEffect(() => {
+  //   axios
+  //     .get("https://app.medicarebot.live/get-leads")
+  //     .then((response) => {
+  //       setLeads(response.data); // Set the leads data from API
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching leads:", error);
+  //     });
+  // }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -105,49 +116,46 @@ const ViewPartners = () => {
     navigate(`/editPartners/${id}`);
   };
 
-  const handleDelete = async (id) => {
-    setLoading(true);
-    try {
-      const token = sessionStorage.getItem("authToken");
+ const handleDelete = async (id) => {
+   setLoading(true); 
+   try {
+     const token = sessionStorage.getItem("authToken");
 
-      const response = await axios.delete(
-        `https://app.medicarebot.live/delete-lead/${id}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+     const response = await axios.delete(
+       `https://app.medicarebot.live/delete-lead/${id}`,
+       {
+         headers: { Authorization: `Bearer ${token}` },
+       }
+     );
 
-      // Show success message from the server
-      setNotificationType("success");
-      setNotificationMessage(
-        response.data.message || "Lead deleted successfully!"
-      );
+     // Show success message from the server
+     setNotificationType("success");
+     setNotificationMessage(
+       response.data.message || "Lead deleted successfully!"
+     );
 
-      // Remove the deleted lead from the UI immediately
-      setViewLeadersData((prevData) =>
-        prevData.filter((lead) => lead.id !== id)
-      );
-      setFilteredData((prevData) => prevData.filter((lead) => lead.id !== id));
-    } catch (error) {
-      let errorMessage = "Error deleting lead. Please try again.";
+     // Remove the deleted lead from the UI immediately
+     setViewLeadersData((prevData) =>
+       prevData.filter((lead) => lead.id !== id)
+     );
+     setFilteredData((prevData) => prevData.filter((lead) => lead.id !== id));
+   } catch (error) {
+     let errorMessage = "Error deleting lead. Please try again.";
 
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        errorMessage = error.response.data.message;
-      }
+     if (error.response && error.response.data && error.response.data.message) {
+       errorMessage = error.response.data.message; 
+     }
 
-      // Show error message
-      setNotificationType("error");
-      setNotificationMessage(errorMessage);
-      console.error("Error deleting lead:", error);
-    } finally {
-      setLoading(false);
-      setShowNotification(true); // Show the snackbar with message
-    }
-  };
+     // Show error message
+     setNotificationType("error");
+     setNotificationMessage(errorMessage);
+     console.error("Error deleting lead:", error);
+   } finally {
+     setLoading(false);
+     setShowNotification(true); // Show the snackbar with message
+   }
+ };
+
 
   // 🔍 Search Function
   const handleSearch = (event) => {
@@ -264,7 +272,7 @@ const ViewPartners = () => {
     } catch (error) {
       console.error("Download error:", error);
     } finally {
-      setIsDownloading(false);
+      setIsDownloading(false); // Stop loading
     }
   };
 
@@ -289,13 +297,11 @@ const ViewPartners = () => {
   const totalPartners = viewLeadersData.length;
 
   const totalVendors = viewLeadersData.filter(
-    (partner) =>
-      (partner.partner_definition?.trim().toLowerCase() || "") === "vendors"
+    (partner) => partner.partner_definition.trim().toLowerCase() === "vendors"
   ).length;
 
   const totalClients = viewLeadersData.filter(
-    (partner) =>
-      (partner.partner_definition?.trim().toLowerCase() || "") === "clients"
+    (partner) => partner.partner_definition.trim().toLowerCase() === "clients"
   ).length;
 
   return (
@@ -425,7 +431,7 @@ const ViewPartners = () => {
           justifyContent="end"
           alignItems="center"
           flexWrap="wrap"
-          p={isNonMobile ? "0 2em" : "0 1em"}
+          p="0 2em"
         >
           {/* <Typography variant="h3" fontWeight="bold">
             Patner List
@@ -435,17 +441,18 @@ const ViewPartners = () => {
               display: "flex",
               alignItems: "center",
               justifyContent: "end",
-              gap: isNonMobile ? "1em" : ".5em",
+              gap: "1em",
             }}
           >
             <Box
               display="flex"
               backgroundColor={colors.grey[500]}
               borderRadius="0px"
+              width="250px"
               sx={{
-                width: isNonMobile ? "250px" : undefined,
+                width: "220px",
                 borderRadius: "25px",
-                margin: isNonMobile ? "1em" : ".5em 0",
+                margin: ".5em .5em .5em 3em",
                 backgroundColor: "#ccc",
                 border: `1px solid white`,
                 color: "#000",
@@ -453,7 +460,7 @@ const ViewPartners = () => {
             >
               <InputBase
                 sx={{ ml: 2, flex: 1, color: "#000" }}
-                placeholder="Searchy Partners Name"
+                placeholder="Search Partner name or email"
                 value={searchQuery}
                 onChange={handleSearch}
               />
@@ -474,7 +481,7 @@ const ViewPartners = () => {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                gap: isNonMobile ? ".5em" : "0",
+                gap: ".5em",
                 cursor: "pointer",
               }}
             >
@@ -569,6 +576,7 @@ const ViewPartners = () => {
         </Box>
       </Box>
 
+      {/* Lead Details Dialog */}
       <Dialog
         open={!!selectedLead}
         onClose={handleCloseDialog}
@@ -576,44 +584,60 @@ const ViewPartners = () => {
         maxWidth="md"
         PaperProps={{
           sx: {
-            borderRadius: "1em",
-            boxShadow: "0px 16px 32px rgba(0, 0, 0, 0.4)",
-            border: `1px solid ${colors.grey[700]}`,
+            background: "linear-gradient(45deg, #062994, #0E72E1)",
+            borderRadius: "4px",
+            boxShadow: "4px 4px 20px rgba(0, 0, 0, 0.25)",
           },
         }}
       >
-        <DialogContent
-          dividers
+        <DialogTitle
           sx={{
-            backgroundColor: colors.primary[400],
-            padding: isNonMobile ? "2em" : "1em 0",
+            color: "white",
+            fontWeight: "bold",
+            display: "flex",
+            alignItems: "center",
+            gap: "1em",
+            margin: "0 1em",
+            padding: "1em 2.5em",
           }}
         >
+          <VisibilityIcon />
+          <Typography
+            variant="h2"
+            sx={{
+              color: colors.grey[100],
+              fontWeight: "bold",
+              textAlign: "center",
+              flexGrow: "1",
+            }}
+          >
+            LEAD DETAILS
+          </Typography>
+          <IconButton
+            onClick={handleCloseDialog}
+            sx={{
+              position: "absolute",
+              right: 16,
+              top: 16,
+              color: "white",
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+
+        <DialogContent dividers sx={{ backgroundColor: colors.primary[400] }}>
           {dialogError ? (
-            <Typography
-              variant="body1"
-              align="center"
-              sx={{
-                color: "#EF5350",
-                fontWeight: "500",
-                padding: "16px",
-                borderRadius: "8px",
-              }}
-            >
+            <Typography color="error" variant="h6" align="center">
               {dialogError}
             </Typography>
           ) : (
             selectedLead && (
               <Grid container spacing={3}>
-                {/* Basic Information */}
                 <Grid item xs={12} md={6}>
                   <DetailCard
                     title="Basic Information"
-                    icon={
-                      <InfoIcon
-                        sx={{ color: colors.blueAccent[500], fontSize: "24px" }}
-                      />
-                    } // Green icon
+                    icon={<InfoIcon sx={{ color: colors.blueAccent[400] }} />}
                   >
                     <DetailItem label="ID" value={selectedLead.id} />
                     <DetailItem
@@ -623,7 +647,9 @@ const ViewPartners = () => {
                     <DetailItem label="Email" value={selectedLead.email} />
                     <DetailItem
                       label="Mobile Number"
-                      value={`+${selectedLead.country_code} ${selectedLead.mobile_number}`}
+                      value={` ${"+"}${selectedLead.country_code} ${" "}${
+                        selectedLead.mobile_number
+                      }`}
                     />
                     <DetailItem label="Country" value={selectedLead.country} />
                     <DetailItem label="State" value={selectedLead.state} />
@@ -631,15 +657,12 @@ const ViewPartners = () => {
                   </DetailCard>
                 </Grid>
 
-                {/* Additional Information */}
                 <Grid item xs={12} md={6}>
                   <DetailCard
                     title="Additional Information"
                     icon={
-                      <DescriptionIcon
-                        sx={{ color: colors.blueAccent[400], fontSize: "24px" }}
-                      />
-                    } // Blue icon
+                      <DescriptionIcon sx={{ color: colors.blueAccent[400] }} />
+                    }
                   >
                     <DetailItem
                       label="Company Name"
@@ -663,6 +686,10 @@ const ViewPartners = () => {
             )
           )}
         </DialogContent>
+
+        <DialogActions
+          sx={{ backgroundColor: colors.primary[400], padding: "1.75em" }}
+        ></DialogActions>
       </Dialog>
 
       <Snackbar

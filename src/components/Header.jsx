@@ -15,7 +15,7 @@ const Header = ({ title, subtitle, titleFontSize, subtitleFontSize }) => {
     >
       <Typography
         variant="h2"
-        fontSize={titleFontSize || (isNonMobile ? undefined : "1.5em")} // Use prop or default
+        fontSize={titleFontSize || (isNonMobile ? undefined : "1.5em")} 
         color={colors.grey[100]}
         fontWeight="bold"
         sx={{ m: "0 0 5px 0" }}
@@ -23,7 +23,7 @@ const Header = ({ title, subtitle, titleFontSize, subtitleFontSize }) => {
         {title}
       </Typography>
       <Typography
-        fontSize={subtitleFontSize || (isNonMobile ? undefined : "1em")} // Use prop or default
+        fontSize={subtitleFontSize || (isNonMobile ? undefined : "1em")} 
         variant="h5"
         color={colors.blueAccent[400]}
       >

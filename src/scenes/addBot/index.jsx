@@ -42,6 +42,8 @@ const AddBot = () => {
   const [loading, setLoading] = useState(false);
 
   const isNonMobile = useMediaQuery("(min-width:600px)");
+  const isTab = useMediaQuery("(min-width:921px)");
+  
 
   const handleCloseNotification = (event, reason) => {
     if (reason === "clickaway") return;
@@ -925,6 +927,7 @@ const AddBot = () => {
                       gridColumn: "span 2",
                       display: "flex",
                       flexDirection: "column",
+                      padding: isNonMobile ? undefined : "0 2em"
                     }}
                   >
                     <Box
@@ -1310,7 +1313,7 @@ const AddBot = () => {
                     Web Crawling (Optional)
                   </Typography>
                   <Box
-                  gridColumn={"span 4"}
+                    gridColumn={"span 4"}
                     display="grid"
                     gap="30px"
                     gridTemplateColumns="repeat(4, minmax(0, 1fr))"
@@ -1423,63 +1426,65 @@ const AddBot = () => {
                 </Box>
               )}
 
-              <Box mt={4} display="flex" gap={2}>
+              <Box
+                mt={4}
+                display="flex"
+                flexWrap="wrap"
+                gap={2} 
+                alignItems="center"
+                width="100%"
+              >
                 {currentStep > 1 && (
-                  <Box>
-                    <Button
-                      variant="contained"
-                      onClick={handlePrev}
-                      sx={{
-                        background: "linear-gradient(45deg, #062994, #0E72E1)",
-                        color: "#fff",
-                        fontSize: "14px",
-                        fontWeight: "bold",
-                        padding: "10px 2em",
-                        mb: isNonMobile ? "0em" : "1em",
-                        transition: "all 0.5s ease",
-                        "&:hover": {
-                          opacity: ".7",
-                        },
-                      }}
-                      startIcon={<KeyboardTabIcon sx={{ rotate: "180deg" }} />}
-                    >
-                      Previous
-                    </Button>
-                  </Box>
+                  <Button
+                    variant="contained"
+                    onClick={handlePrev}
+                    sx={{
+                      flexGrow: "1",
+                      maxWidth: isTab ? "180px" : undefined,
+                      background: "linear-gradient(45deg, #062994, #0E72E1)",
+                      color: "#fff",
+                      fontSize: { xs: "12px", sm: "14px" }, // Smaller text on small screens
+                      fontWeight: "bold",
+                      padding: { xs: "8px 1.5em", sm: "10px 2em" }, // Reduce padding for small screens
+                      minWidth: { xs: "120px", sm: "150px" }, // Smaller button width on mobile
+                      transition: "all 0.5s ease",
+                      "&:hover": { opacity: ".7" },
+                    }}
+                    startIcon={<KeyboardTabIcon sx={{ rotate: "180deg" }} />}
+                  >
+                    Previous
+                  </Button>
                 )}
+
                 {currentStep < steps.length && (
-                  <Box>
-                    <Button
-                      variant="contained"
-                      onClick={handleNext}
-                      sx={{
-                        background: "linear-gradient(45deg, #062994, #0E72E1)",
-                        color: "#fff",
-                        fontSize: "14px",
-                        fontWeight: "bold",
-                        padding: "10px 3em",
-                        mb: isNonMobile ? "0em" : "1em",
-                        transition: "all 0.5s ease",
-                        "&:hover": {
-                          opacity: ".7",
-                        },
-                      }}
-                      endIcon={<KeyboardTabIcon />}
-                    >
-                      Next
-                    </Button>
-                  </Box>
+                  <Button
+                    variant="contained"
+                    onClick={handleNext}
+                    sx={{
+                      flexGrow: "1",
+                      maxWidth: isTab ? "180px" : undefined,
+                      background: "linear-gradient(45deg, #062994, #0E72E1)",
+                      color: "#fff",
+                      fontSize: { xs: "12px", sm: "14px" },
+                      fontWeight: "bold",
+                      padding: { xs: "8px 1.5em", sm: "10px 3em" },
+                      minWidth: { xs: "120px", sm: "150px" },
+                      transition: "all 0.5s ease",
+                      "&:hover": { opacity: ".7" },
+                    }}
+                    endIcon={<KeyboardTabIcon />}
+                  >
+                    Next
+                  </Button>
                 )}
+
                 {currentStep === steps.length && (
                   <Box
                     sx={{
+                      flexGrow: "1",
+                      gap: 2,
                       display: "flex",
-                      // justifyContent: "center",
-                      alignItems: "center",
                       flexWrap: "wrap",
-                      gap: "1em",
-                      height: "100%",
-                      border: '1px solid red'
                     }}
                   >
                     <Button
@@ -1491,7 +1496,7 @@ const AddBot = () => {
                       endIcon={
                         loading ? (
                           <CircularProgress
-                            size={24}
+                            size={20}
                             sx={{ color: colors.grey[100] }}
                           />
                         ) : (
@@ -1499,12 +1504,14 @@ const AddBot = () => {
                         )
                       }
                       sx={{
+                        flexGrow: "1",
+
                         background: "linear-gradient(45deg, #4caf50, #81c784)",
                         color: "#fff",
-                        fontSize: "14px",
+                        fontSize: { xs: "12px", sm: "14px" },
                         fontWeight: "bold",
-                        padding: "10px 2em",
-                        mb: isNonMobile ? "0em" : "1em",
+                        padding: { xs: "8px 1.5em", sm: "10px 2em" },
+                        minWidth: { xs: "120px", sm: "160px" },
                         transition: "all 0.5s ease",
                         "&:hover": {
                           background:
@@ -1515,18 +1522,21 @@ const AddBot = () => {
                     >
                       {loading ? `Saving...` : "Save & activate"}
                     </Button>
+
                     <Button
                       variant="contained"
                       color="warning"
                       onClick={handleDraft}
                       startIcon={<SyncIcon />}
                       sx={{
+                        flexGrow: "1",
+
                         background: "linear-gradient(45deg, #ff9800, #ffc107)",
                         color: "#fff",
-                        fontSize: "14px",
+                        fontSize: { xs: "12px", sm: "14px" },
                         fontWeight: "bold",
-                        padding: "10px 2em",
-                        mb: isNonMobile ? "0em" : "1em",
+                        padding: { xs: "8px 1.5em", sm: "10px 2em" },
+                        minWidth: { xs: "120px", sm: "160px" },
                         transition: "all 0.5s ease",
                         "&:hover": {
                           background:
@@ -1544,12 +1554,14 @@ const AddBot = () => {
                       onClick={() => handleCancel(resetForm)}
                       startIcon={<BlockIcon />}
                       sx={{
+                        flexGrow: "1",
+
                         background: "linear-gradient(45deg, #f44336, #e57373)",
                         color: "#fff",
-                        fontSize: "14px",
+                        fontSize: { xs: "12px", sm: "14px" },
                         fontWeight: "bold",
-                        padding: "10px 2em",
-                        mb: isNonMobile ? "0em" : "1em",
+                        padding: { xs: "8px 1.5em", sm: "10px 2em" },
+                        minWidth: { xs: "120px", sm: "160px" },
                         transition: "all 0.5s ease",
                         "&:hover": {
                           background:

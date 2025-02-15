@@ -26,6 +26,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import axios from "axios";
 import DetailCard from "../../components/DetailCard";
@@ -41,7 +42,7 @@ const AllBots = () => {
   const isNonMobile = useMediaQuery("(min-width: 768px)");
   const isTab = useMediaQuery("(min-width: 1200px)");
   const isSmallTab = useMediaQuery("(min-width: 961px)");
-  const isMobile = useMediaQuery("(max-width: 768px)"); 
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const navigate = useNavigate();
 
@@ -78,7 +79,7 @@ const AllBots = () => {
         if (response.data.bots) {
           const botsWithStatus = response.data.bots.map((bot) => ({
             ...bot,
-            status: "Inactive", 
+            status: "Inactive",
           }));
           setBotData(botsWithStatus);
         } else {
@@ -148,7 +149,6 @@ const AllBots = () => {
       setShowNotification(true);
     }
   };
-
 
   const handleCloseDialog = () => {
     setSelectedBot(null);
@@ -743,51 +743,30 @@ const AllBots = () => {
         maxWidth="md"
         PaperProps={{
           sx: {
-            background: "linear-gradient(45deg, #062994, #0E72E1)",
-            borderRadius: "4px",
-            boxShadow: "4px 4px 20px rgba(0, 0, 0, 0.25)",
+            borderRadius: "1em",
+            boxShadow: "0px 16px 32px rgba(0, 0, 0, 0.4)",
+            border: `1px solid ${colors.grey[700]}`,
           },
         }}
       >
-        <DialogTitle
+        <DialogContent
+          dividers
           sx={{
-            color: "white",
-            fontWeight: "bold",
-            display: "flex",
-            alignItems: "center",
-            gap: "1em",
-            margin: "0 1em",
-            padding: "1em 2.5em",
+            backgroundColor: colors.primary[400],
+            padding: isNonMobile ? "2em" : "1em 0",
           }}
         >
-          <VisibilityIcon />
-          <Typography
-            variant="h2"
-            sx={{
-              color: colors.grey[100],
-              fontWeight: "bold",
-              textAlign: "center",
-              flexGrow: "1",
-            }}
-          >
-            BOT DETAILS
-          </Typography>
-          <IconButton
-            onClick={handleCloseDialog}
-            sx={{
-              position: "absolute",
-              right: 16,
-              top: 16,
-              color: "white",
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-
-        <DialogContent dividers sx={{ backgroundColor: colors.primary[400] }}>
           {dialogError ? (
-            <Typography color="error" variant="h6" align="center">
+            <Typography
+              variant="body1"
+              align="center"
+              sx={{
+                color: "#EF5350",
+                fontWeight: "500",
+                padding: "16px",
+                borderRadius: "8px",
+              }}
+            >
               {dialogError}
             </Typography>
           ) : (
@@ -796,9 +775,48 @@ const AllBots = () => {
                 <Grid item xs={12} md={6}>
                   <DetailCard
                     title="Basic Information"
-                    icon={<InfoIcon sx={{ color: colors.blueAccent[500] }} />}
+                    icon={
+                      <InfoIcon sx={{ color: "#4CAF50", fontSize: "24px" }} />
+                    }
                   >
-                    <DetailItem label="Bot ID" value={selectedBot.bot_id} />
+                    <DetailItem
+                      label="Bot ID"
+                      value={
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                            position: "relative",
+                            cursor: "pointer",
+                            "&:hover .copy-icon": {
+                              opacity: 1,
+                              transform: "translateX(0)", // Moves icon into view smoothly
+                            },
+                          }}
+                          onClick={() => handleCopyBotId(selectedBot.bot_id)}
+                        >
+                          <Typography variant="body2">
+                            {selectedBot.bot_id}
+                          </Typography>
+
+                          {/* Copy Icon (Initially Hidden) */}
+                          <IconButton
+                            className="copy-icon"
+                            sx={{
+                              opacity: 0, // Hidden by default
+                              transform: "translateX(10px)", // Moves icon out of view
+                              transition:
+                                "opacity 0.3s ease, transform 0.3s ease",
+                              color: colors.blueAccent[200],
+                            }}
+                          >
+                            <ContentCopyIcon fontSize="small" />
+                          </IconButton>
+                        </Box>
+                      }
+                    />
+
                     <DetailItem label="Name" value={selectedBot.name} />
                     <DetailItem label="Type" value={selectedBot.type} />
                     <DetailItem
@@ -819,7 +837,9 @@ const AllBots = () => {
                   <DetailCard
                     title="Additional Information"
                     icon={
-                      <DescriptionIcon sx={{ color: colors.blueAccent[500] }} />
+                      <DescriptionIcon
+                        sx={{ color: colors.blueAccent[500], fontSize: "24px" }}
+                      />
                     }
                   >
                     <DetailItem
@@ -863,23 +883,6 @@ const AllBots = () => {
             )
           )}
         </DialogContent>
-
-        <DialogActions
-          sx={{ backgroundColor: colors.primary[400], padding: "1.75em" }}
-        >
-          {/* <Button
-            onClick={handleCloseDialog}
-            sx={{
-              color: "white",
-              backgroundColor: colors.blueAccent[700],
-              "&:hover": {
-                backgroundColor: colors.blueAccent[800],
-              },
-            }}
-          >
-            Close
-          </Button> */}
-        </DialogActions>
       </Dialog>
     </Box>
   );

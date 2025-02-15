@@ -56,8 +56,8 @@ const Topbar = ({ setIsSidebar }) => {
           aria-label="Toggle Sidebar"
           sx={{
             display: isNonMobile ? "none" : "flex",
-            alignItems: 'center',
-            justifyContent: "center"
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
           <MenuOutlinedIcon />
@@ -74,7 +74,6 @@ const Topbar = ({ setIsSidebar }) => {
             sx={{ flex: 1, color: "#000", pl: "12px" }}
             placeholder="Search..."
             aria-label="Search"
-            
           />
           <IconButton type="button" sx={{ p: 1 }} aria-label="Search">
             <SearchIcon sx={{ color: "#000" }} />
@@ -102,9 +101,12 @@ const Topbar = ({ setIsSidebar }) => {
         </IconButton>
 
         {/* Settings */}
-        <IconButton sx={{
-          display: isNonMobile ? "block" : "none"
-        }} aria-label="Settings">
+        <IconButton
+          sx={{
+            display: isNonMobile ? undefined : "none",
+          }}
+          aria-label="Settings"
+        >
           <SettingsOutlinedIcon />
         </IconButton>
 
