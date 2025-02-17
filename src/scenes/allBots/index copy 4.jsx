@@ -498,10 +498,16 @@ const AllBots = () => {
               >
                 <Skeleton
                   circle
-                  height={128}
-                  width={128}
+                  height={150}
+                  width={150}
                   style={{ marginBottom: "20px" }}
                 />
+                <Skeleton
+                  width="60%"
+                  height={20}
+                  style={{ marginBottom: "10px" }}
+                />
+                <Skeleton width="40%" height={20} />
               </Box>
             </Box>
           ) : (
@@ -532,9 +538,9 @@ const AllBots = () => {
                 <Box
                   sx={{
                     background: `conic-gradient(
-                            ${colors.blueAccent[400]} 0deg ${progressAngle}deg, 
-                            ${colors.redAccent[500]} ${progressAngle}deg 360deg
-                          )`,
+                  ${colors.blueAccent[400]} 0deg ${progressAngle}deg, 
+                  ${colors.redAccent[500]} ${progressAngle}deg 360deg
+                )`,
                     borderRadius: "50%",
                     width: "150px",
                     height: "150px",
@@ -640,6 +646,8 @@ const AllBots = () => {
               </Box>
             </Box>
           )}
+
+          
           {/* ROW 2 */}
           {loading ? (
             <Box
@@ -648,32 +656,33 @@ const AllBots = () => {
               backgroundColor={colors.primary[400]}
               borderRadius="8px"
               p="20px"
-              pt={"1em"}
-              overflow={"hidden"}
             >
               {/* Table Header Skeleton */}
-              <Box display="flex" justifyContent="space-between">
-                <Box width="100%">
-                  <Skeleton
-                    style={{
-                      marginBottom: "1em",
-                      marginLeft: "1.5em",
-                      borderRadius: "25px"
-                    }}
-                    width="250px"
-                    height={43}
-                  />
-
-                  <Skeleton
-                    style={{
-                      marginBottom: ".5em",
-                    }}
-                    width="100%"
-                    height={30}
-                    count={5}
-                  />
-                </Box>
+              <Box display="flex" justifyContent="space-between" mb="10px">
+                <Skeleton width="10%" height={40} />
+                <Skeleton width="15%" height={40} />
+                <Skeleton width="15%" height={40} />
+                <Skeleton width="20%" height={40} />
+                <Skeleton width="20%" height={40} />
+                <Skeleton width="10%" height={40} />
               </Box>
+
+              {/* Table Rows Skeleton */}
+              {Array.from({ length: 6 }).map((_, index) => (
+                <Box
+                  key={index}
+                  display="flex"
+                  justifyContent="space-between"
+                  mb="10px"
+                >
+                  <Skeleton width="10%" height={30} />
+                  <Skeleton width="15%" height={30} />
+                  <Skeleton width="15%" height={30} />
+                  <Skeleton width="20%" height={30} />
+                  <Skeleton width="20%" height={30} />
+                  <Skeleton width="10%" height={30} />
+                </Box>
+              ))}
             </Box>
           ) : (
             <Box
@@ -690,7 +699,7 @@ const AllBots = () => {
                   sx={{
                     width: "220px",
                     borderRadius: "25px",
-                    margin: "1.5em .5em .5em 3em",
+                    margin: ".5em .5em .5em 3em",
                     backgroundColor: "#ccc",
                     border: `1px solid white`,
                     color: "#000",
@@ -750,52 +759,6 @@ const AllBots = () => {
             </Box>
           )}
         </Box>
-
-        {/* snackbar notification */}
-        <Snackbar
-          open={snackbarOpen}
-          autoHideDuration={3000}
-          onClose={handleCloseSnackbar}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        >
-          <Alert
-            onClose={handleCloseSnackbar}
-            severity="success"
-            sx={{ width: "100%" }}
-          >
-            You copied your bot ID: {copiedBotId}
-          </Alert>
-        </Snackbar>
-
-        <Snackbar
-          open={showNotification}
-          autoHideDuration={6000}
-          onClose={handleCloseNotification}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        >
-          <Alert
-            onClose={handleCloseNotification}
-            severity={notificationType}
-            sx={{ width: "100%" }}
-          >
-            {notificationMessage}
-          </Alert>
-        </Snackbar>
-
-        <Snackbar
-          open={showNotification}
-          autoHideDuration={6000}
-          onClose={() => setShowNotification(false)}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        >
-          <Alert
-            onClose={() => setShowNotification(false)}
-            severity={notificationType}
-            sx={{ width: "100%" }}
-          >
-            {notificationMessage}
-          </Alert>
-        </Snackbar>
 
         {/* Bot Details Dialog */}
         <Dialog

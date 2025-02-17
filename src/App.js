@@ -53,8 +53,6 @@ function App() {
   const isNonMobile = useMediaQuery("(min-width:768px)");
 
 
-
-
   const location = useLocation();
 
   // Determine if the current path is for authentication

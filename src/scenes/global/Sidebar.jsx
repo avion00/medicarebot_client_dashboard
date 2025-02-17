@@ -33,6 +33,9 @@ import FlagIcon from "@mui/icons-material/Flag";
 import EmailIcon from "@mui/icons-material/Email";
 import { useRef } from "react";
 
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -62,20 +65,25 @@ const Sidebar = ({ isSidebar, setIsSidebar }) => {
   const location = useLocation(); 
 
   // for dynamic URL images
-  const [imageUrl, setImageUrl] = useState("");
+const [imageUrl, setImageUrl] = useState("");
+const [loading, setLoading] = useState(true); // State for loading
 
-  useEffect(() => {
-    fetch("https://randomuser.me/api/")
-      .then((response) => response.json())
-      .then((data) => {
-        const fetchedImageUrl = data.results[0].picture.large; 
-        setImageUrl(fetchedImageUrl);
-      })
-      .catch((error) => {
-        console.error("Error fetching image:", error);
-        setImageUrl("https://via.placeholder.com/100"); 
-      });
-  }, []);
+useEffect(() => {
+  fetch("https://randomuser.me/api/")
+    .then((response) => response.json())
+    .then((data) => {
+      const fetchedImageUrl = data.results[0].picture.large;
+      setImageUrl(fetchedImageUrl);
+    })
+    .catch((error) => {
+      console.error("Error fetching image:", error);
+      setImageUrl("https://via.placeholder.com/100");
+    })
+    .finally(() => {
+      setLoading(false); // Set loading to false after fetching image
+    });
+}, []);
+
 
   const sidebarRef = useRef(null);
 
@@ -242,18 +250,36 @@ const Sidebar = ({ isSidebar, setIsSidebar }) => {
             {isSidebar && (
               <Box mb="25px">
                 <Box display="flex" justifyContent="center" alignItems="center">
-                  <img
-                    alt="profile-user"
-                    width="100px"
-                    height="100px"
-                    src={imageUrl || "https://via.placeholder.com/100"}
-                    style={{
-                      cursor: "pointer",
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                    }}
-                  />
+                  {loading ? (
+                    <Skeleton
+                      circle
+                      width={100}
+                      height={100}
+                      baseColor={
+                        theme.palette.mode === "dark" ? "#333" : "#e0e0e0"
+                      }
+                      highlightColor={
+                        theme.palette.mode === "dark" ? "#444" : "#f5f5f5"
+                      }
+                      
+                    />
+                  ) : (
+                    <img
+                      alt="profile-user"
+                      
+                      width="100px"
+                      height="100px"
+                      src={imageUrl}
+                      style={{
+                        cursor: "pointer",
+                        marginTop: "3px",
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  )}
                 </Box>
+
                 <Box textAlign="center">
                   <Typography
                     variant="h2"
