@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Typography,
   useTheme,
   IconButton,
@@ -471,64 +470,34 @@ const AllBots = () => {
           columnGap="20px"
         >
           {/* ROW 1 */}
-          {loading ? (
+
+          <Box
+            gridColumn={
+              isTab
+                ? "span 4"
+                : isSmallTab
+                ? "span 6"
+                : isNonMobile
+                ? "span 8"
+                : "span 12"
+            }
+            gridRow="span 2"
+            backgroundColor={colors.primary[400]}
+            borderRadius="8px"
+            overflow="auto"
+          >
             <Box
-              gridColumn={
-                isTab
-                  ? "span 4"
-                  : isSmallTab
-                  ? "span 6"
-                  : isNonMobile
-                  ? "span 8"
-                  : "span 12"
-              }
               gridRow="span 2"
-              backgroundColor={colors.primary[400]}
-              borderRadius="8px"
-              overflow="auto"
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+              justifyContent="center"
+              position="relative"
+              p={{ xs: "20px", md: "30px" }}
             >
-              <Box
-                gridRow="span 2"
-                display="flex"
-                flexDirection="column"
-                alignItems="center"
-                justifyContent="center"
-                position="relative"
-                p={{ xs: "20px", md: "30px" }}
-              >
-                <Skeleton
-                  circle
-                  height={128}
-                  width={128}
-                  style={{ marginBottom: "20px" }}
-                />
-              </Box>
-            </Box>
-          ) : (
-            <Box
-              gridColumn={
-                isTab
-                  ? "span 4"
-                  : isSmallTab
-                  ? "span 6"
-                  : isNonMobile
-                  ? "span 8"
-                  : "span 12"
-              }
-              gridRow="span 2"
-              backgroundColor={colors.primary[400]}
-              borderRadius="8px"
-              overflow="auto"
-            >
-              <Box
-                gridRow="span 2"
-                display="flex"
-                flexDirection="column"
-                alignItems="center"
-                justifyContent="center"
-                position="relative"
-                p={{ xs: "20px", md: "30px" }}
-              >
+              {loading ? (
+                <Skeleton circle height={146.5} width={150} />
+              ) : (
                 <Box
                   sx={{
                     background: `conic-gradient(
@@ -555,18 +524,22 @@ const AllBots = () => {
                     },
                   }}
                 />
+              )}
 
-                <Box
-                  sx={{
-                    position: "absolute",
-                    bottom: "2em",
-                    left: "2em",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    zIndex: "2",
-                  }}
-                >
+              <Box
+                sx={{
+                  position: "absolute",
+                  bottom: "2em",
+                  left: "2em",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  zIndex: "2",
+                }}
+              >
+                {loading ? (
+                  <Skeleton variant="h5" height={20} width={20} />
+                ) : (
                   <Typography
                     variant="h5"
                     color={colors.redAccent[500]}
@@ -574,6 +547,11 @@ const AllBots = () => {
                   >
                     {inactiveBots}
                   </Typography>
+                )}
+
+                {loading ? (
+                  <Skeleton variant="h5" height={10} width={70} />
+                ) : (
                   <Typography
                     variant="h6"
                     color={colors.redAccent[500]}
@@ -581,20 +559,24 @@ const AllBots = () => {
                   >
                     Inactive Bots
                   </Typography>
-                </Box>
+                )}
+              </Box>
 
-                <Box
-                  sx={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    zIndex: "2",
-                  }}
-                >
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  zIndex: "2",
+                }}
+              >
+                {loading ? (
+                  <Skeleton variant="h5" height={20} width={20} />
+                ) : (
                   <Typography
                     variant="h5"
                     color={colors.grey[200]}
@@ -602,6 +584,11 @@ const AllBots = () => {
                   >
                     {totalBots}
                   </Typography>
+                )}
+
+                {loading ? (
+                  <Skeleton variant="h5" height={10} width={70} />
+                ) : (
                   <Typography
                     variant="h6"
                     color={colors.grey[200]}
@@ -609,19 +596,23 @@ const AllBots = () => {
                   >
                     Total Bots
                   </Typography>
-                </Box>
+                )}
+              </Box>
 
-                <Box
-                  sx={{
-                    position: "absolute",
-                    right: "2em",
-                    top: "2em",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    zIndex: "2",
-                  }}
-                >
+              <Box
+                sx={{
+                  position: "absolute",
+                  right: "2em",
+                  top: "2em",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  zIndex: "2",
+                }}
+              >
+                {loading ? (
+                  <Skeleton variant="h5" height={20} width={20} />
+                ) : (
                   <Typography
                     variant="h5"
                     color={colors.blueAccent[400]}
@@ -629,6 +620,11 @@ const AllBots = () => {
                   >
                     {activeBots}
                   </Typography>
+                )}
+
+                {loading ? (
+                  <Skeleton variant="h5" height={10} width={70} />
+                ) : (
                   <Typography
                     variant="h6"
                     color={colors.blueAccent[400]}
@@ -636,10 +632,11 @@ const AllBots = () => {
                   >
                     Active Bots
                   </Typography>
-                </Box>
+                )}
               </Box>
             </Box>
-          )}
+          </Box>
+
           {/* ROW 2 */}
           {loading ? (
             <Box
@@ -658,7 +655,7 @@ const AllBots = () => {
                     style={{
                       marginBottom: "1em",
                       marginLeft: "1.5em",
-                      borderRadius: "25px"
+                      borderRadius: "25px",
                     }}
                     width="250px"
                     height={43}
@@ -761,7 +758,7 @@ const AllBots = () => {
           <Alert
             onClose={handleCloseSnackbar}
             severity="success"
-            sx={{ width: "100%" }}
+            sx={{ width: "100%"   }}
           >
             You copied your bot ID: {copiedBotId}
           </Alert>

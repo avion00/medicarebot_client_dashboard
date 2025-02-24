@@ -46,17 +46,24 @@ import PrivateRoute from "./components/PrivateRoute";
 import TestComponent from "./scenes/test/index";
 import GmailChatHistory from "./scenes/gmailChatHistory/index";
 import CallingPage from "./scenes/bot-call/index";
+import GlobalLoading from "./components/GlobalLoading"; // Add this component
 
-function App({ onLoaded }) {
+function App() {
   const [theme, colorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
   const isNonMobile = useMediaQuery("(min-width:768px)");
-
-  useEffect(() => {
-    onLoaded && onLoaded();
-  }, [onLoaded]);
+  const [isLoading, setIsLoading] = useState(true); // Global loading state
 
   const location = useLocation();
+
+  // Simulate app initialization
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false); // Set loading to false after 1 second (simulate initialization)
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   // Determine if the current path is for authentication
   const isAuthPage =
@@ -71,8 +78,10 @@ function App({ onLoaded }) {
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        {isAuthPage ? (
-          <div className="auth-page" style={{}}>
+        {isLoading ? (
+          <GlobalLoading /> // Show global loading animation while app is initializing
+        ) : isAuthPage ? (
+          <div className="auth-page">
             <Routes>
               <Route path="/" element={<LogIn />} />
               <Route path="/register" element={<Register />} />
@@ -80,20 +89,12 @@ function App({ onLoaded }) {
               <Route path="/forgetPassword" element={<ForgetPassword />} />
               <Route path="/otp" element={<OTP />} />
               <Route path="/newPassword" element={<NewPassword />} />
-
               <Route path="*" element={<Navigate to="/logIn" />} />
             </Routes>
           </div>
         ) : (
-          <div
-            className="app"
-            style={{
-              display: "flex",
-            }}
-          >
-            {/* <Sidebar isSidebar={isSidebar} /> */}
+          <div className="app" style={{ display: "flex" }}>
             <Sidebar isSidebar={isSidebar} setIsSidebar={setIsSidebar} />
-
             <main
               className="content"
               style={{
@@ -106,7 +107,6 @@ function App({ onLoaded }) {
               }}
             >
               <Topbar setIsSidebar={setIsSidebar} />
-
               <Routes>
                 <Route path="*" element={<Navigate to="/logIn" />} />
                 <Route
