@@ -10,25 +10,27 @@ const TableSkeleton = ({ rows = 5, columns = 6 }) => {
         display: "flex",
         flexDirection: "column",
         gap: "10px",
-        padding: "20px",
+        // padding: "20px",
       }}
     >
       {/* Search Bar Skeleton */}
-      <Box
+      {/* <Box
         sx={{
           display: "flex",
           justifyContent: "flex-start",
           alignItems: "center",
           marginBottom: "20px",
+          paddingLeft: "20px"
         }}
       >
         <Skeleton
           variant="rectangular"
           width={220}
           height={40}
+          
           sx={{ borderRadius: "25px" }}
         />
-      </Box>
+      </Box> */}
 
       {/* Table Header Skeleton */}
       <Box

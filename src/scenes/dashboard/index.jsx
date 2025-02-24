@@ -26,7 +26,6 @@ const Dashboard = () => {
     const timer = setTimeout(() => {
       setLoading(false);
     }, 1000);
-
     return () => clearTimeout(timer);
   }, []);
 
@@ -169,7 +168,6 @@ const Dashboard = () => {
               p="15px"
             >
               {loading ? (
-                // Skeleton for "Recent Activity Feed" header
                 <Skeleton variant="text" width={180} height={20} />
               ) : (
                 <Typography
@@ -182,7 +180,6 @@ const Dashboard = () => {
               )}
 
               {loading ? (
-                // Skeleton for "View All Activity" text on the right
                 <Skeleton variant="text" width={140} height={15} />
               ) : (
                 <Typography

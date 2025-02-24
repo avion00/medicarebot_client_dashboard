@@ -640,49 +640,45 @@ const AllBots = () => {
               </Box>
             </Box>
           </Box>
-
           {/* ROW 2 */}
-          {loading ? (
-            <Box
-              gridColumn="span 12"
-              mt="20px"
-              backgroundColor={colors.primary[400]}
-              p="20px"
-              pt={"1em"}
-              overflow={"hidden"}
-            >
-              <TableSkeleton rows={5} columns={8} />
-            </Box>
-          ) : (
-            // Your actual DataGrid code
-            <Box
-              gridColumn="span 12"
-              mt="20px"
-              backgroundColor={colors.primary[400]}
-            >
-              <Box>
-                <Box
-                  display="flex"
-                  backgroundColor={colors.grey[500]}
-                  width="250px"
-                  sx={{
-                    width: "220px",
-                    borderRadius: "25px",
-                    margin: "1.5em .5em .5em 3em",
-                    backgroundColor: "#ccc",
-                    border: `1px solid white`,
-                    color: "#000",
-                  }}
-                >
-                  <InputBase
-                    sx={{ ml: 2, flex: 1, color: "#000" }}
-                    placeholder="Search"
-                  />
-                  <IconButton type="button" sx={{ p: 1 }}>
-                    <SearchIcon sx={{ color: "#000" }} />
-                  </IconButton>
-                </Box>
+          // Your actual DataGrid code
+          <Box
+            gridColumn="span 12"
+            mt="20px"
+            backgroundColor={colors.primary[400]}
+          >
+            <Box>
+              <Box
+                display="flex"
+                backgroundColor={colors.grey[500]}
+                width="250px"
+                sx={{
+                  width: "220px",
+                  borderRadius: "25px",
+                  margin: "1.5em .5em .5em 3em",
+                  backgroundColor: "#ccc",
+                  border: `1px solid white`,
+                  color: "#000",
+                }}
+              >
+                <InputBase
+                  sx={{ ml: 2, flex: 1, color: "#000" }}
+                  placeholder="Search"
+                />
+                <IconButton type="button" sx={{ p: 1 }}>
+                  <SearchIcon sx={{ color: "#000" }} />
+                </IconButton>
               </Box>
+            </Box>
+            {loading ? (
+              <Box
+                gridColumn="span 12"
+                mt="20px"
+                backgroundColor={colors.primary[400]}
+              >
+                <TableSkeleton rows={5} columns={8} />
+              </Box>
+            ) : (
               <Box
                 gridColumn="span 12"
                 height="380px"
@@ -725,8 +721,8 @@ const AllBots = () => {
                   rowsPerPageOptions={[25, 50, 100]}
                 />
               </Box>
-            </Box>
-          )}
+            )}
+          </Box>
         </Box>
 
         {/* snackbar notification */}
