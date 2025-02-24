@@ -14,7 +14,6 @@ import {
   Alert,
   CircularProgress,
 } from "@mui/material";
-import SettingsIcon from "@mui/icons-material/Settings";
 import Header from "../../components/Header";
 import { tokens } from "../../theme";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -117,7 +116,7 @@ const TrainBots = () => {
       return;
     }
 
-    const botId = selectedBots[0]; // Ensure bot_id is valid
+    const botId = selectedBots[0]; 
     console.log("Starting crawl for bot:", botId);
 
     setLoading(true);
@@ -204,7 +203,6 @@ const TrainBots = () => {
       );
       setSnackbarSeverity("success");
 
-      // ✅ Clear the file selection after upload
       setUploadKnowledgeBase(null);
     } catch (error) {
       console.error("Upload Error:", error.response || error);
@@ -215,7 +213,6 @@ const TrainBots = () => {
       setLoadingUpload(false);
     }
   };
-
 
   return (
     <Box m="20px">
@@ -229,23 +226,6 @@ const TrainBots = () => {
           title="TRAIN BOTS"
           subtitle=" Train Your bots to perform your task"
         />
-
-        {/* <Button
-          sx={{
-            background: "linear-gradient(45deg, #062994, #0E72E1)",
-            color: "#fff",
-            fontSize: "14px",
-            fontWeight: "bold",
-            padding: isNonMobile ? "10px 20px" : ".5em",
-            marginBottom: isNonMobile ? "inherit" : "1.5em",
-            "&:hover": {
-              backgroundColor: colors.primary[400],
-            },
-          }}
-        >
-          <SettingsIcon sx={{ mr: "10px" }} />
-          Configure
-        </Button> */}
       </Box>
 
       <Box

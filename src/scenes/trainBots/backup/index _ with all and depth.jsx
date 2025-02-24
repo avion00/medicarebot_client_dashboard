@@ -15,8 +15,8 @@ import {
   CircularProgress,
 } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
-import Header from "../../components/Header";
-import { tokens } from "../../theme";
+import Header from "../../../components/Header";
+import { tokens } from "../../../theme";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import axios from "axios";
 
@@ -24,9 +24,8 @@ const TrainBots = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const isTab = useMediaQuery("(max-width:1234px)");
-  
-  const isNonMobile = useMediaQuery("(min-width:768px)");
 
+  const isNonMobile = useMediaQuery("(min-width:768px)");
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
@@ -172,7 +171,6 @@ const TrainBots = () => {
     event.target.value = null;
   };
 
-
   const uploadKnowledgeBaseFile = async () => {
     if (!selectedBots.length || !uploadKnowledgeBase) {
       setSnackbarMessage("Please select a bot and choose a file to upload.");
@@ -222,7 +220,6 @@ const TrainBots = () => {
       setLoadingUpload(false);
     }
   };
-
 
   return (
     <Box m="20px">
@@ -277,7 +274,6 @@ const TrainBots = () => {
                 "&.Mui-focused": {
                   color: colors.grey[100],
                   fontWeight: "bold",
-
                 },
               }}
             >

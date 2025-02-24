@@ -18,8 +18,8 @@ import {
   // FormGroup,
 } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
-import Header from "../../components/Header";
-import { tokens } from "../../theme";
+import Header from "../../../components/Header";
+import { tokens } from "../../../theme";
 import ExtensionIcon from "@mui/icons-material/Extension";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import axios from "axios";
@@ -481,7 +481,6 @@ const TrainBots = () => {
             Submit Feedback
           </Button>
 
-          
           <p>{feedbackList}</p>
         </div>
       </Box>

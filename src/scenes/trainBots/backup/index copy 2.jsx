@@ -13,14 +13,23 @@ import {
   FormControl,
   Typography,
   Alert,
-  CircularProgress,
+  Checkbox,
+  FormControlLabel,
+  // FormGroup,
 } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
-import Header from "../../components/Header";
-import { tokens } from "../../theme";
+import Header from "../../../components/Header";
+import { tokens } from "../../../theme";
 import ExtensionIcon from "@mui/icons-material/Extension";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import axios from "axios";
+
+// import SaveIcon from "@mui/icons-material/Save";
+// import BackupIcon from "@mui/icons-material/Backup";
+// import RestoreIcon from "@mui/icons-material/Restore";
+// import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+// import { SnackbarContent } from "@mui/material";
+// import AddIcon from "@mui/icons-material/Add";
 
 const TrainBots = () => {
   const theme = useTheme();
@@ -58,7 +67,9 @@ const TrainBots = () => {
     setOpenSnackbar(false);
   };
 
+  const [crawlingStatus] = useState("");
   const [analyticsData] = useState("");
+  // const [feedbackList] = useState("");
   const [activityLogs] = useState("");
   const [loadingSnippet, setLoadingSnippet] = useState(false);
   const [snippetData, setSnippetData] = useState("");
@@ -110,6 +121,8 @@ const TrainBots = () => {
       if (response.data.message === "Crawling completed") {
         setSnackbarMessage("Crawling completed successfully!");
         setSnackbarSeverity("success");
+
+        // Set summary_id dynamically from response
         setSummaryId(response.data.summary_id);
       } else {
         setSnackbarMessage("An error occurred while crawling.");
@@ -186,11 +199,19 @@ const TrainBots = () => {
     // Fetch activity logs
   };
 
+  const saveCrawlingSettings = () => {
+    // Save crawling settings
+  };
+
   const exportAnalytics = () => {
     // Export analytics data
   };
 
   const exportLogs = () => {
+    // Export activity logs
+  };
+
+  const handleDepthChange = () => {
     // Export activity logs
   };
 
@@ -302,14 +323,7 @@ const TrainBots = () => {
     }
   };
 
-  const [depth, setDepth] = useState("");
-
-  const [uploadKnowledgeBase, setUploadKnowledgeBase] = useState(null);
-
-  const handleuploadKnowledgeBaseChange = (event) => {
-    const file = event.target.files[0];
-    setUploadKnowledgeBase(file || null);
-  };
+  const [depth, setDepth] = useState([]);
 
   return (
     <Box m="20px">
@@ -431,7 +445,7 @@ const TrainBots = () => {
           variant="outlined"
           sx={{
             width: "100%",
-            margin: "1em 0",
+            margin: "1.5em 0",
             backgroundColor: colors.primary[400],
             "& .MuiOutlinedInput-root": {
               "& fieldset": {
@@ -497,7 +511,6 @@ const TrainBots = () => {
         <Box
           display="grid"
           gap="30px"
-          mt={"1em"}
           gridTemplateColumns="repeat(4, minmax(0, 1fr))"
           sx={{
             "& > div": {
@@ -552,135 +565,86 @@ const TrainBots = () => {
               },
             }}
           >
-            <InputLabel id="depth-label" sx={{ color: colors.primary[100] }}>
+            <InputLabel id="status" sx={{ color: colors.primary[100] }}>
               Depth
             </InputLabel>
             <Select
-              labelId="depth-label"
+              labelId="depth"
               id="depth"
-              value={depth} // Ensure depth is a string/number
+              value={depth}
               name="depth"
-              onChange={(e) => setDepth(e.target.value)} // Update state correctly
-              sx={{
-                backgroundColor: colors.primary[400],
-                color: colors.grey[100],
-                "& .MuiSelect-icon": { color: colors.grey[100] },
-              }}
+              onChange={(e) => setSelectedBots(e.target.value)}
             >
-              <MenuItem value="20">20</MenuItem>
-              <MenuItem value="30">30</MenuItem>
-              <MenuItem value="50">50</MenuItem>
+              <MenuItem value="1">Low</MenuItem>
+              <MenuItem value="2">Medium</MenuItem>
+              <MenuItem value="3">High</MenuItem>
             </Select>
           </FormControl>
         </Box>
-        <Box mt="1.5em">
-          <Button
-            onClick={startCrawling}
-            variant="outlined"
-            disabled={loading}
+
+        <Box
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "start",
+            flexWrap: "wrap",
+            gap: "1em",
+            margin: ".5em 0",
+          }}
+        >
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={crawlSettings.includeSitemap}
+                onChange={handleCrawlSettingChange}
+                name="includeSitemap"
+                sx={{
+                  color: colors.grey[100],
+                  "&.Mui-checked": {
+                    color: colors.blueAccent[300],
+                  },
+                }}
+              />
+            }
+            label="Include Sitemap"
             sx={{
-              width: "160px",
               display: "flex",
               alignItems: "center",
-              justifyContent: "center",
-              gap: "8px", // Add space between spinner and text
+              gap: ".2em",
+              marginLeft: isNonMobile ? "1em" : 0,
+            }}
+          />
+          <Button
+            onClick={startCrawling}
+            color="secondary"
+            variant="outlined"
+            style={{
+              borderRadius: "20px",
+              marginRight: "8px",
+            }}
+            disabled={loading}
+          >
+            {loading ? "Crawling..." : "Start Crawling"}
+          </Button>
+
+          <Button
+            onClick={saveCrawlingSettings}
+            variant="outlined"
+            sx={{
               color: colors.blueAccent[300],
               borderColor: colors.blueAccent[300],
               borderRadius: "20px",
               marginRight: "8px",
               "&:hover": {
-                background: "linear-gradient(15deg, #062994, #0E72E1)",
+                backgroundColor: colors.blueAccent[700],
                 borderColor: colors.blueAccent[700],
               },
             }}
           >
-            {loading ? (
-              <>
-                <CircularProgress
-                  size={20}
-                  sx={{ color: colors.blueAccent[300] }}
-                />
-                Crawling...
-              </>
-            ) : (
-              "Start Crawling"
-            )}
+            Save Crawling Settings
           </Button>
-        </Box>
-      </Box>
 
-      <Box mt={"2em"}>
-        <Typography
-          variant="h3"
-          fontWeight="bold"
-          gutterBottom
-          color={colors.grey[100]}
-        >
-          Upload Knowledge Base File
-        </Typography>
-        <Box
-          display="grid"
-          gap="30px"
-          mt="1em"
-          gridTemplateColumns="repeat(4, minmax(0, 1fr))"
-          sx={{
-            "& > div": {
-              gridColumn: isNonMobile ? undefined : "span 4",
-            },
-          }}
-        >
-          <TextField
-            gridColumn="span 2"
-            label="Upload Knowledge Base"
-            variant="filled"
-            type="text"
-            name="uploadKnowledgeBase"
-            value={uploadKnowledgeBase ? uploadKnowledgeBase.name : ""}
-            InputProps={{
-              readOnly: true,
-              endAdornment: (
-                <Button
-                  variant="contained"
-                  component="label"
-                  sx={{
-                    backgroundColor: "transparent",
-                    color: "white",
-                    textTransform: "none",
-                    boxShadow: "none",
-                    width: "100%",
-                    height: "100%",
-                    position: "absolute",
-                    top: "0",
-                    left: "0",
-                    "&:hover": {
-                      backgroundColor: "transparent",
-                    },
-                  }}
-                >
-                  <input
-                    type="file"
-                    hidden
-                    name="uploadKnowledgeBase"
-                    onChange={(e) => handleuploadKnowledgeBaseChange(e)}
-                  />
-                </Button>
-              ),
-            }}
-            sx={{
-              position: "relative",
-              width: "100%",
-              flexGrow: "1",
-              gridColumn: "span 2",
-              "& .MuiFormLabel-root.Mui-focused": {
-                color: colors.blueAccent[500],
-                fontWeight: "bold",
-              },
-              "& .MuiFilledInput-root": {
-                backgroundColor: colors.primary[400],
-                color: colors.grey[100],
-              },
-            }}
-          />
+          <p>{crawlingStatus}</p>
         </Box>
       </Box>
 

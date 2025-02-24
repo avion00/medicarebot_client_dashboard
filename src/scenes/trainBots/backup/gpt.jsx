@@ -15,8 +15,8 @@ import {
   CircularProgress,
 } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
-import Header from "../../components/Header";
-import { tokens } from "../../theme";
+import Header from "../../../components/Header";
+import { tokens } from "../../../theme";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import axios from "axios";
 

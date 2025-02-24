@@ -33,8 +33,8 @@ import SendIcon from "@mui/icons-material/Send";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-
 import GradientButton from "../../components/GradientButton";
+import TableSkeleton from "../../components/skeleton/TableSkeleton"; // Import the new component
 
 const AllBots = () => {
   const theme = useTheme();
@@ -292,7 +292,6 @@ const AllBots = () => {
         </Typography>
       ),
     },
-
     {
       field: "status",
       headerName: "Status",
@@ -462,6 +461,12 @@ const AllBots = () => {
           </Box>
         </Box>
 
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+
         {/* GRID & CHARTS */}
         <Box
           display="grid"
@@ -470,7 +475,6 @@ const AllBots = () => {
           columnGap="20px"
         >
           {/* ROW 1 */}
-
           <Box
             gridColumn={
               isTab
@@ -501,9 +505,9 @@ const AllBots = () => {
                 <Box
                   sx={{
                     background: `conic-gradient(
-                            ${colors.blueAccent[400]} 0deg ${progressAngle}deg, 
-                            ${colors.redAccent[500]} ${progressAngle}deg 360deg
-                          )`,
+                        ${colors.blueAccent[400]} 0deg ${progressAngle}deg, 
+                        ${colors.redAccent[500]} ${progressAngle}deg 360deg
+                      )`,
                     borderRadius: "50%",
                     width: "150px",
                     height: "150px",
@@ -643,36 +647,14 @@ const AllBots = () => {
               gridColumn="span 12"
               mt="20px"
               backgroundColor={colors.primary[400]}
-              borderRadius="8px"
               p="20px"
               pt={"1em"}
               overflow={"hidden"}
             >
-              {/* Table Header Skeleton */}
-              <Box display="flex" justifyContent="space-between">
-                <Box width="100%">
-                  <Skeleton
-                    style={{
-                      marginBottom: "1em",
-                      marginLeft: "1.5em",
-                      borderRadius: "25px",
-                    }}
-                    width="250px"
-                    height={43}
-                  />
-
-                  <Skeleton
-                    style={{
-                      marginBottom: ".5em",
-                    }}
-                    width="100%"
-                    height={30}
-                    count={5}
-                  />
-                </Box>
-              </Box>
+              <TableSkeleton rows={5} columns={8} />
             </Box>
           ) : (
+            // Your actual DataGrid code
             <Box
               gridColumn="span 12"
               mt="20px"
@@ -682,7 +664,6 @@ const AllBots = () => {
                 <Box
                   display="flex"
                   backgroundColor={colors.grey[500]}
-                  borderRadius="0px"
                   width="250px"
                   sx={{
                     width: "220px",
@@ -758,7 +739,7 @@ const AllBots = () => {
           <Alert
             onClose={handleCloseSnackbar}
             severity="success"
-            sx={{ width: "100%"   }}
+            sx={{ width: "100%" }}
           >
             You copied your bot ID: {copiedBotId}
           </Alert>
