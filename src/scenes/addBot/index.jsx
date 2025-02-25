@@ -43,7 +43,6 @@ const AddBot = () => {
 
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const isTab = useMediaQuery("(min-width:921px)");
-  
 
   const handleCloseNotification = (event, reason) => {
     if (reason === "clickaway") return;
@@ -265,8 +264,7 @@ const AddBot = () => {
   const handleFormSubmit = async (values, { resetForm }) => {
     setLoading(true);
     const formData = new FormData();
-    const formatPostgresArray = (array) => `{${array.join(",")}}`;
-
+const formatPostgresArray = (array) => JSON.stringify(array);
     // Append form fields
     formData.append("name", values.botName);
     formData.append(
@@ -279,7 +277,7 @@ const AddBot = () => {
     formData.append("pretrained_template", values.preTrainedTemplate);
     formData.append(
       "language_support",
-      formatPostgresArray(values.languageSupport)
+      formatPostgresArray(values.languageSupport) // This will format as ["en","de","it"]
     );
 
     formData.append("expectation", values.ExpectedOutcome);
@@ -889,7 +887,7 @@ const AddBot = () => {
                     }}
                   >
                     <InputLabel
-                      id="language-support"
+                      id="preTrainedTemplate"
                       sx={{ color: colors.primary[100] }}
                     >
                       Pre-trained Template
@@ -927,7 +925,7 @@ const AddBot = () => {
                       gridColumn: "span 2",
                       display: "flex",
                       flexDirection: "column",
-                      padding: isNonMobile ? undefined : "0 2em"
+                      padding: isNonMobile ? undefined : "0 2em",
                     }}
                   >
                     <Box
@@ -1430,7 +1428,7 @@ const AddBot = () => {
                 mt={4}
                 display="flex"
                 flexWrap="wrap"
-                gap={2} 
+                gap={2}
                 alignItems="center"
                 width="100%"
               >

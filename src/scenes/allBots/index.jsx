@@ -34,7 +34,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import GradientButton from "../../components/GradientButton";
-import TableSkeleton from "../../components/skeleton/TableSkeleton"; // Import the new component
+import TableSkeleton from "../../components/skeleton/TableSkeleton"; 
 
 const AllBots = () => {
   const theme = useTheme();
@@ -157,7 +157,7 @@ const AllBots = () => {
 
   // Send Email Function
   const sendEmail = async (id) => {
-    const selected = botData.find((bot) => bot.bot_id === id); // Find the bot by bot_id
+    const selected = botData.find((bot) => bot.bot_id === id);
     if (selected) {
       try {
         // Set loading state for the specific bot
@@ -641,7 +641,6 @@ const AllBots = () => {
             </Box>
           </Box>
           {/* ROW 2 */}
-          // Your actual DataGrid code
           <Box
             gridColumn="span 12"
             mt="20px"

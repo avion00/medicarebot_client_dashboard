@@ -77,3 +77,12 @@ const TableSkeleton = ({ rows = 5, columns = 6 }) => {
 };
 
 export default TableSkeleton;
+
+
+
+
+
+
+
+
+
