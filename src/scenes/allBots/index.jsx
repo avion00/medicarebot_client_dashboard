@@ -87,6 +87,10 @@ const AllBots = () => {
         }
       } catch (err) {
         setError(err.message);
+        // Set Snackbar state for error
+        setNotificationType("error");
+        setNotificationMessage(err.message || "Failed to fetch bots.");
+        setShowNotification(true);
       } finally {
         setLoading(false);
       }
@@ -461,12 +465,7 @@ const AllBots = () => {
           </Box>
         </Box>
 
-        {error && (
-          <Alert severity="error" sx={{ mb: 2 }}>
-            {error}
-          </Alert>
-        )}
-
+       
         {/* GRID & CHARTS */}
         <Box
           display="grid"
@@ -725,6 +724,8 @@ const AllBots = () => {
         </Box>
 
         {/* snackbar notification */}
+       
+
         <Snackbar
           open={snackbarOpen}
           autoHideDuration={3000}
