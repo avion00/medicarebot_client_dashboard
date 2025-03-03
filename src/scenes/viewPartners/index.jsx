@@ -510,6 +510,7 @@ const ViewPartners = () => {
             <Box
               gridColumn="span 12"
               // mt="20px"
+              padding={"1em"}
               backgroundColor={colors.primary[400]}
             >
               <TableSkeleton rows={5} columns={8} />

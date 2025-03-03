@@ -272,6 +272,8 @@ const GmailChatHistory = () => {
                 </Box>
               )}
             </Box>
+
+            
           </Box>
 
           <Box sx={{ overflow: "auto", height: "58vh" }}>

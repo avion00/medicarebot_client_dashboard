@@ -4,16 +4,16 @@ import Header from "../../components/Header";
 import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { PendingRequest, ResolvedRequests } from "../../data/humanHandoffsData";
-// import useMediaQuery from "@mui/material/useMediaQuery";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 const HumanHandoffs = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  // const isNonMobile = useMediaQuery("(min-width:768px)");
+  const isNonMobile = useMediaQuery("(min-width:768px)");
 
   const handleCheckboxChange = (ids) => {
     // submittion code
@@ -102,7 +102,10 @@ const HumanHandoffs = () => {
           justifyContent="space-between"
           alignItems="center"
           flexWrap="wrap"
-          p="0 2em"
+          // p="0 2em"
+          p={isNonMobile ? "0 2em" : "0 0 0 2em"}
+          m=".5em"
+          gap="1em"
         >
           <Typography variant="h3" fontWeight="bold">
             Pending Requests
@@ -111,32 +114,40 @@ const HumanHandoffs = () => {
             sx={{
               display: "flex",
               alignItems: "center",
-              justifyContent: "end",
+              justifyContent: "flex-end",
               gap: "1em",
+              width: isNonMobile ? undefined : "100%",
             }}
           >
             <Box
               display="flex"
               backgroundColor={colors.grey[500]}
               borderRadius="0px"
-              width="250px"
               sx={{
-                width: "220px",
+                width: "100%",
                 borderRadius: "25px",
-                margin: ".5em .5em .5em 3em",
-                backgroundColor: "#ccc",
+                backgroundColor: colors.grey[200],
                 border: `1px solid white`,
                 color: "#000",
+                "&:focus": { backgroundColor: colors.grey[100] },
               }}
             >
               <InputBase
-                sx={{ ml: 2, flex: 1, color: "#000" }}
+                sx={{ ml: 2, p: "0 1em", flex: 1, color: "#000" }}
                 placeholder="Search"
               />
               <IconButton type="button" sx={{ p: 1 }}>
                 <SearchIcon sx={{ color: "#000" }} />
               </IconButton>
             </Box>
+            <IconButton
+              sx={{
+                display: isNonMobile ? "none" : undefined,
+              }}
+              onClick={() => console.log("Filter By Clicked")}
+            >
+              <MoreVertIcon />
+            </IconButton>
             <Box
               onClick={() => console.log("Filter By Clicked")}
               sx={{
@@ -147,7 +158,7 @@ const HumanHandoffs = () => {
                 background: "linear-gradient(45deg, #062994, #0E72E1)",
                 color: "#fff",
                 borderRadius: "20px",
-                display: "flex",
+                display: isNonMobile ? "flex" : "none",
                 alignItems: "center",
                 justifyContent: "center",
                 gap: ".5em",
@@ -172,6 +183,7 @@ const HumanHandoffs = () => {
           gridColumn="span 12"
           height="240px"
           sx={{
+            padding: "16px",
             "& .MuiDataGrid-root": {
               border: "none",
             },
@@ -201,7 +213,6 @@ const HumanHandoffs = () => {
           }}
         >
           <DataGrid
-            checkboxSelection
             rows={PendingRequest}
             columns={PendingColumns}
             getRowId={(row) => row.id}
@@ -215,15 +226,18 @@ const HumanHandoffs = () => {
       <Box
         gridColumn="span 12"
         backgroundColor={colors.primary[400]}
-        mt={6}
         pt=".5em"
-      >
+        mt={6}
+        >
         <Box
           display="flex"
           justifyContent="space-between"
           alignItems="center"
           flexWrap="wrap"
-          p="0 2em"
+          // p="0 2em"
+          p={isNonMobile ? "0 2em" : "0 0 0 2em"}
+          m=".5em"
+          gap="1em"
         >
           <Typography variant="h3" fontWeight="bold">
             Resolved Requests
@@ -232,32 +246,40 @@ const HumanHandoffs = () => {
             sx={{
               display: "flex",
               alignItems: "center",
-              justifyContent: "end",
+              justifyContent: "flex-end",
               gap: "1em",
+              width: isNonMobile ? undefined : "100%",
             }}
           >
             <Box
               display="flex"
               backgroundColor={colors.grey[500]}
               borderRadius="0px"
-              width="250px"
               sx={{
-                width: "220px",
+                width: "100%",
                 borderRadius: "25px",
-                margin: ".5em .5em .5em 3em",
-                backgroundColor: "#ccc",
+                backgroundColor: colors.grey[200],
                 border: `1px solid white`,
                 color: "#000",
+                "&:focus": { backgroundColor: colors.grey[100] },
               }}
             >
               <InputBase
-                sx={{ ml: 2, flex: 1, color: "#000" }}
+                sx={{ ml: 2, p: "0 1em", flex: 1, color: "#000" }}
                 placeholder="Search"
               />
               <IconButton type="button" sx={{ p: 1 }}>
                 <SearchIcon sx={{ color: "#000" }} />
               </IconButton>
             </Box>
+            <IconButton
+              sx={{
+                display: isNonMobile ? "none" : undefined,
+              }}
+              onClick={() => console.log("Filter By Clicked")}
+            >
+              <MoreVertIcon />
+            </IconButton>
             <Box
               onClick={() => console.log("Filter By Clicked")}
               sx={{
@@ -268,7 +290,7 @@ const HumanHandoffs = () => {
                 background: "linear-gradient(45deg, #062994, #0E72E1)",
                 color: "#fff",
                 borderRadius: "20px",
-                display: "flex",
+                display: isNonMobile ? "flex" : "none",
                 alignItems: "center",
                 justifyContent: "center",
                 gap: ".5em",
@@ -293,6 +315,7 @@ const HumanHandoffs = () => {
           gridColumn="span 12"
           height="240px"
           sx={{
+            padding: "16px",
             "& .MuiDataGrid-root": {
               border: "none",
             },
@@ -322,7 +345,6 @@ const HumanHandoffs = () => {
           }}
         >
           <DataGrid
-            checkboxSelection
             rows={ResolvedRequests}
             columns={ResolvedColumns}
             getRowId={(row) => row.id}

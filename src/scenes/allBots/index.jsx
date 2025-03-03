@@ -465,7 +465,6 @@ const AllBots = () => {
           </Box>
         </Box>
 
-       
         {/* GRID & CHARTS */}
         <Box
           display="grid"
@@ -673,6 +672,7 @@ const AllBots = () => {
                 gridColumn="span 12"
                 mt="20px"
                 backgroundColor={colors.primary[400]}
+                padding={"1em"}
               >
                 <TableSkeleton rows={5} columns={8} />
               </Box>
@@ -681,6 +681,8 @@ const AllBots = () => {
                 gridColumn="span 12"
                 height="380px"
                 sx={{
+                  padding: "16px",
+
                   "& .MuiDataGrid-root": {
                     border: "none",
                   },
@@ -724,7 +726,6 @@ const AllBots = () => {
         </Box>
 
         {/* snackbar notification */}
-       
 
         <Snackbar
           open={snackbarOpen}

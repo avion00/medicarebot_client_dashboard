@@ -23,17 +23,14 @@ const TrainBots = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const isTab = useMediaQuery("(max-width:1234px)");
-  
-  const isNonMobile = useMediaQuery("(min-width:768px)");
 
+  const isNonMobile = useMediaQuery("(min-width:768px)");
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
   };
-
- 
 
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
@@ -105,18 +102,15 @@ const TrainBots = () => {
     }
   };
 
-
   const startCrawling = async () => {
-    if (!selectedBots.length || !websiteURL ) {
-      setSnackbarMessage(
-        "Please select a bot, enter a website URL."
-      );
+    if (!selectedBots.length || !websiteURL) {
+      setSnackbarMessage("Please select a bot, enter a website URL.");
       setSnackbarSeverity("error");
       setOpenSnackbar(true);
       return;
     }
 
-    const botId = selectedBots[0]; 
+    const botId = selectedBots[0];
     console.log("Starting crawl for bot:", botId);
 
     setLoading(true);
@@ -163,7 +157,6 @@ const TrainBots = () => {
     // Reset the file input so the same file can be selected again
     event.target.value = null;
   };
-
 
   const uploadKnowledgeBaseFile = async () => {
     if (!selectedBots.length || !uploadKnowledgeBase) {
@@ -250,7 +243,6 @@ const TrainBots = () => {
                 "&.Mui-focused": {
                   color: colors.grey[100],
                   fontWeight: "bold",
-
                 },
               }}
             >
@@ -428,7 +420,6 @@ const TrainBots = () => {
               },
             }}
           />
-
         </Box>
         <Box mt="1.5em">
           <Button

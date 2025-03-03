@@ -1,8 +1,8 @@
-import { Box, useTheme, Typography, InputBase } from "@mui/material";
+import { Box, useTheme, Typography,IconButton, InputBase } from "@mui/material";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import React, { useState, useEffect, useRef } from "react";
-// import useMediaQuery from "@mui/material/useMediaQuery";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import SearchIcon from "@mui/icons-material/Search";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import SendIcon from "@mui/icons-material/Send";
@@ -13,7 +13,7 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 const ChatHistory = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  // const isNonMobile = useMediaQuery("(min-width:768px)");
+  const isNonMobile = useMediaQuery("(min-width:768px)");
 
   useEffect(() => {
     setConversation(initialData);
@@ -66,6 +66,34 @@ const ChatHistory = () => {
     conversationEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [conversation]);
 
+    const [isOpen, setIsOpen] = useState(false); // State to toggle filter options
+    const filterRef = useRef(null); // Ref to the filter box
+  
+    
+      // Toggle filter options visibility
+      const handleFilterClick = () => {
+        setIsOpen((prevState) => !prevState);
+      };
+    
+      // Close the filter box when clicking outside
+      useEffect(() => {
+        const handleClickOutside = (event) => {
+          if (filterRef.current && !filterRef.current.contains(event.target)) {
+            setIsOpen(false);
+          }
+        };
+    
+        // Add event listener on mount
+        document.addEventListener("mousedown", handleClickOutside);
+    
+        // Remove event listener on cleanup
+        return () => {
+          document.removeEventListener("mousedown", handleClickOutside);
+        };
+      }, []);
+    
+    
+
   return (
     <Box m="20px">
       {/* HEADER */}
@@ -76,7 +104,6 @@ const ChatHistory = () => {
         flexWrap="wrap"
       >
         <Header title="CHAT HISTORY" subtitle="Detailed Chat History" />
-        
       </Box>
       <Box
         sx={{
@@ -156,24 +183,92 @@ const ChatHistory = () => {
             </Box>
 
             <Box
-              onClick={() => console.log("Filter By Clicked")}
+              onClick={handleFilterClick}
               sx={{
                 flex: 0.25,
-                padding: "0.5em 1em ",
                 position: "relative",
-                background: "linear-gradient(45deg, #062994, #0E72E1)",
-                color: "#fff",
-                borderRadius: "20px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: ".5em",
-                cursor: "pointer",
               }}
             >
-              <FilterAltIcon />
-              <Typography>Filter By</Typography>
-              <ArrowDropDownIcon />
+              <IconButton
+                sx={{
+                  background: "linear-gradient(45deg, #062994, #0E72E1)",
+                  color: "#fff",
+                  borderRadius: "20px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: ".5em",
+                }}
+              >
+                <FilterAltIcon />
+                <Typography
+                  variant="h6"
+                  fontWeight="bold"
+                  textAlign="center"
+                  width="60px"
+                >
+                  Filter By
+                </Typography>
+                <ArrowDropDownIcon />
+              </IconButton>
+
+              {/* Filter options box */}
+              {isOpen && (
+                <Box
+                  ref={filterRef} // Assign ref to the filter dropdown box
+                  sx={{
+                    border: `1px solid ${colors.grey[600]}`,
+                    borderRadius: "8px",
+                    position: "absolute",
+                    top: "3em",
+                    left: "0",
+                    width: "100%",
+                    background: colors.primary[400],
+                    padding: ".5em 0",
+                    overflow: "hidden",
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      background: colors.primary[400],
+                      padding: ".5em 1em",
+                      cursor: "pointer",
+                      transition: "all .4s ease-out",
+                      "&:hover": {
+                        background: colors.primary[500],
+                      },
+                    }}
+                  >
+                    Interaction Type
+                  </Typography>
+                  <Typography
+                    sx={{
+                      background: colors.primary[400],
+                      padding: ".5em 1em",
+                      cursor: "pointer",
+                      transition: "all .4s ease-out",
+                      "&:hover": {
+                        background: colors.primary[500],
+                      },
+                    }}
+                  >
+                    Channel
+                  </Typography>
+                  <Typography
+                    sx={{
+                      background: colors.primary[400],
+                      padding: ".5em 1em",
+                      cursor: "pointer",
+                      transition: "all .4s ease-out",
+                      "&:hover": {
+                        background: colors.primary[500],
+                      },
+                    }}
+                  >
+                    Timestamp
+                  </Typography>
+                </Box>
+              )}
             </Box>
           </Box>
 
@@ -308,786 +403,7 @@ const ChatHistory = () => {
                 </span>
               </Box>
             </Box>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                backgroundColor: colors.primary[400],
-                borderBottom: `2px solid ${colors.primary[500]}`,
-                padding: "1em 2em",
-                transition: "all .2s ease-out",
-                cursor: "pointer",
-                "&:hover": {
-                  backgroundColor: colors.grey[900],
-                },
-              }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-start",
-                  gap: "1em",
-                }}
-              >
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <img
-                    src={`../../assets/user.png`}
-                    alt="Logo"
-                    style={{
-                      width: "42px",
-                      height: "42px",
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                    }}
-                  />
-                </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                  }}
-                >
-                  <span
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "1em",
-                    }}
-                  >
-                    <Typography variant="h5" lineHeight="1.4" fontWeight="bold">
-                      John Smith
-                    </Typography>
-                    <span
-                      style={{
-                        fontSize: "10px",
-                        fontWeight: "500",
-                        background: colors.redAccent[800],
-                        padding: "1px 10px",
-                        borderRadius: "25px",
-                      }}
-                    >
-                      Unseerved
-                    </span>
-                  </span>
 
-                  <Typography
-                    variant="h6"
-                    lineHeight="1.4"
-                    color={colors.grey[300]}
-                  >
-                    Asked about price and features
-                  </Typography>
-                </Box>
-              </Box>
-
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-end",
-                }}
-              >
-                <Typography
-                  fontSize={{ xs: "12px", sm: "14px" }}
-                  lineHeight="1.4"
-                  fontWeight="bold"
-                >
-                  Web Chatbot
-                </Typography>
-
-                <span
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: ".5em",
-                  }}
-                >
-                  <Typography
-                    variant="h6"
-                    lineHeight="1.4"
-                    color={colors.grey[200]}
-                  >
-                    20 min ago
-                  </Typography>
-                  <span
-                    style={{
-                      width: "22px",
-                      height: "22px",
-                      background: "linear-gradient(45deg, #062994, #0E72E1)",
-                      borderRadius: "25px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <span
-                      style={{
-                        padding: "10px",
-                        fontSize: "10px",
-                        fontWeight: "500",
-                        color: "#fff",
-                      }}
-                    >
-                      85
-                    </span>
-                  </span>
-                </span>
-              </Box>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                backgroundColor: colors.primary[400],
-                borderBottom: `2px solid ${colors.primary[500]}`,
-                padding: "1em 2em",
-                transition: "all .2s ease-out",
-                cursor: "pointer",
-                "&:hover": {
-                  backgroundColor: colors.grey[900],
-                },
-              }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-start",
-                  gap: "1em",
-                }}
-              >
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <img
-                    src={`../../assets/user.png`}
-                    alt="Logo"
-                    style={{
-                      width: "42px",
-                      height: "42px",
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                    }}
-                  />
-                </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                  }}
-                >
-                  <span
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "1em",
-                    }}
-                  >
-                    <Typography variant="h5" lineHeight="1.4" fontWeight="bold">
-                      John Smith
-                    </Typography>
-                    <span
-                      style={{
-                        fontSize: "10px",
-                        fontWeight: "500",
-                        background: colors.redAccent[800],
-                        padding: "1px 10px",
-                        borderRadius: "25px",
-                      }}
-                    >
-                      Unseerved
-                    </span>
-                  </span>
-
-                  <Typography
-                    variant="h6"
-                    lineHeight="1.4"
-                    color={colors.grey[300]}
-                  >
-                    Asked about price and features
-                  </Typography>
-                </Box>
-              </Box>
-
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-end",
-                }}
-              >
-                <Typography
-                  fontSize={{ xs: "12px", sm: "14px" }}
-                  lineHeight="1.4"
-                  fontWeight="bold"
-                >
-                  Web Chatbot
-                </Typography>
-
-                <span
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: ".5em",
-                  }}
-                >
-                  <Typography
-                    variant="h6"
-                    lineHeight="1.4"
-                    color={colors.grey[200]}
-                  >
-                    20 min ago
-                  </Typography>
-                  <span
-                    style={{
-                      width: "22px",
-                      height: "22px",
-                      background: "linear-gradient(45deg, #062994, #0E72E1)",
-                      borderRadius: "25px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <span
-                      style={{
-                        padding: "10px",
-                        fontSize: "10px",
-                        fontWeight: "500",
-                        color: "#fff",
-                      }}
-                    >
-                      85
-                    </span>
-                  </span>
-                </span>
-              </Box>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                backgroundColor: colors.primary[400],
-                borderBottom: `2px solid ${colors.primary[500]}`,
-                padding: "1em 2em",
-                transition: "all .2s ease-out",
-                cursor: "pointer",
-                "&:hover": {
-                  backgroundColor: colors.grey[900],
-                },
-              }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-start",
-                  gap: "1em",
-                }}
-              >
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <img
-                    src={`../../assets/user.png`}
-                    alt="Logo"
-                    style={{
-                      width: "42px",
-                      height: "42px",
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                    }}
-                  />
-                </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                  }}
-                >
-                  <span
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "1em",
-                    }}
-                  >
-                    <Typography variant="h5" lineHeight="1.4" fontWeight="bold">
-                      John Smith
-                    </Typography>
-                    <span
-                      style={{
-                        fontSize: "10px",
-                        fontWeight: "500",
-                        background: colors.redAccent[800],
-                        padding: "1px 10px",
-                        borderRadius: "25px",
-                      }}
-                    >
-                      Unseerved
-                    </span>
-                  </span>
-
-                  <Typography
-                    variant="h6"
-                    lineHeight="1.4"
-                    color={colors.grey[300]}
-                  >
-                    Asked about price and features
-                  </Typography>
-                </Box>
-              </Box>
-
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-end",
-                }}
-              >
-                <Typography
-                  fontSize={{ xs: "12px", sm: "14px" }}
-                  lineHeight="1.4"
-                  fontWeight="bold"
-                >
-                  Web Chatbot
-                </Typography>
-
-                <span
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: ".5em",
-                  }}
-                >
-                  <Typography
-                    variant="h6"
-                    lineHeight="1.4"
-                    color={colors.grey[200]}
-                  >
-                    20 min ago
-                  </Typography>
-                  <span
-                    style={{
-                      width: "22px",
-                      height: "22px",
-                      background: "linear-gradient(45deg, #062994, #0E72E1)",
-                      borderRadius: "25px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <span
-                      style={{
-                        padding: "10px",
-                        fontSize: "10px",
-                        fontWeight: "500",
-                        color: "#fff",
-                      }}
-                    >
-                      85
-                    </span>
-                  </span>
-                </span>
-              </Box>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                backgroundColor: colors.primary[400],
-                borderBottom: `2px solid ${colors.primary[500]}`,
-                padding: "1em 2em",
-                transition: "all .2s ease-out",
-                cursor: "pointer",
-                "&:hover": {
-                  backgroundColor: colors.grey[900],
-                },
-              }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-start",
-                  gap: "1em",
-                }}
-              >
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <img
-                    src={`../../assets/user.png`}
-                    alt="Logo"
-                    style={{
-                      width: "42px",
-                      height: "42px",
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                    }}
-                  />
-                </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                  }}
-                >
-                  <span
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "1em",
-                    }}
-                  >
-                    <Typography variant="h5" lineHeight="1.4" fontWeight="bold">
-                      John Smith
-                    </Typography>
-                    <span
-                      style={{
-                        fontSize: "10px",
-                        fontWeight: "500",
-                        background: colors.redAccent[800],
-                        padding: "1px 10px",
-                        borderRadius: "25px",
-                      }}
-                    >
-                      Unseerved
-                    </span>
-                  </span>
-
-                  <Typography
-                    variant="h6"
-                    lineHeight="1.4"
-                    color={colors.grey[300]}
-                  >
-                    Asked about price and features
-                  </Typography>
-                </Box>
-              </Box>
-
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-end",
-                }}
-              >
-                <Typography
-                  fontSize={{ xs: "12px", sm: "14px" }}
-                  lineHeight="1.4"
-                  fontWeight="bold"
-                >
-                  Web Chatbot
-                </Typography>
-
-                <span
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: ".5em",
-                  }}
-                >
-                  <Typography
-                    variant="h6"
-                    lineHeight="1.4"
-                    color={colors.grey[200]}
-                  >
-                    20 min ago
-                  </Typography>
-                  <span
-                    style={{
-                      width: "22px",
-                      height: "22px",
-                      background: "linear-gradient(45deg, #062994, #0E72E1)",
-                      borderRadius: "25px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <span
-                      style={{
-                        padding: "10px",
-                        fontSize: "10px",
-                        fontWeight: "500",
-                        color: "#fff",
-                      }}
-                    >
-                      85
-                    </span>
-                  </span>
-                </span>
-              </Box>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                backgroundColor: colors.primary[400],
-                borderBottom: `2px solid ${colors.primary[500]}`,
-                padding: "1em 2em",
-                transition: "all .2s ease-out",
-                cursor: "pointer",
-                "&:hover": {
-                  backgroundColor: colors.grey[900],
-                },
-              }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-start",
-                  gap: "1em",
-                }}
-              >
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <img
-                    src={`../../assets/user.png`}
-                    alt="Logo"
-                    style={{
-                      width: "42px",
-                      height: "42px",
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                    }}
-                  />
-                </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                  }}
-                >
-                  <span
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "1em",
-                    }}
-                  >
-                    <Typography variant="h5" lineHeight="1.4" fontWeight="bold">
-                      John Smith
-                    </Typography>
-                    <span
-                      style={{
-                        fontSize: "10px",
-                        fontWeight: "500",
-                        background: colors.redAccent[800],
-                        padding: "1px 10px",
-                        borderRadius: "25px",
-                      }}
-                    >
-                      Unseerved
-                    </span>
-                  </span>
-
-                  <Typography
-                    variant="h6"
-                    lineHeight="1.4"
-                    color={colors.grey[300]}
-                  >
-                    Asked about price and features
-                  </Typography>
-                </Box>
-              </Box>
-
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-end",
-                }}
-              >
-                <Typography
-                  fontSize={{ xs: "12px", sm: "14px" }}
-                  lineHeight="1.4"
-                  fontWeight="bold"
-                >
-                  Web Chatbot
-                </Typography>
-
-                <span
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: ".5em",
-                  }}
-                >
-                  <Typography
-                    variant="h6"
-                    lineHeight="1.4"
-                    color={colors.grey[200]}
-                  >
-                    20 min ago
-                  </Typography>
-                  <span
-                    style={{
-                      width: "22px",
-                      height: "22px",
-                      background: "linear-gradient(45deg, #062994, #0E72E1)",
-                      borderRadius: "25px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <span
-                      style={{
-                        padding: "10px",
-                        fontSize: "10px",
-                        fontWeight: "500",
-                        color: "#fff",
-                      }}
-                    >
-                      85
-                    </span>
-                  </span>
-                </span>
-              </Box>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                backgroundColor: colors.primary[400],
-                borderBottom: `2px solid ${colors.primary[500]}`,
-                padding: "1em 2em",
-                transition: "all .2s ease-out",
-                cursor: "pointer",
-                "&:hover": {
-                  backgroundColor: colors.grey[900],
-                },
-              }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-start",
-                  gap: "1em",
-                }}
-              >
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <img
-                    src={`../../assets/user.png`}
-                    alt="Logo"
-                    style={{
-                      width: "42px",
-                      height: "42px",
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                    }}
-                  />
-                </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                  }}
-                >
-                  <span
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "1em",
-                    }}
-                  >
-                    <Typography variant="h5" lineHeight="1.4" fontWeight="bold">
-                      John Smith
-                    </Typography>
-                    <span
-                      style={{
-                        fontSize: "10px",
-                        fontWeight: "500",
-                        background: colors.redAccent[800],
-                        padding: "1px 10px",
-                        borderRadius: "25px",
-                      }}
-                    >
-                      Unseerved
-                    </span>
-                  </span>
-
-                  <Typography
-                    variant="h6"
-                    lineHeight="1.4"
-                    color={colors.grey[300]}
-                  >
-                    Asked about price and features
-                  </Typography>
-                </Box>
-              </Box>
-
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-end",
-                }}
-              >
-                <Typography
-                  fontSize={{ xs: "12px", sm: "14px" }}
-                  lineHeight="1.4"
-                  fontWeight="bold"
-                >
-                  Web Chatbot
-                </Typography>
-
-                <span
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: ".5em",
-                  }}
-                >
-                  <Typography
-                    variant="h6"
-                    lineHeight="1.4"
-                    color={colors.grey[200]}
-                  >
-                    20 min ago
-                  </Typography>
-                  <span
-                    style={{
-                      width: "22px",
-                      height: "22px",
-                      background: "linear-gradient(45deg, #062994, #0E72E1)",
-                      borderRadius: "25px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <span
-                      style={{
-                        padding: "10px",
-                        fontSize: "10px",
-                        fontWeight: "500",
-                        color: "#fff",
-                      }}
-                    >
-                      85
-                    </span>
-                  </span>
-                </span>
-              </Box>
-            </Box>
             <Box
               sx={{
                 display: "flex",
