@@ -577,7 +577,7 @@ const ViewPartners = () => {
                   <p style={{ color: "red", padding: "1em" }}>Error: {error}</p>
                 ) : (
                   <DataGrid
-                    rows={filteredData} // ✅ Display filtered results
+                    rows={filteredData}
                     columns={columns}
                     getRowId={(row) => row.id}
                     rowHeight={40}

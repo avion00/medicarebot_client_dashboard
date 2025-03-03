@@ -13,55 +13,40 @@ import {
   Typography,
   Alert,
   CircularProgress,
-  IconButton,
-  Modal,
 } from "@mui/material";
 import Header from "../../components/Header";
 import { tokens } from "../../theme";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import axios from "axios";
-import { DataGrid } from "@mui/x-data-grid";
-import DeleteIcon from "@mui/icons-material/Delete";
-import TableSkeleton from "../../components/skeleton/TableSkeleton";
-import CloseIcon from "@mui/icons-material/Close"; // Import the close icon
-
 
 const TrainBots = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const isTab = useMediaQuery("(max-width:1234px)");
+  
   const isNonMobile = useMediaQuery("(min-width:768px)");
 
-  // Snackbar states
+
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
   };
 
-  // Auth token
-  const token = sessionStorage.getItem("authToken");
+ 
 
-  // Bots
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+
+  // api integration for feed back
   const [selectedBots, setSelectedBots] = useState([]);
   const [botsList, setBotsList] = useState([]);
-
-  // Feedback states
   const [feedback, setFeedback] = useState("");
-  const [feedbackData, setFeedbackData] = useState([]); // For the DataGrid
-  const [loadingFeedback, setLoadingFeedback] = useState(false); // For fetching feedback
-  // const [error, setError] = useState(null);
-
-  // Crawling states
+  const [loading, setLoading] = useState(false);
   const [websiteURL, setWebsiteURL] = useState("");
-  const [loadingCrawl, setLoadingCrawl] = useState(false);
 
-  // Knowledge base upload states
-  const [uploadKnowledgeBase, setUploadKnowledgeBase] = useState(null);
-  const [loadingUpload, setLoadingUpload] = useState(false);
+  const token = sessionStorage.getItem("authToken");
 
-  // Fetch the list of bots on mount
   useEffect(() => {
     const fetchBots = async () => {
       try {
@@ -75,7 +60,6 @@ const TrainBots = () => {
         );
         setBotsList(response.data.bots);
       } catch (error) {
-        // setError(error.message);
         console.error("Error fetching bots:", error);
       }
     };
@@ -83,26 +67,10 @@ const TrainBots = () => {
     fetchBots();
   }, [token]);
 
-  // Fetch feedback when selectedBots changes
-  useEffect(() => {
-    if (selectedBots.length > 0) {
-      fetchFeedback();
-    }
-  }, [selectedBots]);
-
-  // Handle input changes
   const handleFeedbackInput = (event) => {
     setFeedback(event.target.value);
   };
-  const handleuploadKnowledgeBaseChange = (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-    setUploadKnowledgeBase(file);
-    // Reset the file input so the same file can be selected again
-    event.target.value = null;
-  };
 
-  // Submit feedback for a selected bot
   const submitFeedback = async () => {
     if (!selectedBots.length || !feedback) {
       setSnackbarMessage("Please select a bot and enter feedback.");
@@ -131,64 +99,27 @@ const TrainBots = () => {
       setFeedback("");
       setSelectedBots([]);
     } catch (error) {
-      // setError(error.message);
-      console.error("Failed to submit feedback:", error);
       setSnackbarMessage("Failed to submit feedback.");
       setSnackbarSeverity("error");
       setOpenSnackbar(true);
     }
   };
 
-  // Fetch feedback for the selected bot
-const fetchFeedback = async () => {
-  if (!selectedBots.length) {
-    setSnackbarMessage("Please select a bot to fetch feedback.");
-    setSnackbarSeverity("error");
-    setOpenSnackbar(true);
-    return;
-  }
 
-  setLoadingFeedback(true);
-  try {
-    const response = await axios.get("https://app.medicarebot.live/feedback", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      params: {
-        bot_id: selectedBots[0],
-      },
-    });
-
-    setFeedbackData(response.data || []);
-    setSnackbarMessage("Feedback fetched successfully.");
-    setSnackbarSeverity("success");
-    setOpenSnackbar(true);
-  } catch (error) {
-    console.error("Error fetching feedback:", error);
-
-    // Extract the error message from the server response
-    const serverErrorMessage =
-    error.response?.data?.error || "Error fetching feedback data.";
-    // console.log(setError(error.message));
-    setSnackbarMessage(serverErrorMessage); // Set the server's error message
-    setSnackbarSeverity("error");
-    setOpenSnackbar(true);
-  } finally {
-    setLoadingFeedback(false);
-  }
-};
-
-  // Start website crawling
   const startCrawling = async () => {
-    if (!selectedBots.length || !websiteURL) {
-      setSnackbarMessage("Please select a bot and enter a website URL.");
+    if (!selectedBots.length || !websiteURL ) {
+      setSnackbarMessage(
+        "Please select a bot, enter a website URL."
+      );
       setSnackbarSeverity("error");
       setOpenSnackbar(true);
       return;
     }
 
-    const botId = selectedBots[0];
-    setLoadingCrawl(true);
+    const botId = selectedBots[0]; 
+    console.log("Starting crawl for bot:", botId);
+
+    setLoading(true);
     try {
       const response = await axios.post(
         "https://app.medicarebot.live/crawl",
@@ -201,22 +132,39 @@ const fetchFeedback = async () => {
         }
       );
 
+      console.log("Crawling Response:", response.data);
+
       setSnackbarMessage(
         response.data.message || "Crawling started successfully."
       );
       setSnackbarSeverity("success");
-      setOpenSnackbar(true);
     } catch (error) {
       console.error("Crawling API Error:", error.response || error);
       setSnackbarMessage(error.response?.data?.message || "Crawling failed.");
       setSnackbarSeverity("error");
-      setOpenSnackbar(true);
     } finally {
-      setLoadingCrawl(false);
+      setOpenSnackbar(true);
+      setLoading(false);
     }
   };
 
-  // Upload knowledge base file
+  // upload knowledge base file
+
+  const [uploadKnowledgeBase, setUploadKnowledgeBase] = useState(null);
+  const [loadingUpload, setLoadingUpload] = useState(false);
+
+  const handleuploadKnowledgeBaseChange = (event) => {
+    const file = event.target.files[0];
+    if (!file) return; // Prevent empty selection
+
+    console.log("Selected file:", file); // Debugging file selection
+    setUploadKnowledgeBase(file);
+
+    // Reset the file input so the same file can be selected again
+    event.target.value = null;
+  };
+
+
   const uploadKnowledgeBaseFile = async () => {
     if (!selectedBots.length || !uploadKnowledgeBase) {
       setSnackbarMessage("Please select a bot and choose a file to upload.");
@@ -227,8 +175,13 @@ const fetchFeedback = async () => {
 
     setLoadingUpload(true);
     const formData = new FormData();
-    formData.append("bot_id", selectedBots[0]);
+    formData.append("bot_id", selectedBots[0]); // First selected bot
     formData.append("knowledge_base_file", uploadKnowledgeBase);
+
+    // Debugging FormData before sending
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}:`, value);
+    }
 
     try {
       const response = await axios.post(
@@ -243,113 +196,26 @@ const fetchFeedback = async () => {
         }
       );
 
+      console.log("Upload Response:", response.data);
+
       setSnackbarMessage(
         response.data.message || "File uploaded successfully."
       );
       setSnackbarSeverity("success");
+
       setUploadKnowledgeBase(null);
-      setOpenSnackbar(true);
     } catch (error) {
       console.error("Upload Error:", error.response || error);
       setSnackbarMessage(error.response?.data?.message || "Upload failed.");
       setSnackbarSeverity("error");
-      setOpenSnackbar(true);
     } finally {
+      setOpenSnackbar(true);
       setLoadingUpload(false);
     }
   };
 
-  // Handle delete action in table (stub)
-  // Handle delete action in table
-  const handleDelete = async (feedbackId) => {
-    try {
-      // Send DELETE request to the /feedback endpoint
-      await axios.delete(
-        `https://app.medicarebot.live/feedback/${feedbackId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      // Remove the deleted feedback from the feedbackData state
-      setFeedbackData((prevFeedbackData) =>
-        prevFeedbackData.filter((feedback) => feedback.id !== feedbackId)
-      );
-
-      // Show success message
-      setSnackbarMessage("Feedback deleted successfully.");
-      setSnackbarSeverity("success");
-      setOpenSnackbar(true);
-    } catch (error) {
-      console.error("Error deleting feedback:", error);
-      setSnackbarMessage("Failed to delete feedback.");
-      setSnackbarSeverity("error");
-      setOpenSnackbar(true);
-    }
-  };
-
- 
-
-   const [isModalOpen, setIsModalOpen] = useState(false);
-   const [selectedFeedbackContent, setSelectedFeedbackContent] = useState("");
-
-   // Handle row click
-   const handleRowClick = (params) => {
-     setSelectedFeedbackContent(params.row.content); // Set the selected feedback content
-     setIsModalOpen(true); // Open the modal
-   };
-
-
-
-  // DataGrid columns
-  const columns = [
-    {
-      field: "id",
-      headerName: "ID",
-      flex: 0.1,
-      headerAlign: "center",
-      minWidth: 50,
-      align: "center",
-    },
-    {
-      field: "content",
-      headerName: "Feedback",
-      flex: 1,
-      minWidth: 420,
-      cellClassName: "clickable-cell", // Add a custom class name
-    },
-    {
-      field: "created_at",
-      headerName: "Created At",
-      flex: 0.3,
-      minWidth: 150,
-    },
-    {
-      field: "action",
-      headerName: "Action",
-      flex: 0.15,
-      headerAlign: "center",
-      minWidth: 100,
-      align: "center",
-      renderCell: (params) => (
-        <Box display="flex" gap=".1em" justifyContent="center">
-          <IconButton
-            onClick={() => handleDelete(params.row.id)}
-            aria-label="delete"
-          >
-            <DeleteIcon color="error" sx={{ fontSize: "14px" }} />
-          </IconButton>
-        </Box>
-      ),
-    },
-  ];
-
-
   return (
     <Box m="20px">
-      {/* Header */}
       <Box
         display="flex"
         justifyContent="space-between"
@@ -358,11 +224,10 @@ const fetchFeedback = async () => {
       >
         <Header
           title="TRAIN BOTS"
-          subtitle="Train Your bots to perform your tasks"
+          subtitle=" Train Your bots to perform your task"
         />
       </Box>
 
-      {/* Select Bots */}
       <Box
         display="grid"
         gap="30px"
@@ -385,6 +250,7 @@ const fetchFeedback = async () => {
                 "&.Mui-focused": {
                   color: colors.grey[100],
                   fontWeight: "bold",
+
                 },
               }}
             >
@@ -435,7 +301,7 @@ const fetchFeedback = async () => {
         </Box>
       </Box>
 
-      {/* Feedback System */}
+      {/* User Feedback */}
       <Box>
         <Typography
           variant="h3"
@@ -449,7 +315,7 @@ const fetchFeedback = async () => {
           value={feedback}
           onChange={handleFeedbackInput}
           label="Feedback"
-          placeholder="Enter your Feedback"
+          placeholder="Enter you Feedback"
           multiline
           rows={10}
           variant="outlined"
@@ -462,7 +328,7 @@ const fetchFeedback = async () => {
                 borderColor: colors.primary[400],
               },
               "&:hover fieldset": {
-                borderColor: colors.blueAccent[700],
+                borderColor: colors.blueAccent[500],
                 borderRadius: "0",
               },
               "&.Mui-focused fieldset": {
@@ -504,115 +370,10 @@ const fetchFeedback = async () => {
           >
             Submit Feedback
           </Button>
-          <Button
-            onClick={fetchFeedback}
-            color="secondary"
-            variant="outlined"
-            style={{
-              borderRadius: "20px",
-              marginRight: "8px",
-            }}
-          >
-            Fetch Feedback
-          </Button>
+          {/* <p>{feedbackList}</p> */}
         </Box>
-
-        {/* Feedback Table */}
-        {loadingFeedback ? (
-          <Box
-            mt={"1em"}
-            gridColumn="span 12"
-            pt="1em"
-            padding={"1em"}
-            backgroundColor={colors.primary[400]}
-          >
-            <TableSkeleton rows={5} columns={8} />
-          </Box>
-        ) : (
-          <Box
-            gridColumn="span 12"
-            height="320px"
-            mt={"1em"}
-            sx={{
-              overflowX: "auto",
-              overflowY: "hidden",
-              "& .MuiDataGrid-root": {
-                border: "none",
-              },
-              "& .MuiDataGrid-cell": {
-                borderBottom: "none",
-              },
-              "& .name-column--cell": {
-                color: colors.blueAccent[200],
-              },
-              "& .MuiDataGrid-columnHeaders": {
-                backgroundColor: colors.primary[400],
-                borderBottom: `1px solid ${colors.grey[700]}`,
-                borderRadius: "0 !important",
-              },
-              "& .MuiDataGrid-virtualScroller": {
-                backgroundColor: colors.primary[400],
-              },
-              "& .MuiDataGrid-footerContainer": {
-                borderTop: `1px solid ${colors.grey[700]}`,
-                backgroundColor: colors.primary[400],
-                height: "40px !important",
-                minHeight: "40px !important",
-              },
-              "& .MuiCheckbox-root": {
-                color: `${colors.blueAccent[200]} !important`,
-              },
-            }}
-          >
-            <Box
-              gridColumn="span 12"
-              height="320px"
-              sx={{
-                "& .MuiDataGrid-root": { border: "none" },
-                "& .MuiDataGrid-columnHeaders": {
-                  backgroundColor: colors.primary[400],
-                  borderBottom: `1px solid ${colors.grey[700]}`,
-                },
-                "& .MuiDataGrid-footerContainer": {
-                  borderTop: `1px solid ${colors.grey[700]}`,
-                  backgroundColor: colors.primary[400],
-                },
-              }}
-            >
-              {loadingFeedback ? (
-                <p
-                  style={{
-                    padding: "2em",
-                  }}
-                >
-                  Loading data...
-                </p>
-              ) : (
-                <DataGrid
-                  rows={feedbackData}
-                  columns={columns}
-                  onRowClick={handleRowClick} // Handle row click
-                  getRowId={(row) => row.id}
-                  rowHeight={40}
-                  headerHeight={40}
-                  initialState={{
-                    sorting: {
-                      sortModel: [{ field: "id", sort: "asc" }],
-                    },
-                  }}
-                  sx={{
-                    "& .clickable-cell": {
-                      cursor: "pointer", // Set cursor to pointer for the content field
-                    },
-                  }}
-                />
-              )}
-            </Box>
-          </Box>
-        )}
       </Box>
 
-      {/* Website Crawling */}
       <Box>
         <Typography
           variant="h3"
@@ -667,18 +428,19 @@ const fetchFeedback = async () => {
               },
             }}
           />
+
         </Box>
         <Box mt="1.5em">
           <Button
             variant="outlined"
-            disabled={loadingCrawl}
+            disabled={loading}
             onClick={startCrawling}
             sx={{
               width: "160px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              gap: "8px",
+              gap: "8px", // Add space between spinner and text
               color: colors.blueAccent[300],
               borderColor: colors.blueAccent[300],
               borderRadius: "20px",
@@ -689,7 +451,7 @@ const fetchFeedback = async () => {
               },
             }}
           >
-            {loadingCrawl ? (
+            {loading ? (
               <>
                 <CircularProgress
                   size={20}
@@ -704,7 +466,6 @@ const fetchFeedback = async () => {
         </Box>
       </Box>
 
-      {/* Upload Knowledge Base File */}
       <Box mt={"2em"}>
         <Typography
           variant="h3"
@@ -829,56 +590,6 @@ const fetchFeedback = async () => {
           {snackbarMessage}
         </Alert>
       </Snackbar>
-
-      <Modal
-        open={isModalOpen}
-        onClose={() => setIsModalOpen(false)} // Close modal when clicking outside
-        aria-labelledby="feedback-modal-title"
-        aria-describedby="feedback-modal-description"
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: "90%",
-            maxWidth: "600px",
-            backgroundColor: colors.grey[900],
-            boxShadow: 24,
-            px: 4,
-            py: 6,
-            pr: 2.75,
-            borderRadius: "8px",
-            outline: "none", // Remove outline
-          }}
-        >
-          {/* Close icon at the top-right corner */}
-          <IconButton
-            aria-label="close"
-            onClick={() => setIsModalOpen(false)}
-            sx={{
-              position: "absolute",
-              right: 8,
-              top: 8,
-              color: "text.secondary",
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-
-          {/* Content */}
-          <Box
-            sx={{
-              maxHeight: "70vh", // Limit height to 70% of the viewport
-              overflowY: "auto", // Add scroll if content is too long
-              paddingRight: "8px", // Add padding to avoid overlap with scrollbar
-            }}
-          >
-            {selectedFeedbackContent}
-          </Box>
-        </Box>
-      </Modal>
     </Box>
   );
 };
