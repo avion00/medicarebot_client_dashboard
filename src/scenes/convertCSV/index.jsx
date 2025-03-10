@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {
   Box,
   Button,
@@ -10,11 +10,9 @@ import {
   useTheme,
 } from "@mui/material";
 import { Formik } from "formik";
-import * as yup from "yup";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import Header from "../../components/Header";
 import useMediaQuery from "@mui/material/useMediaQuery";
-
 import { tokens } from "../../theme";
 import axios from "axios";
 
@@ -28,6 +26,9 @@ const ConvertCSV = () => {
   const [showNotification, setShowNotification] = useState(false);
   const [notificationType, setNotificationType] = useState("success");
   const [notificationMessage, setNotificationMessage] = useState("");
+
+  // Add a ref to the file input
+  const fileInputRef = useRef(null);
 
   const handleUploadFileChange = (event) => {
     const file = event.target.files[0];
@@ -80,6 +81,10 @@ const ConvertCSV = () => {
       setShowNotification(true);
       resetForm();
       setExcelFile(null);
+      // Clear the file input using the ref
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     } catch (error) {
       setNotificationType("error");
       setNotificationMessage(
@@ -90,8 +95,6 @@ const ConvertCSV = () => {
       setLoading(false);
     }
   };
-
-  
 
   const initialValues = { file: "" };
 
@@ -145,13 +148,14 @@ const ConvertCSV = () => {
                         type="file"
                         hidden
                         accept=".xls,.xlsx"
+                        ref={fileInputRef}
                         onChange={handleUploadFileChange}
                       />
                     </Button>
                   ),
                 }}
                 sx={{
-                  maxWidth: isNonMobile ?  "480px" : "100%",
+                  maxWidth: isNonMobile ? "480px" : "100%",
                   backgroundColor: colors.primary[400],
                   color: colors.primary[100],
                   borderRadius: "8px",
@@ -188,9 +192,18 @@ const ConvertCSV = () => {
                   "&:hover": { opacity: loading ? "1" : ".7" },
                 }}
               >
-                {loading
-                  ? `${(<CircularProgress size={20} color="inherit" />)} Converting....`
-                  : "Convert & Download"}
+                {loading ? (
+                  <>
+                    <CircularProgress
+                      size={20}
+                      color="inherit"
+                      sx={{ marginRight: "8px" }}
+                    />
+                    Converting...
+                  </>
+                ) : (
+                  "Convert & Download"
+                )}
               </Button>
             </Box>
           </form>
