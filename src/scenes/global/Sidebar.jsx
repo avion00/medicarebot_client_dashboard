@@ -4,6 +4,7 @@ import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 import "react-pro-sidebar/dist/css/styles.css";
 import { tokens } from "../../theme";
+import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import AssessmentIcon from "@mui/icons-material/Assessment";
@@ -62,28 +63,27 @@ const Sidebar = ({ isSidebar, setIsSidebar }) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [selected, setSelected] = useState("Dashboard");
   const isNonMobile = useMediaQuery("(min-width:768px)");
-  const location = useLocation(); 
+  const location = useLocation();
 
   // for dynamic URL images
-const [imageUrl, setImageUrl] = useState("");
-const [loading, setLoading] = useState(true); // State for loading
+  const [imageUrl, setImageUrl] = useState("");
+  const [loading, setLoading] = useState(true); // State for loading
 
-useEffect(() => {
-  fetch("https://randomuser.me/api/")
-    .then((response) => response.json())
-    .then((data) => {
-      const fetchedImageUrl = data.results[0].picture.large;
-      setImageUrl(fetchedImageUrl);
-    })
-    .catch((error) => {
-      console.error("Error fetching image:", error);
-      setImageUrl("https://via.placeholder.com/100");
-    })
-    .finally(() => {
-      setLoading(false); // Set loading to false after fetching image
-    });
-}, []);
-
+  useEffect(() => {
+    fetch("https://randomuser.me/api/")
+      .then((response) => response.json())
+      .then((data) => {
+        const fetchedImageUrl = data.results[0].picture.large;
+        setImageUrl(fetchedImageUrl);
+      })
+      .catch((error) => {
+        console.error("Error fetching image:", error);
+        setImageUrl("https://via.placeholder.com/100");
+      })
+      .finally(() => {
+        setLoading(false); // Set loading to false after fetching image
+      });
+  }, []);
 
   const sidebarRef = useRef(null);
 
@@ -126,6 +126,8 @@ useEffect(() => {
       setSelected("Deactivate Bots");
     } else if (path === "/addPartners") {
       setSelected("addPartners");
+    } else if (path === "/convertCSV") {
+      setSelected("convertCSV");
     } else if (path === "/viewPartners") {
       setSelected("viewPartners");
     } else if (path === "/chatHistory") {
@@ -261,12 +263,10 @@ useEffect(() => {
                       highlightColor={
                         theme.palette.mode === "dark" ? "#444" : "#f5f5f5"
                       }
-                      
                     />
                   ) : (
                     <img
                       alt="profile-user"
-                      
                       width="100px"
                       height="100px"
                       src={imageUrl}
@@ -466,6 +466,26 @@ useEffect(() => {
                     }}
                   >
                     Add Partners
+                  </Link>
+                </MenuItem>
+                <MenuItem
+                  icon={<InsertDriveFileOutlinedIcon />}
+                  onClick={() => setSelected("convertCSV")}
+                  style={{
+                    marginBottom: ".5em",
+                    color:
+                      selected === "convertCSV" ? "#6870fa" : colors.grey[100],
+                  }}
+                >
+                  <Link
+                    to="/convertCSV"
+                    style={{
+                      textDecoration: "none",
+                      color: "inherit",
+                      fontSize: "13px",
+                    }}
+                  >
+                    Convert to CSV
                   </Link>
                 </MenuItem>
                 <MenuItem
