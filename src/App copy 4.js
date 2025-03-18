@@ -35,7 +35,7 @@ import ChatHistory from "./scenes/chatHistory/index";
 import InteractionStats from "./scenes/InteractionStats";
 import HumanHandoffs from "./scenes/humanHandoffs/index";
 import BotIntegration from "./scenes/botIntegration/index";
-// import PrivateRoute from "./components/PrivateRoute";
+import PrivateRoute from "./components/PrivateRoute";
 import TestComponent from "./scenes/test/index";
 import GmailChatHistory from "./scenes/gmailChatHistory/index";
 import CallingPage from "./scenes/bot-call/index";
@@ -107,236 +107,236 @@ function App({ onLoaded }) {
                   exact
                   path="/dashboard"
                   element={
-                    
+                    <PrivateRoute>
                       <Dashboard />
-                    
+                    </PrivateRoute>
                   }
                 />
 
                 <Route
                   path="/form"
                   element={
-                    
+                    <PrivateRoute>
                       <Form />
-                    
+                    </PrivateRoute>
                   }
                 />
 
                 <Route
                   path="/faq"
                   element={
-                    
+                    <PrivateRoute>
                       <FAQ />
-                    
+                    </PrivateRoute>
                   }
                 />
                 <Route
                   path="/calendar"
                   element={
-                    
+                    <PrivateRoute>
                       <Calendar />
-                    
+                    </PrivateRoute>
                   }
                 />
 
                 <Route
                   path="/changePassword"
                   element={
-                    
+                    <PrivateRoute>
                       <ChangePassword />
-                    
+                    </PrivateRoute>
                   }
                 />
                 <Route
                   path="/editProfile"
                   element={
-                    
+                    <PrivateRoute>
                       <EditProfile />
-                    
+                    </PrivateRoute>
                   }
                 />
                 <Route
                   path="/activeBots"
                   element={
-                    
+                    <PrivateRoute>
                       <ActiveBots />
-                    
+                    </PrivateRoute>
                   }
                 />
                 <Route
                   path="/configureSettings"
                   element={
-                    
+                    <PrivateRoute>
                       <ConfigureSettings />
-                    
+                    </PrivateRoute>
                   }
                 />
                 <Route
                   path="/testBots"
                   element={
-                    
+                    <PrivateRoute>
                       <TestBots />
-                    
+                    </PrivateRoute>
                   }
                 />
                 <Route
                   path="/deactivateBots"
                   element={
-                    
+                    <PrivateRoute>
                       <Deactivate />
-                    
+                    </PrivateRoute>
                   }
                 />
                 <Route
                   path="/trainBots"
                   element={
-                    
+                    <PrivateRoute>
                       <TrainBots />
-                    
+                    </PrivateRoute>
                   }
                 />
                 <Route
                   path="/billing"
                   element={
-                    
+                    <PrivateRoute>
                       <Billing />
-                    
+                    </PrivateRoute>
                   }
                 />
                 <Route
                   path="/reports"
                   element={
-                    
+                    <PrivateRoute>
                       <Reports />
-                    
+                    </PrivateRoute>
                   }
                 />
                 <Route
                   path="/addBot"
                   element={
-                    
+                    <PrivateRoute>
                       <AddBot />
-                    
+                    </PrivateRoute>
                   }
                 />
                 <Route
                   path="/allBots"
                   element={
-                    
+                    <PrivateRoute>
                       <AllBots />
-                    
+                    </PrivateRoute>
                   }
                 />
                 <Route
                   path="/addPartners"
                   element={
-                    
+                    <PrivateRoute>
                       <AddPartners />
-                    
+                    </PrivateRoute>
                   }
                 />
                 <Route
                   path="/convertCSV"
                   element={
-                    
+                    <PrivateRoute>
                       <ConvertCSV />
-                    
+                    </PrivateRoute>
                   }
                 />
                 <Route
                   path="/editPartners/:id"
                   element={
-                    
+                    <PrivateRoute>
                       <EditPartners />
-                    
+                    </PrivateRoute>
                   }
                 />
                 <Route
                   path="/viewPartners"
                   element={
-                    
+                    <PrivateRoute>
                       <ViewPartners />
-                    
+                    </PrivateRoute>
                   }
                 />
                 <Route
                   path="/contactUs"
                   element={
-                    
+                    <PrivateRoute>
                       <ContactUs />
-                    
+                    </PrivateRoute>
                   }
                 />
                 <Route
                   path="/customerSupport"
                   element={
-                    
+                    <PrivateRoute>
                       <CustomerSupport />
-                    
+                    </PrivateRoute>
                   }
                 />
                 <Route
                   path="/viewProfile"
                   element={
-                    
+                    <PrivateRoute>
                       <ViewProfile />
-                    
+                    </PrivateRoute>
                   }
                 />
                 <Route
                   path="/interactionStats"
                   element={
-                    
+                    <PrivateRoute>
                       <InteractionStats />
-                    
+                    </PrivateRoute>
                   }
                 />
                 <Route
                   path="/chatHistory"
                   element={
-                    
+                    <PrivateRoute>
                       <ChatHistory />
-                    
+                    </PrivateRoute>
                   }
                 />
                 <Route
                   path="/humanHandoffs"
                   element={
-                    
+                    <PrivateRoute>
                       <HumanHandoffs />
-                    
+                    </PrivateRoute>
                   }
                 />
                 <Route
                   path="/botIntegration"
                   element={
-                    
+                    <PrivateRoute>
                       <BotIntegration />
-                    
+                    </PrivateRoute>
                   }
                 />
                 <Route
                   path="/gmailChatHistory"
                   element={
-                    
+                    <PrivateRoute>
                       <GmailChatHistory />
-                    
+                    </PrivateRoute>
                   }
                 />
                 <Route
                   path="/testComponent"
                   element={
-                    
+                    <PrivateRoute>
                       <TestComponent />
-                    
+                    </PrivateRoute>
                   }
                 />
                 <Route
                   path="/bot-call"
                   element={
-                    
+                    <PrivateRoute>
                       <CallingPage />
-                    
+                    </PrivateRoute>
                   }
                 />
               </Routes>

@@ -9,29 +9,9 @@ const TableSkeleton = ({ rows = 5, columns = 6 }) => {
         height: "380px",
         display: "flex",
         flexDirection: "column",
-        gap: "10px",
-        // padding: "20px",
+        gap: "6px",
       }}
     >
-      {/* Search Bar Skeleton */}
-      {/* <Box
-        sx={{
-          display: "flex",
-          justifyContent: "flex-start",
-          alignItems: "center",
-          marginBottom: "20px",
-          paddingLeft: "20px"
-        }}
-      >
-        <Skeleton
-          variant="rectangular"
-          width={220}
-          height={40}
-          
-          sx={{ borderRadius: "25px" }}
-        />
-      </Box> */}
-
       {/* Table Header Skeleton */}
       <Box
         sx={{
@@ -44,9 +24,10 @@ const TableSkeleton = ({ rows = 5, columns = 6 }) => {
           <Skeleton
             key={index}
             variant="text"
+            animation="wave" 
             width={100}
-            height={30}
-            sx={{ flex: 1, mx: 1}}
+            height={20}
+            sx={{ flex: 1, mx: 1 }}
           />
         ))}
       </Box>
@@ -65,9 +46,10 @@ const TableSkeleton = ({ rows = 5, columns = 6 }) => {
             <Skeleton
               key={colIndex}
               variant="text"
+              animation="wave"
               width={100}
-              height={30}
-              sx={{ flex: 1, mx: 1, }}
+              height={20}
+              sx={{ flex: 1, mx: 1 }}
             />
           ))}
         </Box>
@@ -77,12 +59,3 @@ const TableSkeleton = ({ rows = 5, columns = 6 }) => {
 };
 
 export default TableSkeleton;
-
-
-
-
-
-
-
-
-

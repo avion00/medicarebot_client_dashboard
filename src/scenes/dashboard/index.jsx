@@ -25,7 +25,7 @@ const Dashboard = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 1000);
+    }, 100000);
     return () => clearTimeout(timer);
   }, []);
 

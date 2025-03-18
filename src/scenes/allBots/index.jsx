@@ -34,7 +34,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import GradientButton from "../../components/GradientButton";
-import TableSkeleton from "../../components/skeleton/TableSkeleton"; 
+import TableSkeleton from "../../components/skeleton/TableSkeleton";
 
 const AllBots = () => {
   const theme = useTheme();
@@ -540,7 +540,7 @@ const AllBots = () => {
                 }}
               >
                 {loading ? (
-                  <Skeleton variant="h5" height={20} width={20} />
+                  <Skeleton variant="h5" circle height={20} width={20} />
                 ) : (
                   <Typography
                     variant="h5"
@@ -577,7 +577,7 @@ const AllBots = () => {
                 }}
               >
                 {loading ? (
-                  <Skeleton variant="h5" height={20} width={20} />
+                  <Skeleton variant="h5" circle height={20} width={20} />
                 ) : (
                   <Typography
                     variant="h5"
@@ -613,7 +613,7 @@ const AllBots = () => {
                 }}
               >
                 {loading ? (
-                  <Skeleton variant="h5" height={20} width={20} />
+                  <Skeleton variant="h5" circle height={20} width={20} />
                 ) : (
                   <Typography
                     variant="h5"
@@ -645,27 +645,42 @@ const AllBots = () => {
             backgroundColor={colors.primary[400]}
           >
             <Box>
-              <Box
-                display="flex"
-                backgroundColor={colors.grey[500]}
-                width="250px"
-                sx={{
-                  width: "220px",
-                  borderRadius: "25px",
-                  margin: "1.5em .5em .5em 3em",
-                  backgroundColor: "#ccc",
-                  border: `1px solid white`,
-                  color: "#000",
-                }}
-              >
-                <InputBase
-                  sx={{ ml: 2, flex: 1, color: "#000" }}
-                  placeholder="Search"
-                />
-                <IconButton type="button" sx={{ p: 1 }}>
-                  <SearchIcon sx={{ color: "#000" }} />
-                </IconButton>
-              </Box>
+              {loading ? (
+                <Box
+                  sx={{
+                    borderRadius: "25px",
+                    overflow: "hidden",
+                    width: "220px",
+                    height: "40px",
+                    margin: "1.5em .5em .5em 3em", // exactly the same margin as the real input
+                  }}
+                >
+                  <Skeleton variant="rectangular" style={{
+                    borderRadius: "25px"
+                  }} width="100%" height="100%" />
+                </Box>
+              ) : (
+                <Box
+                  display="flex"
+                  backgroundColor={colors.grey[500]}
+                  width="220px"
+                  sx={{
+                    border: "1px solid red",
+                    borderRadius: "25px",
+                    margin: "1.5em .5em .5em 3em",
+                    backgroundColor: "#ccc",
+                    color: "#000",
+                  }}
+                >
+                  <InputBase
+                    sx={{ ml: 2, flex: 1, color: "#000" }}
+                    placeholder="Search"
+                  />
+                  <IconButton type="button" sx={{ p: 1 }}>
+                    <SearchIcon sx={{ color: "#000" }} />
+                  </IconButton>
+                </Box>
+              )}
             </Box>
             {loading ? (
               <Box
