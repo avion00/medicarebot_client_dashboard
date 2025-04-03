@@ -665,7 +665,6 @@ const AllBots = () => {
                   backgroundColor={colors.grey[500]}
                   width="220px"
                   sx={{
-                    border: "1px solid red",
                     borderRadius: "25px",
                     margin: "1.5em .5em .5em 3em",
                     backgroundColor: "#ccc",

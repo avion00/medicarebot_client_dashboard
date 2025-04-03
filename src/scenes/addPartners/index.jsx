@@ -26,6 +26,8 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import "./phone-style.css";
 import axios from "axios";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const AddPartners = () => {
   const theme = useTheme();
@@ -322,971 +324,1166 @@ const AddPartners = () => {
     }
   };
 
+  const [skloading, setSkLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSkLoading(false);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <Box m="20px">
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        flexWrap="wrap"
-      >
-        <Header title="ADD NEW PARTNERS" subtitle="Add your new Partners" />
-
-        <Formik
-          initialValues={payload}
-          validationSchema={checkoutSchemaaa}
-          onSubmit={handleFormUploadSubmit}
+    <SkeletonTheme
+      baseColor={theme.palette.mode === "dark" ? "#333" : "#e0e0e0"}
+      highlightColor={theme.palette.mode === "dark" ? "#444" : "#f5f5f5"}
+    >
+      <Box m="20px">
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          flexWrap="wrap"
         >
-          {({
-            values,
-            errors,
-            touched,
-            handleBlur,
-            handleChange,
-            handleSubmit,
-            setFieldValue,
-            resetForm,
-          }) => (
-            <form onSubmit={handleSubmit}>
-              <Box
-                display="flex"
-                flexWrap="wrap"
-                justifyContent="flex-end"
-                gap="20px"
-                alignItems="center"
-                m={"1.5em 0"}
-              >
-                <Box flex={"1"} minWidth={"180px"}>
-                  <TextField
-                    fullWidth
-                    label="Upload Partners via File"
-                    variant="outlined"
-                    type="text"
-                    name="UploadLeadsviaFile"
-                    value={UploadLeadsviaFile ? UploadLeadsviaFile.name : ""}
-                    placeholder="No file selected"
-                    InputProps={{
-                      readOnly: true,
-                      sx: {
-                        backgroundColor: "#1E1E2D",
-                        color: "#FFFFFF",
-                        borderRadius: "8px",
-                        textAlign: "center",
-                        "& .MuiOutlinedInput-root": {
-                          "& input": {
-                            textAlign: "center",
-                            fontWeight: "bold",
-                            color: UploadLeadsviaFile ? "#FFFFFF" : "#999999",
-                          },
-                          "& fieldset": {
-                            borderColor: "#4F4F5A",
-                          },
-                          "&:hover fieldset": {
-                            borderColor: "#0A74DA",
-                          },
-                          "&.Mui-focused fieldset": {
-                            borderColor: "#0A74DA",
-                            borderWidth: "2px",
-                          },
-                        },
-                      },
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <UploadFileIcon sx={{ color: "#0A74DA" }} />
-                        </InputAdornment>
-                      ),
-                      endAdornment: (
-                        <Button
-                          variant="contained"
-                          component="label"
-                          sx={{
-                            backgroundColor: "transparent",
-                            color: "white",
-                            textTransform: "none",
-                            boxShadow: "none",
-                            width: "100%",
-                            height: "100%",
-                            position: "absolute",
-                            top: "0",
-                            left: "0",
-                            "&:hover": {
-                              backgroundColor: "transparent",
-                            },
-                          }}
-                        >
-                          <input
-                            type="file"
-                            hidden
-                            name="UploadLeadsviaFile"
-                            onChange={(e) => handleUploadLeadsviaFileChange(e)}
-                          />
-                        </Button>
-                      ),
-                    }}
-                  />
-                </Box>
-                <Box>
-                  <Button
-                    type="submit"
-                    color="secondary"
-                    variant="contained"
-                    startIcon={
-                      loading ? (
-                        <CircularProgress size={20} color="inherit" />
-                      ) : (
-                        <AddIcon />
-                      )
-                    }
-                    disabled={loading}
-                    sx={{
-                      background: "linear-gradient(45deg, #062994, #0E72E1)",
-                      color: "#fff",
-                      fontSize: "14px",
-                      fontWeight: "bold",
-                      padding: "10px 20px",
-                      transition: "all 0.5s ease",
-                      "&:hover": {
-                        opacity: loading ? "1" : ".7",
-                      },
-                    }}
-                  >
-                    {loading ? "Uploading..." : "Upload File"}
-                  </Button>
-                </Box>
-              </Box>
-            </form>
-          )}
-        </Formik>
+          <Header title="ADD NEW PARTNERS" subtitle="Add your new Partners" />
 
-        <Snackbar
-          open={showNotification}
-          autoHideDuration={6000}
-          onClose={handleCloseNotification}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        >
-          <Alert
-            onClose={handleCloseNotification}
-            severity={notificationType}
-            sx={{ width: "100%" }}
+          <Formik
+            initialValues={payload}
+            validationSchema={checkoutSchemaaa}
+            onSubmit={handleFormUploadSubmit}
           >
-            {notificationMessage}
-          </Alert>
-        </Snackbar>
-      </Box>
-
-      <Box>
-        <Formik
-          onSubmit={handleFormSubmit}
-          initialValues={initialValues}
-          validationSchema={checkoutSchema}
-        >
-          {({
-            values,
-            errors,
-            touched,
-            handleBlur,
-            handleChange,
-            setFieldValue,
-            handleSubmit,
-          }) => (
-            <form onSubmit={handleSubmit}>
-              <Box>
-                <Typography
-                  variant="h3"
-                  fontWeight="bold"
-                  gutterBottom
-                  sx={{ color: colors.grey[100] }}
-                >
-                  Basic Information
-                </Typography>
-
+            {({
+              values,
+              errors,
+              touched,
+              handleBlur,
+              handleChange,
+              handleSubmit,
+              setFieldValue,
+              resetForm,
+            }) => (
+              <form onSubmit={handleSubmit}>
                 <Box
-                  display="grid"
-                  gap="30px"
-                  gridTemplateColumns="repeat(4, minmax(0, 1fr))"
-                  sx={{
-                    "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 4",
-                    },
-                  }}
+                  display="flex"
+                  flexWrap="wrap"
+                  justifyContent="flex-end"
+                  gap="20px"
+                  alignItems="center"
+                  m={"1.5em 0"}
                 >
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="Full Name"
-                    onBlur={handleBlur}
-                    onChange={(e) => handlefullNameChange(e, handleChange)}
-                    value={values.fullName}
-                    name="fullName"
-                    error={!!touched.fullName && !!errors.fullName}
-                    helperText={touched.fullName && errors.fullName}
-                    sx={{
-                      gridColumn: "span 2",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="email"
-                    label="Email"
-                    onBlur={handleBlur}
-                    onChange={(e) => handleEmailChange(e, handleChange)}
-                    value={values.email}
-                    name="email"
-                    error={!!touched.email && !!errors.email}
-                    helperText={touched.email && errors.email}
-                    sx={{
-                      gridColumn: "span 2",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-
-                  <Box
-                    sx={{
-                      gridColumn: "span 1",
-                      width: "100%",
-                    }}
-                  >
-                    <PhoneInput
-                      country={"us"}
-                      value={`${values.countryCode}${values.phoneNumber}`} // Combine for display
-                      onChange={(phone, country, e) => {
-                        let countryCode = `${country.dialCode}`;
-                        let phoneNumber = phone
-                          .replace(new RegExp(`^\\+?${country.dialCode}`), "")
-                          .trim();
-
-                        // If user manually enters a country code, detect it dynamically
-                        const manualCountryMatch = phone.match(/^\+(\d{1,4})/);
-                        if (manualCountryMatch) {
-                          countryCode = manualCountryMatch[0]; // Extract the matched country code
-                          phoneNumber = phone.replace(countryCode, "").trim(); // Get the rest of the number
+                  <Box flex={"1"} minWidth={"180px"}>
+                    {skloading ? (
+                      <Box>
+                        <Skeleton
+                          height={40}
+                          width={"100%"}
+                          variant={"rectangular"}
+                        />
+                      </Box>
+                    ) : (
+                      <TextField
+                        fullWidth
+                        label="Upload Partners via File"
+                        variant="outlined"
+                        type="text"
+                        name="UploadLeadsviaFile"
+                        value={
+                          UploadLeadsviaFile ? UploadLeadsviaFile.name : ""
                         }
-
-                        // Ensure country code doesn't duplicate in the input
-                        setFieldValue("countryCode", countryCode);
-                        setFieldValue("phoneNumber", phoneNumber);
-                      }}
-                      onBlur={() => {
-                        // Ensure phoneNumber doesn't store country code again
-                        setFieldValue(
-                          "phoneNumber",
-                          values.phoneNumber
-                            .replace(values.countryCode, "")
-                            .trim()
-                        );
-                      }}
-                      inputProps={{
-                        name: "phone",
-                        required: true,
-                        autoFocus: false,
-                      }}
-                      containerStyle={{
-                        width: "65%",
-                        height: "53px",
-                        border: "none",
-                        // border: '1px solid red'
-                      }}
-                      inputStyle={{
-                        width: "100%",
-                        marginLeft: "50%",
-                        height: "53px",
-                        padding: "10px",
-                        paddingLeft: ".5em",
-                        fontSize: "14px",
-                        borderRadius: "0 .3em 0 0",
-                        backgroundColor: colors.primary[400],
-                        color: colors.primary[100],
-                        border: "none",
-                        borderBottom: `1px solid ${colors.primary[100]}`,
-                      }}
-                      buttonStyle={{
-                        width: "50%",
-                        backgroundColor: colors.primary[400],
-                        borderRadius: " .3em 0 0 0 ",
-                        border: "none",
-                        borderBottom: `1px solid ${colors.primary[100]}`,
-                      }}
-                    />
-
-                    {touched.phoneNumber && errors.phoneNumber && (
-                      <Typography
-                        variant="caption"
-                        color="error"
-                        sx={{
-                          mt: 1,
-                          display: "block",
-                          fontSize: "0.75rem",
+                        placeholder="No file selected"
+                        InputProps={{
+                          readOnly: true,
+                          sx: {
+                            backgroundColor: "#1E1E2D",
+                            color: "#FFFFFF",
+                            borderRadius: "8px",
+                            textAlign: "center",
+                            "& .MuiOutlinedInput-root": {
+                              "& input": {
+                                textAlign: "center",
+                                fontWeight: "bold",
+                                color: UploadLeadsviaFile
+                                  ? "#FFFFFF"
+                                  : "#999999",
+                              },
+                              "& fieldset": {
+                                borderColor: "#4F4F5A",
+                              },
+                              "&:hover fieldset": {
+                                borderColor: "#0A74DA",
+                              },
+                              "&.Mui-focused fieldset": {
+                                borderColor: "#0A74DA",
+                                borderWidth: "2px",
+                              },
+                            },
+                          },
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <UploadFileIcon sx={{ color: "#0A74DA" }} />
+                            </InputAdornment>
+                          ),
+                          endAdornment: (
+                            <Button
+                              variant="contained"
+                              component="label"
+                              sx={{
+                                backgroundColor: "transparent",
+                                color: "white",
+                                textTransform: "none",
+                                boxShadow: "none",
+                                width: "100%",
+                                height: "100%",
+                                position: "absolute",
+                                top: "0",
+                                left: "0",
+                                "&:hover": {
+                                  backgroundColor: "transparent",
+                                },
+                              }}
+                            >
+                              <input
+                                type="file"
+                                hidden
+                                name="UploadLeadsviaFile"
+                                onChange={(e) =>
+                                  handleUploadLeadsviaFileChange(e)
+                                }
+                              />
+                            </Button>
+                          ),
                         }}
-                      >
-                        {errors.phoneNumber}
-                      </Typography>
+                      />
                     )}
                   </Box>
 
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="City"
-                    onBlur={handleBlur}
-                    onChange={(e) => handleCityChange(e, handleChange)}
-                    value={values.city}
-                    name="city"
-                    error={!!touched.city && !!errors.city}
-                    helperText={touched.city && errors.city}
-                    sx={{
-                      gridColumn: "span 1",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="State"
-                    onBlur={handleBlur}
-                    onChange={(e) => handleStateChange(e, handleChange)}
-                    value={values.state}
-                    name="state"
-                    error={!!touched.state && !!errors.state}
-                    helperText={touched.state && errors.state}
-                    sx={{
-                      gridColumn: "span 1",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="Country"
-                    onBlur={handleBlur}
-                    onChange={(e) => handleCountryChange(e, handleChange)}
-                    value={values.country}
-                    name="country"
-                    error={!!touched.country && !!errors.country}
-                    helperText={touched.country && errors.country}
-                    sx={{
-                      gridColumn: "span 1",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
+                  <Box>
+                    {skloading ? (
+                      <Box>
+                        <Skeleton
+                          height={40}
+                          width={160}
+                          variant={"rectangular"}
+                        />
+                      </Box>
+                    ) : (
+                      <Button
+                        type="submit"
+                        color="secondary"
+                        variant="contained"
+                        startIcon={
+                          loading ? (
+                            <CircularProgress size={20} color="inherit" />
+                          ) : (
+                            <AddIcon />
+                          )
+                        }
+                        disabled={loading}
+                        sx={{
+                          background:
+                            "linear-gradient(45deg, #062994, #0E72E1)",
+                          color: "#fff",
+                          fontSize: "14px",
+                          fontWeight: "bold",
+                          padding: "10px 20px",
+                          transition: "all 0.5s ease",
+                          "&:hover": {
+                            opacity: loading ? "1" : ".7",
+                          },
+                        }}
+                      >
+                        {loading ? "Uploading..." : "Upload File"}
+                      </Button>
+                    )}
+                  </Box>
                 </Box>
-              </Box>
+              </form>
+            )}
+          </Formik>
 
-              <Box>
-                <Typography
-                  variant="h3"
-                  fontWeight="bold"
-                  gutterBottom
-                  sx={{ mt: "2em", color: colors.grey[100] }}
-                >
-                  Partners Definition
-                </Typography>
+          <Snackbar
+            open={showNotification}
+            autoHideDuration={6000}
+            onClose={handleCloseNotification}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          >
+            <Alert
+              onClose={handleCloseNotification}
+              severity={notificationType}
+              sx={{ width: "100%" }}
+            >
+              {notificationMessage}
+            </Alert>
+          </Snackbar>
+        </Box>
 
-                <Box
-                  display="grid"
-                  gap="30px"
-                  gridTemplateColumns="repeat(4, minmax(0, 1fr))"
-                  sx={{
-                    "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 4",
-                    },
-                  }}
-                >
-                  <FormControl
-                    fullWidth
-                    variant="filled"
-                    sx={{
-                      gridColumn: "span 2",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  >
-                    <InputLabel
-                      id="partnerDefinition"
-                      sx={{ color: colors.primary[100] }}
+        <Box>
+          <Formik
+            onSubmit={handleFormSubmit}
+            initialValues={initialValues}
+            validationSchema={checkoutSchema}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              handleBlur,
+              handleChange,
+              setFieldValue,
+              handleSubmit,
+            }) => (
+              <form onSubmit={handleSubmit}>
+                <Box>
+                  {skloading ? (
+                    <Box
+                      sx={{
+                        marginBottom: "0.75em",
+                      }}
+                    >
+                      <Skeleton
+                        height={25}
+                        width={160}
+                        variant={"rectangular"}
+                      />
+                    </Box>
+                  ) : (
+                    <Typography
+                      variant="h3"
+                      fontWeight="bold"
+                      gutterBottom
+                      color={colors.grey[100]}
+                    >
+                      Basic Information
+                    </Typography>
+                  )}
+
+                  {skloading ? (
+                    <Box
+                      sx={{
+                        marginTop: "1.5em",
+                        marginBottom: "9.5em",
+                      }}
+                    >
+                      <Skeleton
+                        width={"50%"}
+                        height={10}
+                        variant={"ractangular"}
+                      />
+                      <Skeleton
+                        width={"25%"}
+                        height={10}
+                        variant={"ractangular"}
+                      />
+                    </Box>
+                  ) : (
+                    <Box
+                      display="grid"
+                      gap="30px"
+                      gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                      sx={{
+                        "& > div": {
+                          gridColumn: isNonMobile ? undefined : "span 4",
+                        },
+                      }}
+                    >
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type="text"
+                        label="Full Name"
+                        onBlur={handleBlur}
+                        onChange={(e) => handlefullNameChange(e, handleChange)}
+                        value={values.fullName}
+                        name="fullName"
+                        error={!!touched.fullName && !!errors.fullName}
+                        helperText={touched.fullName && errors.fullName}
+                        sx={{
+                          gridColumn: "span 2",
+                          "& .MuiFormLabel-root.Mui-focused": {
+                            color: colors.blueAccent[500],
+                            fontWeight: "bold",
+                          },
+                        }}
+                      />
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type="email"
+                        label="Email"
+                        onBlur={handleBlur}
+                        onChange={(e) => handleEmailChange(e, handleChange)}
+                        value={values.email}
+                        name="email"
+                        error={!!touched.email && !!errors.email}
+                        helperText={touched.email && errors.email}
+                        sx={{
+                          gridColumn: "span 2",
+                          "& .MuiFormLabel-root.Mui-focused": {
+                            color: colors.blueAccent[500],
+                            fontWeight: "bold",
+                          },
+                        }}
+                      />
+
+                      <Box
+                        sx={{
+                          gridColumn: "span 1",
+                          width: "100%",
+                        }}
+                      >
+                        <PhoneInput
+                          country={"us"}
+                          value={`${values.countryCode}${values.phoneNumber}`} // Combine for display
+                          onChange={(phone, country, e) => {
+                            let countryCode = `${country.dialCode}`;
+                            let phoneNumber = phone
+                              .replace(
+                                new RegExp(`^\\+?${country.dialCode}`),
+                                ""
+                              )
+                              .trim();
+
+                            // If user manually enters a country code, detect it dynamically
+                            const manualCountryMatch =
+                              phone.match(/^\+(\d{1,4})/);
+                            if (manualCountryMatch) {
+                              countryCode = manualCountryMatch[0]; // Extract the matched country code
+                              phoneNumber = phone
+                                .replace(countryCode, "")
+                                .trim(); // Get the rest of the number
+                            }
+
+                            // Ensure country code doesn't duplicate in the input
+                            setFieldValue("countryCode", countryCode);
+                            setFieldValue("phoneNumber", phoneNumber);
+                          }}
+                          onBlur={() => {
+                            // Ensure phoneNumber doesn't store country code again
+                            setFieldValue(
+                              "phoneNumber",
+                              values.phoneNumber
+                                .replace(values.countryCode, "")
+                                .trim()
+                            );
+                          }}
+                          inputProps={{
+                            name: "phone",
+                            required: true,
+                            autoFocus: false,
+                          }}
+                          containerStyle={{
+                            width: "65%",
+                            height: "53px",
+                            border: "none",
+                            // border: '1px solid red'
+                          }}
+                          inputStyle={{
+                            width: "100%",
+                            marginLeft: "50%",
+                            height: "53px",
+                            padding: "10px",
+                            paddingLeft: ".5em",
+                            fontSize: "14px",
+                            borderRadius: "0 .3em 0 0",
+                            backgroundColor: colors.primary[400],
+                            color: colors.primary[100],
+                            border: "none",
+                            borderBottom: `1px solid ${colors.primary[100]}`,
+                          }}
+                          buttonStyle={{
+                            width: "50%",
+                            backgroundColor: colors.primary[400],
+                            borderRadius: " .3em 0 0 0 ",
+                            border: "none",
+                            borderBottom: `1px solid ${colors.primary[100]}`,
+                          }}
+                        />
+
+                        {touched.phoneNumber && errors.phoneNumber && (
+                          <Typography
+                            variant="caption"
+                            color="error"
+                            sx={{
+                              mt: 1,
+                              display: "block",
+                              fontSize: "0.75rem",
+                            }}
+                          >
+                            {errors.phoneNumber}
+                          </Typography>
+                        )}
+                      </Box>
+
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type="text"
+                        label="City"
+                        onBlur={handleBlur}
+                        onChange={(e) => handleCityChange(e, handleChange)}
+                        value={values.city}
+                        name="city"
+                        error={!!touched.city && !!errors.city}
+                        helperText={touched.city && errors.city}
+                        sx={{
+                          gridColumn: "span 1",
+                          "& .MuiFormLabel-root.Mui-focused": {
+                            color: colors.blueAccent[500],
+                            fontWeight: "bold",
+                          },
+                        }}
+                      />
+
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type="text"
+                        label="State"
+                        onBlur={handleBlur}
+                        onChange={(e) => handleStateChange(e, handleChange)}
+                        value={values.state}
+                        name="state"
+                        error={!!touched.state && !!errors.state}
+                        helperText={touched.state && errors.state}
+                        sx={{
+                          gridColumn: "span 1",
+                          "& .MuiFormLabel-root.Mui-focused": {
+                            color: colors.blueAccent[500],
+                            fontWeight: "bold",
+                          },
+                        }}
+                      />
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type="text"
+                        label="Country"
+                        onBlur={handleBlur}
+                        onChange={(e) => handleCountryChange(e, handleChange)}
+                        value={values.country}
+                        name="country"
+                        error={!!touched.country && !!errors.country}
+                        helperText={touched.country && errors.country}
+                        sx={{
+                          gridColumn: "span 1",
+                          "& .MuiFormLabel-root.Mui-focused": {
+                            color: colors.blueAccent[500],
+                            fontWeight: "bold",
+                          },
+                        }}
+                      />
+                    </Box>
+                  )}
+                </Box>
+
+                <Box>
+                  {skloading ? (
+                    <Box
+                      sx={{
+                        marginBottom: "0.75em",
+                      }}
+                    >
+                      <Skeleton
+                        height={25}
+                        width={160}
+                        variant={"rectangular"}
+                      />
+                    </Box>
+                  ) : (
+                    <Typography
+                      variant="h3"
+                      fontWeight="bold"
+                      gutterBottom
+                      sx={{ mt: "2em", color: colors.grey[100] }}
                     >
                       Partners Definition
-                    </InputLabel>
-                    <Select
-                      labelId="partnerDefinition"
-                      id="partnerDefinition"
-                      value={values.partnerDefinition}
-                      name="partnerDefinition"
-                      onChange={(e) =>
-                        HandlePartnerDefinitionChange(e, handleChange)
-                      }
-                      onBlur={handleBlur}
-                      error={
-                        !!touched.partnerDefinition &&
-                        !!errors.partnerDefinition
-                      }
+                    </Typography>
+                  )}
+
+                  {skloading ? (
+                    <Box
+                      sx={{
+                        marginTop: "1.5em",
+                        marginBottom: "1em",
+                      }}
                     >
-                      <MenuItem value="vendors">Vendors</MenuItem>
-                      <MenuItem value="clients">Clients</MenuItem>
-                    </Select>
-                    {touched.partnerDefinition && errors.partnerDefinition && (
-                      <Box color="red" mt="4px" fontSize="11px" ml="1.5em">
-                        {errors.partnerDefinition}
-                      </Box>
-                    )}
-                  </FormControl>
-                </Box>
-              </Box>
-
-              <Box>
-                <Typography
-                  variant="h3"
-                  fontWeight="bold"
-                  gutterBottom
-                  sx={{ mt: "2em", color: colors.grey[100] }}
-                >
-                  Business Information (for B2B)
-                </Typography>
-
-                <Box
-                  display="grid"
-                  gap="30px"
-                  gridTemplateColumns="repeat(4, minmax(0, 1fr))"
-                  sx={{
-                    "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 4",
-                    },
-                  }}
-                >
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="Company Name"
-                    onBlur={handleBlur}
-                    onChange={(e) => handleCompanyNameChange(e, handleChange)}
-                    value={values.companyName}
-                    name="companyName"
-                    error={!!touched.companyName && !!errors.companyName}
-                    helperText={touched.companyName && errors.companyName}
-                    sx={{
-                      gridColumn: "span 2",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="Job Title"
-                    onBlur={handleBlur}
-                    onChange={(e) => handleJobTitleChange(e, handleChange)}
-                    value={values.jobTitle}
-                    name="jobTitle"
-                    error={!!touched.jobTitle && !!errors.jobTitle}
-                    helperText={touched.jobTitle && errors.jobTitle}
-                    sx={{
-                      gridColumn: "span 2",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="Company Size"
-                    onBlur={handleBlur}
-                    onChange={(e) => handleCompanySizeChange(e, handleChange)}
-                    value={values.companySize}
-                    name="companySize"
-                    error={!!touched.companySize && !!errors.companySize}
-                    helperText={touched.companySize && errors.companySize}
-                    sx={{
-                      gridColumn: "span 2",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="Industry"
-                    onBlur={handleBlur}
-                    onChange={(e) => handleIndustryChange(e, handleChange)}
-                    value={values.industry}
-                    name="industry"
-                    error={!!touched.industry && !!errors.industry}
-                    helperText={touched.industry && errors.industry}
-                    sx={{
-                      gridColumn: "span 2",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-                </Box>
-              </Box>
-
-              <Box>
-                <Typography
-                  variant="h3"
-                  fontWeight="bold"
-                  gutterBottom
-                  sx={{ mt: "2em", color: colors.grey[100] }}
-                >
-                  Engagement and Interest
-                </Typography>
-
-                <Box
-                  display="grid"
-                  gap="30px"
-                  gridTemplateColumns="repeat(4, minmax(0, 1fr))"
-                  sx={{
-                    "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 4",
-                    },
-                  }}
-                >
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="Interest/Service of Interest"
-                    onBlur={handleBlur}
-                    onChange={(e) => handleInterestChange(e, handleChange)}
-                    value={values.interest}
-                    name="interest"
-                    error={!!touched.interest && !!errors.interest}
-                    helperText={touched.interest && errors.interest}
-                    sx={{
-                      gridColumn: "span 4",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-                </Box>
-              </Box>
-
-              <Box>
-                <Typography
-                  variant="h3"
-                  fontWeight="bold"
-                  gutterBottom
-                  sx={{ mt: "2em", color: colors.grey[100] }}
-                >
-                  Relevant Information
-                </Typography>
-                <Box>
-                  <Typography
-                    variant="h5"
-                    fontWeight="500"
-                    gutterBottom
-                    sx={{
-                      mt: "1em",
-                      color: colors.grey[100],
-                    }}
-                  >
-                    Budget Range:
-                  </Typography>
-                </Box>
-
-                <Box
-                  display="grid"
-                  gap="30px"
-                  gridTemplateColumns="repeat(4, minmax(0, 1fr))"
-                  sx={{
-                    "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 4",
-                    },
-                  }}
-                >
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="number"
-                    label="From"
-                    onBlur={handleBlur}
-                    onChange={(e) => handleBudgetFromChange(e, handleChange)}
-                    value={values.budgetFrom}
-                    name="budgetFrom"
-                    error={!!touched.budgetFrom && !!errors.budgetFrom}
-                    helperText={touched.budgetFrom && errors.budgetFrom}
-                    sx={{
-                      gridColumn: "span 2",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="number"
-                    label="Budget To"
-                    onBlur={handleBlur}
-                    onChange={(e) => handleBudgetToChange(e, handleChange)}
-                    value={values.budgetTo}
-                    name="budgetTo"
-                    error={!!touched.budgetTo && !!errors.budgetTo}
-                    helperText={touched.budgetTo && errors.budgetTo}
-                    sx={{
-                      gridColumn: "span 2",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-
-                  <FormControl
-                    fullWidth
-                    variant="filled"
-                    sx={{
-                      gridColumn: "span 2",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  >
-                    <InputLabel
-                      id="timelineTopurchase"
-                      sx={{ color: colors.primary[100] }}
-                    >
-                      Timeline to purchase
-                    </InputLabel>
-                    <Select
-                      labelId="timelineTopurchase"
-                      id="timelineTopurchase"
-                      value={values.timelineToPurchase}
-                      name="timelineToPurchase"
-                      onChange={(e) =>
-                        handleTimelineToPurchaseChange(e, handleChange)
-                      }
-                      onBlur={handleBlur}
-                      error={
-                        !!touched.timelineToPurchase &&
-                        !!errors.timelineToPurchase
-                      }
-                    >
-                      <MenuItem value="Immediate">Immediate</MenuItem>
-                      <MenuItem value="1-3_months">1-3 months</MenuItem>
-                      <MenuItem value="6+_months">6+ months</MenuItem>
-                    </Select>
-                    {touched.timelineToPurchase &&
-                      errors.timelineToPurchase && (
-                        <Box color="red" mt="4px" fontSize="11px" ml="1.5em">
-                          {errors.timelineToPurchase}
-                        </Box>
-                      )}
-                  </FormControl>
-
-                  <FormControl
-                    fullWidth
-                    variant="filled"
-                    sx={{
-                      gridColumn: "span 2",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  >
-                    <InputLabel
-                      id="preferredContactMethod"
-                      sx={{ color: colors.primary[100] }}
-                    >
-                      Preferred Contact Method
-                    </InputLabel>
-                    <Select
-                      labelId="preferredContactMethod"
-                      id="preferredContactMethod"
-                      value={values.preferredContactMethod}
-                      name="preferredContactMethod"
-                      onChange={(e) =>
-                        handlePreferredContactMethodChange(e, handleChange)
-                      }
-                      onBlur={handleBlur}
-                      error={
-                        !!touched.preferredContactMethod &&
-                        !!errors.preferredContactMethod
-                      }
-                    >
-                      <MenuItem value="Immediate">Facebook</MenuItem>
-                      <MenuItem value="Immediate">Youtube</MenuItem>
-                      <MenuItem value="twitter">Twitter</MenuItem>
-                      <MenuItem value="website">Website</MenuItem>
-                      <MenuItem value="ai_tools">Ai Tools</MenuItem>
-                    </Select>
-                    {touched.preferredContactMethod &&
-                      errors.preferredContactMethod && (
-                        <Box color="red" mt="4px" fontSize="11px" ml="1.5em">
-                          {errors.preferredContactMethod}
-                        </Box>
-                      )}
-                  </FormControl>
-                </Box>
-              </Box>
-
-              <Box>
-                <Typography
-                  variant="h3"
-                  fontWeight="bold"
-                  gutterBottom
-                  sx={{ mt: "2em", color: colors.grey[100] }}
-                >
-                  Qualifying Questions (Optional)
-                </Typography>
-
-                <Box
-                  display="grid"
-                  gap="30px"
-                  gridTemplateColumns="repeat(4, minmax(0, 1fr))"
-                  sx={{
-                    "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 4",
-                    },
-                  }}
-                >
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="Pain Points of Challanges"
-                    onBlur={handleBlur}
-                    onChange={(e) =>
-                      handlePainPointsChallangesChange(e, handleChange)
-                    }
-                    value={values.painPointsChallanges}
-                    name="painPointsChallanges"
-                    error={
-                      !!touched.painPointsChallanges &&
-                      !!errors.painPointsChallanges
-                    }
-                    helperText={
-                      touched.painPointsChallanges &&
-                      errors.painPointsChallanges
-                    }
-                    sx={{
-                      gridColumn: "span 4",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="Existing Solution/Competitors"
-                    onBlur={handleBlur}
-                    onChange={(e) =>
-                      handleExistingSolutionChange(e, handleChange)
-                    }
-                    value={values.existingSolution}
-                    name="existingSolution"
-                    error={
-                      !!touched.existingSolution && !!errors.existingSolution
-                    }
-                    helperText={
-                      touched.existingSolution && errors.existingSolution
-                    }
-                    sx={{
-                      gridColumn: "span 4",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="How they found You"
-                    onBlur={handleBlur}
-                    onChange={(e) =>
-                      handleHowTheyFoundYouChange(e, handleChange)
-                    }
-                    value={values.howTheyFoundYou}
-                    name="howTheyFoundYou"
-                    error={
-                      !!touched.howTheyFoundYou && !!errors.howTheyFoundYou
-                    }
-                    helperText={
-                      touched.howTheyFoundYou && errors.howTheyFoundYou
-                    }
-                    sx={{
-                      gridColumn: "span 4",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-                </Box>
-              </Box>
-
-              <Box>
-                <Typography
-                  variant="h3"
-                  fontWeight="bold"
-                  gutterBottom
-                  sx={{ mt: "2em", color: colors.grey[100] }}
-                >
-                  Marketing permission and compliance
-                </Typography>
-
-                <Box
-                  display="grid"
-                  gap="30px"
-                  gridTemplateColumns="repeat(4, minmax(0, 1fr))"
-                  sx={{
-                    "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 4",
-                    },
-                  }}
-                >
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="Consent to Receive Marketing Communication"
-                    onBlur={handleBlur}
-                    onChange={(e) =>
-                      handleMarketingCommunicationChange(e, handleChange)
-                    }
-                    value={values.MarketingCommunication}
-                    name="MarketingCommunication"
-                    error={
-                      !!touched.MarketingCommunication &&
-                      !!errors.MarketingCommunication
-                    }
-                    helperText={
-                      touched.MarketingCommunication &&
-                      errors.MarketingCommunication
-                    }
-                    sx={{
-                      gridColumn: "span 4",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="Preferred Frequency Contact"
-                    onBlur={handleBlur}
-                    onChange={(e) =>
-                      handlePreferredFrequencyChange(e, handleChange)
-                    }
-                    value={values.preferredFrequency}
-                    name="preferredFrequency"
-                    error={
-                      !!touched.preferredFrequency &&
-                      !!errors.preferredFrequency
-                    }
-                    helperText={
-                      touched.preferredFrequency && errors.preferredFrequency
-                    }
-                    sx={{
-                      gridColumn: "span 4",
-                      "& .MuiFormLabel-root.Mui-focused": {
-                        color: colors.blueAccent[500],
-                        fontWeight: "bold",
-                      },
-                    }}
-                  />
-                </Box>
-              </Box>
-
-              <Box mt="2em">
-                <Button
-                  type="submit"
-                  color="secondary"
-                  variant="contained"
-                  startIcon={
-                    loading ? (
-                      <CircularProgress
-                        size={24}
-                        sx={{ color: colors.grey[100] }}
+                      <Skeleton
+                        width={"50%"}
+                        height={10}
+                        variant={"ractangular"}
                       />
-                    ) : (
-                      <AddIcon />
-                    )
-                  }
-                  disabled={loading}
-                  sx={{
-                    background: "linear-gradient(45deg, #062994, #0E72E1)",
-                    color: "#fff",
-                    // width: isNonMobile ? "50%" : "100%",
-                    fontSize: "14px",
-                    fontWeight: "bold",
-                    padding: "10px 20px",
-                    transition: "all 0.5s ease",
-                    "&:hover": {
-                      opacity: ".7",
-                    },
-                  }}
-                >
-                  {loading ? `Adding...` : "Add New Partners"}
-                </Button>
-              </Box>
+                      <Skeleton
+                        width={"25%"}
+                        height={10}
+                        variant={"ractangular"}
+                      />
+                    </Box>
+                  ) : (
+                    <Box
+                      display="grid"
+                      gap="30px"
+                      gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                      sx={{
+                        "& > div": {
+                          gridColumn: isNonMobile ? undefined : "span 4",
+                        },
+                      }}
+                    >
+                      <FormControl
+                        fullWidth
+                        variant="filled"
+                        sx={{
+                          gridColumn: "span 2",
+                          "& .MuiFormLabel-root.Mui-focused": {
+                            color: colors.blueAccent[500],
+                            fontWeight: "bold",
+                          },
+                        }}
+                      >
+                        <InputLabel
+                          id="partnerDefinition"
+                          sx={{ color: colors.primary[100] }}
+                        >
+                          Partners Definition
+                        </InputLabel>
+                        <Select
+                          labelId="partnerDefinition"
+                          id="partnerDefinition"
+                          value={values.partnerDefinition}
+                          name="partnerDefinition"
+                          onChange={(e) =>
+                            HandlePartnerDefinitionChange(e, handleChange)
+                          }
+                          onBlur={handleBlur}
+                          error={
+                            !!touched.partnerDefinition &&
+                            !!errors.partnerDefinition
+                          }
+                        >
+                          <MenuItem value="vendors">Vendors</MenuItem>
+                          <MenuItem value="clients">Clients</MenuItem>
+                        </Select>
+                        {touched.partnerDefinition &&
+                          errors.partnerDefinition && (
+                            <Box
+                              color="red"
+                              mt="4px"
+                              fontSize="11px"
+                              ml="1.5em"
+                            >
+                              {errors.partnerDefinition}
+                            </Box>
+                          )}
+                      </FormControl>
+                    </Box>
+                  )}
+                </Box>
 
-              <Snackbar
-                open={showNotification}
-                autoHideDuration={6000}
-                onClose={handleCloseNotification}
-                anchorOrigin={{ vertical: "top", horizontal: "center" }}
-              >
-                <Alert
+                <Box>
+                  {skloading ? (
+                    <Box
+                      sx={{
+                        marginBottom: "0.75em",
+                        marginTop: "3em",
+                      }}
+                    >
+                      <Skeleton
+                        height={25}
+                        width={160}
+                        variant={"rectangular"}
+                      />
+                    </Box>
+                  ) : (
+                    <Typography
+                      variant="h3"
+                      fontWeight="bold"
+                      gutterBottom
+                      sx={{ mt: "2em", color: colors.grey[100] }}
+                    >
+                      Business Information (for B2B)
+                    </Typography>
+                  )}
+
+                  {skloading ? (
+                    <Box
+                      sx={{
+                        marginTop: "1.5em",
+                        marginBottom: "15em",
+                      }}
+                    >
+                      <Skeleton
+                        width={"50%"}
+                        height={10}
+                        variant={"ractangular"}
+                      />
+                      <Skeleton
+                        width={"25%"}
+                        height={10}
+                        variant={"ractangular"}
+                      />
+                    </Box>
+                  ) : (
+                    <Box
+                      display="grid"
+                      gap="30px"
+                      gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                      sx={{
+                        "& > div": {
+                          gridColumn: isNonMobile ? undefined : "span 4",
+                        },
+                      }}
+                    >
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type="text"
+                        label="Company Name"
+                        onBlur={handleBlur}
+                        onChange={(e) =>
+                          handleCompanyNameChange(e, handleChange)
+                        }
+                        value={values.companyName}
+                        name="companyName"
+                        error={!!touched.companyName && !!errors.companyName}
+                        helperText={touched.companyName && errors.companyName}
+                        sx={{
+                          gridColumn: "span 2",
+                          "& .MuiFormLabel-root.Mui-focused": {
+                            color: colors.blueAccent[500],
+                            fontWeight: "bold",
+                          },
+                        }}
+                      />
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type="text"
+                        label="Job Title"
+                        onBlur={handleBlur}
+                        onChange={(e) => handleJobTitleChange(e, handleChange)}
+                        value={values.jobTitle}
+                        name="jobTitle"
+                        error={!!touched.jobTitle && !!errors.jobTitle}
+                        helperText={touched.jobTitle && errors.jobTitle}
+                        sx={{
+                          gridColumn: "span 2",
+                          "& .MuiFormLabel-root.Mui-focused": {
+                            color: colors.blueAccent[500],
+                            fontWeight: "bold",
+                          },
+                        }}
+                      />
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type="text"
+                        label="Company Size"
+                        onBlur={handleBlur}
+                        onChange={(e) =>
+                          handleCompanySizeChange(e, handleChange)
+                        }
+                        value={values.companySize}
+                        name="companySize"
+                        error={!!touched.companySize && !!errors.companySize}
+                        helperText={touched.companySize && errors.companySize}
+                        sx={{
+                          gridColumn: "span 2",
+                          "& .MuiFormLabel-root.Mui-focused": {
+                            color: colors.blueAccent[500],
+                            fontWeight: "bold",
+                          },
+                        }}
+                      />
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type="text"
+                        label="Industry"
+                        onBlur={handleBlur}
+                        onChange={(e) => handleIndustryChange(e, handleChange)}
+                        value={values.industry}
+                        name="industry"
+                        error={!!touched.industry && !!errors.industry}
+                        helperText={touched.industry && errors.industry}
+                        sx={{
+                          gridColumn: "span 2",
+                          "& .MuiFormLabel-root.Mui-focused": {
+                            color: colors.blueAccent[500],
+                            fontWeight: "bold",
+                          },
+                        }}
+                      />
+                    </Box>
+                  )}
+                </Box>
+
+                {skloading ? (
+                  <Skeleton width={0} />
+                ) : (
+                  <Box>
+                    <Typography
+                      variant="h3"
+                      fontWeight="bold"
+                      gutterBottom
+                      sx={{ mt: "2em", color: colors.grey[100] }}
+                    >
+                      Engagement and Interest
+                    </Typography>
+
+                    <Box
+                      display="grid"
+                      gap="30px"
+                      gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                      sx={{
+                        "& > div": {
+                          gridColumn: isNonMobile ? undefined : "span 4",
+                        },
+                      }}
+                    >
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type="text"
+                        label="Interest/Service of Interest"
+                        onBlur={handleBlur}
+                        onChange={(e) => handleInterestChange(e, handleChange)}
+                        value={values.interest}
+                        name="interest"
+                        error={!!touched.interest && !!errors.interest}
+                        helperText={touched.interest && errors.interest}
+                        sx={{
+                          gridColumn: "span 4",
+                          "& .MuiFormLabel-root.Mui-focused": {
+                            color: colors.blueAccent[500],
+                            fontWeight: "bold",
+                          },
+                        }}
+                      />
+                    </Box>
+                  </Box>
+                )}
+
+                {skloading ? (
+                  <Skeleton width={0} />
+                ) : (
+                  <Box>
+                    <Typography
+                      variant="h3"
+                      fontWeight="bold"
+                      gutterBottom
+                      sx={{ mt: "2em", color: colors.grey[100] }}
+                    >
+                      Relevant Information
+                    </Typography>
+                    <Box>
+                      <Typography
+                        variant="h5"
+                        fontWeight="500"
+                        gutterBottom
+                        sx={{
+                          mt: "1em",
+                          color: colors.grey[100],
+                        }}
+                      >
+                        Budget Range:
+                      </Typography>
+                    </Box>
+
+                    <Box
+                      display="grid"
+                      gap="30px"
+                      gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                      sx={{
+                        "& > div": {
+                          gridColumn: isNonMobile ? undefined : "span 4",
+                        },
+                      }}
+                    >
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type="number"
+                        label="From"
+                        onBlur={handleBlur}
+                        onChange={(e) =>
+                          handleBudgetFromChange(e, handleChange)
+                        }
+                        value={values.budgetFrom}
+                        name="budgetFrom"
+                        error={!!touched.budgetFrom && !!errors.budgetFrom}
+                        helperText={touched.budgetFrom && errors.budgetFrom}
+                        sx={{
+                          gridColumn: "span 2",
+                          "& .MuiFormLabel-root.Mui-focused": {
+                            color: colors.blueAccent[500],
+                            fontWeight: "bold",
+                          },
+                        }}
+                      />
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type="number"
+                        label="Budget To"
+                        onBlur={handleBlur}
+                        onChange={(e) => handleBudgetToChange(e, handleChange)}
+                        value={values.budgetTo}
+                        name="budgetTo"
+                        error={!!touched.budgetTo && !!errors.budgetTo}
+                        helperText={touched.budgetTo && errors.budgetTo}
+                        sx={{
+                          gridColumn: "span 2",
+                          "& .MuiFormLabel-root.Mui-focused": {
+                            color: colors.blueAccent[500],
+                            fontWeight: "bold",
+                          },
+                        }}
+                      />
+
+                      <FormControl
+                        fullWidth
+                        variant="filled"
+                        sx={{
+                          gridColumn: "span 2",
+                          "& .MuiFormLabel-root.Mui-focused": {
+                            color: colors.blueAccent[500],
+                            fontWeight: "bold",
+                          },
+                        }}
+                      >
+                        <InputLabel
+                          id="timelineTopurchase"
+                          sx={{ color: colors.primary[100] }}
+                        >
+                          Timeline to purchase
+                        </InputLabel>
+                        <Select
+                          labelId="timelineTopurchase"
+                          id="timelineTopurchase"
+                          value={values.timelineToPurchase}
+                          name="timelineToPurchase"
+                          onChange={(e) =>
+                            handleTimelineToPurchaseChange(e, handleChange)
+                          }
+                          onBlur={handleBlur}
+                          error={
+                            !!touched.timelineToPurchase &&
+                            !!errors.timelineToPurchase
+                          }
+                        >
+                          <MenuItem value="Immediate">Immediate</MenuItem>
+                          <MenuItem value="1-3_months">1-3 months</MenuItem>
+                          <MenuItem value="6+_months">6+ months</MenuItem>
+                        </Select>
+                        {touched.timelineToPurchase &&
+                          errors.timelineToPurchase && (
+                            <Box
+                              color="red"
+                              mt="4px"
+                              fontSize="11px"
+                              ml="1.5em"
+                            >
+                              {errors.timelineToPurchase}
+                            </Box>
+                          )}
+                      </FormControl>
+
+                      <FormControl
+                        fullWidth
+                        variant="filled"
+                        sx={{
+                          gridColumn: "span 2",
+                          "& .MuiFormLabel-root.Mui-focused": {
+                            color: colors.blueAccent[500],
+                            fontWeight: "bold",
+                          },
+                        }}
+                      >
+                        <InputLabel
+                          id="preferredContactMethod"
+                          sx={{ color: colors.primary[100] }}
+                        >
+                          Preferred Contact Method
+                        </InputLabel>
+                        <Select
+                          labelId="preferredContactMethod"
+                          id="preferredContactMethod"
+                          value={values.preferredContactMethod}
+                          name="preferredContactMethod"
+                          onChange={(e) =>
+                            handlePreferredContactMethodChange(e, handleChange)
+                          }
+                          onBlur={handleBlur}
+                          error={
+                            !!touched.preferredContactMethod &&
+                            !!errors.preferredContactMethod
+                          }
+                        >
+                          <MenuItem value="Immediate">Facebook</MenuItem>
+                          <MenuItem value="Immediate">Youtube</MenuItem>
+                          <MenuItem value="twitter">Twitter</MenuItem>
+                          <MenuItem value="website">Website</MenuItem>
+                          <MenuItem value="ai_tools">Ai Tools</MenuItem>
+                        </Select>
+                        {touched.preferredContactMethod &&
+                          errors.preferredContactMethod && (
+                            <Box
+                              color="red"
+                              mt="4px"
+                              fontSize="11px"
+                              ml="1.5em"
+                            >
+                              {errors.preferredContactMethod}
+                            </Box>
+                          )}
+                      </FormControl>
+                    </Box>
+                  </Box>
+                )}
+
+                {skloading ? (
+                  <Skeleton width={0} />
+                ) : (
+                  <Box>
+                    <Typography
+                      variant="h3"
+                      fontWeight="bold"
+                      gutterBottom
+                      sx={{ mt: "2em", color: colors.grey[100] }}
+                    >
+                      Qualifying Questions (Optional)
+                    </Typography>
+
+                    <Box
+                      display="grid"
+                      gap="30px"
+                      gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                      sx={{
+                        "& > div": {
+                          gridColumn: isNonMobile ? undefined : "span 4",
+                        },
+                      }}
+                    >
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type="text"
+                        label="Pain Points of Challanges"
+                        onBlur={handleBlur}
+                        onChange={(e) =>
+                          handlePainPointsChallangesChange(e, handleChange)
+                        }
+                        value={values.painPointsChallanges}
+                        name="painPointsChallanges"
+                        error={
+                          !!touched.painPointsChallanges &&
+                          !!errors.painPointsChallanges
+                        }
+                        helperText={
+                          touched.painPointsChallanges &&
+                          errors.painPointsChallanges
+                        }
+                        sx={{
+                          gridColumn: "span 4",
+                          "& .MuiFormLabel-root.Mui-focused": {
+                            color: colors.blueAccent[500],
+                            fontWeight: "bold",
+                          },
+                        }}
+                      />
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type="text"
+                        label="Existing Solution/Competitors"
+                        onBlur={handleBlur}
+                        onChange={(e) =>
+                          handleExistingSolutionChange(e, handleChange)
+                        }
+                        value={values.existingSolution}
+                        name="existingSolution"
+                        error={
+                          !!touched.existingSolution &&
+                          !!errors.existingSolution
+                        }
+                        helperText={
+                          touched.existingSolution && errors.existingSolution
+                        }
+                        sx={{
+                          gridColumn: "span 4",
+                          "& .MuiFormLabel-root.Mui-focused": {
+                            color: colors.blueAccent[500],
+                            fontWeight: "bold",
+                          },
+                        }}
+                      />
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type="text"
+                        label="How they found You"
+                        onBlur={handleBlur}
+                        onChange={(e) =>
+                          handleHowTheyFoundYouChange(e, handleChange)
+                        }
+                        value={values.howTheyFoundYou}
+                        name="howTheyFoundYou"
+                        error={
+                          !!touched.howTheyFoundYou && !!errors.howTheyFoundYou
+                        }
+                        helperText={
+                          touched.howTheyFoundYou && errors.howTheyFoundYou
+                        }
+                        sx={{
+                          gridColumn: "span 4",
+                          "& .MuiFormLabel-root.Mui-focused": {
+                            color: colors.blueAccent[500],
+                            fontWeight: "bold",
+                          },
+                        }}
+                      />
+                    </Box>
+                  </Box>
+                )}
+
+                {skloading ? (
+                  <Skeleton width={0} />
+                ) : (
+                  <Box>
+                    <Typography
+                      variant="h3"
+                      fontWeight="bold"
+                      gutterBottom
+                      sx={{ mt: "2em", color: colors.grey[100] }}
+                    >
+                      Marketing permission and compliance
+                    </Typography>
+
+                    <Box
+                      display="grid"
+                      gap="30px"
+                      gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                      sx={{
+                        "& > div": {
+                          gridColumn: isNonMobile ? undefined : "span 4",
+                        },
+                      }}
+                    >
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type="text"
+                        label="Consent to Receive Marketing Communication"
+                        onBlur={handleBlur}
+                        onChange={(e) =>
+                          handleMarketingCommunicationChange(e, handleChange)
+                        }
+                        value={values.MarketingCommunication}
+                        name="MarketingCommunication"
+                        error={
+                          !!touched.MarketingCommunication &&
+                          !!errors.MarketingCommunication
+                        }
+                        helperText={
+                          touched.MarketingCommunication &&
+                          errors.MarketingCommunication
+                        }
+                        sx={{
+                          gridColumn: "span 4",
+                          "& .MuiFormLabel-root.Mui-focused": {
+                            color: colors.blueAccent[500],
+                            fontWeight: "bold",
+                          },
+                        }}
+                      />
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type="text"
+                        label="Preferred Frequency Contact"
+                        onBlur={handleBlur}
+                        onChange={(e) =>
+                          handlePreferredFrequencyChange(e, handleChange)
+                        }
+                        value={values.preferredFrequency}
+                        name="preferredFrequency"
+                        error={
+                          !!touched.preferredFrequency &&
+                          !!errors.preferredFrequency
+                        }
+                        helperText={
+                          touched.preferredFrequency &&
+                          errors.preferredFrequency
+                        }
+                        sx={{
+                          gridColumn: "span 4",
+                          "& .MuiFormLabel-root.Mui-focused": {
+                            color: colors.blueAccent[500],
+                            fontWeight: "bold",
+                          },
+                        }}
+                      />
+                    </Box>
+                  </Box>
+                )}
+
+                {skloading ? (
+                  <Skeleton width={0} />
+                ) : (
+                  <Box mt="2em">
+                    <Button
+                      type="submit"
+                      color="secondary"
+                      variant="contained"
+                      startIcon={
+                        loading ? (
+                          <CircularProgress
+                            size={24}
+                            sx={{ color: colors.grey[100] }}
+                          />
+                        ) : (
+                          <AddIcon />
+                        )
+                      }
+                      disabled={loading}
+                      sx={{
+                        background: "linear-gradient(45deg, #062994, #0E72E1)",
+                        color: "#fff",
+                        // width: isNonMobile ? "50%" : "100%",
+                        fontSize: "14px",
+                        fontWeight: "bold",
+                        padding: "10px 20px",
+                        transition: "all 0.5s ease",
+                        "&:hover": {
+                          opacity: ".7",
+                        },
+                      }}
+                    >
+                      {loading ? `Adding...` : "Add New Partners"}
+                    </Button>
+                  </Box>
+                )}
+
+                <Snackbar
+                  open={showNotification}
+                  autoHideDuration={6000}
                   onClose={handleCloseNotification}
-                  severity={notificationType}
-                  sx={{ width: "100%" }}
+                  anchorOrigin={{ vertical: "top", horizontal: "center" }}
                 >
-                  {notificationMessage}
-                </Alert>
-              </Snackbar>
-            </form>
-          )}
-        </Formik>
+                  <Alert
+                    onClose={handleCloseNotification}
+                    severity={notificationType}
+                    sx={{ width: "100%" }}
+                  >
+                    {notificationMessage}
+                  </Alert>
+                </Snackbar>
+              </form>
+            )}
+          </Formik>
+        </Box>
       </Box>
-    </Box>
+    </SkeletonTheme>
   );
 };
 

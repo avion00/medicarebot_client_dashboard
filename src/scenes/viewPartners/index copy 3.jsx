@@ -33,7 +33,7 @@ import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import Inventory2Icon from "@mui/icons-material/Inventory2";
-import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import Skeleton ,{ SkeletonTheme } from "react-loading-skeleton";
 import StatBoxSkeleton from "../../components/skeleton/StatBox";
 import TableSkeleton from "../../components/skeleton/TableSkeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -72,13 +72,8 @@ const ViewPartners = () => {
         );
 
         if (response.data.status === "success") {
-          // Unwrap the nested array if necessary
-          let leadsData = response.data.leads;
-          if (Array.isArray(leadsData) && Array.isArray(leadsData[0])) {
-            leadsData = leadsData[0];
-          }
-          setViewLeadersData(leadsData);
-          setFilteredData(leadsData);
+          setViewLeadersData(response.data.leads);
+          setFilteredData(response.data.leads); // Set default filtered data
         } else {
           throw new Error(response.data.message || "Failed to fetch leads");
         }
@@ -107,10 +102,11 @@ const ViewPartners = () => {
     navigate(`/editPartners/${id}`);
   };
 
-  // Do not toggle global loading for deletion
   const handleDelete = async (id) => {
+    setLoading(true);
     try {
       const token = sessionStorage.getItem("authToken");
+
       const response = await axios.delete(
         `https://app.medicarebot.live/delete-lead/${id}`,
         {
@@ -118,6 +114,7 @@ const ViewPartners = () => {
         }
       );
 
+      // Show success message from the server
       setNotificationType("success");
       setNotificationMessage(
         response.data.message || "Lead deleted successfully!"
@@ -130,6 +127,7 @@ const ViewPartners = () => {
       setFilteredData((prevData) => prevData.filter((lead) => lead.id !== id));
     } catch (error) {
       let errorMessage = "Error deleting lead. Please try again.";
+
       if (
         error.response &&
         error.response.data &&
@@ -137,24 +135,26 @@ const ViewPartners = () => {
       ) {
         errorMessage = error.response.data.message;
       }
+
+      // Show error message
       setNotificationType("error");
       setNotificationMessage(errorMessage);
       console.error("Error deleting lead:", error);
     } finally {
-      setShowNotification(true);
+      setLoading(false);
+      setShowNotification(true); // Show the snackbar with message
     }
   };
 
-  // 🔍 Search Function with null checks
+  // 🔍 Search Function
   const handleSearch = (event) => {
     const query = event.target.value.toLowerCase();
     setSearchQuery(query);
 
     const filteredResults = viewLeadersData.filter(
       (partner) =>
-        (partner.fullname ? partner.fullname.toLowerCase() : "").includes(
-          query
-        ) || (partner.email ? partner.email.toLowerCase() : "").includes(query)
+        partner.fullname.toLowerCase().includes(query) ||
+        partner.email.toLowerCase().includes(query)
     );
 
     setFilteredData(filteredResults);
@@ -187,10 +187,11 @@ const ViewPartners = () => {
     },
     {
       field: "partner_definition",
-      headerName: "Partner Definition",
+      headerName: "Parner defination",
       flex: 0.75,
       minWidth: 100,
     },
+
     {
       field: "action",
       headerName: "Action",
@@ -210,12 +211,14 @@ const ViewPartners = () => {
           <IconButton
             onClick={() => handleView(params.row.id)}
             aria-label="view"
+            // sx={{ color: colors.grey[100] }}
           >
             <VisibilityIcon color="success" sx={{ fontSize: "14px" }} />
           </IconButton>
           <IconButton
             onClick={() => handleDelete(params.row.id)}
-            aria-label="delete"
+            aria-label="view"
+            // sx={{ color: colors.grey[100] }}
           >
             <DeleteIcon color="error" sx={{ fontSize: "14px" }} />
           </IconButton>
@@ -226,6 +229,7 @@ const ViewPartners = () => {
 
   const handleDownload = async () => {
     setIsDownloading(true);
+
     try {
       const response = await axios.get(
         "https://app.medicarebot.live/list-leads?export=csv",
@@ -237,13 +241,16 @@ const ViewPartners = () => {
           },
         }
       );
+
       const blob = new Blob([response.data], { type: "text/csv" });
       const url = window.URL.createObjectURL(blob);
+
       const a = document.createElement("a");
       a.href = url;
       a.download = "partners.csv";
       document.body.appendChild(a);
       a.click();
+
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
     } catch (error) {
@@ -253,7 +260,7 @@ const ViewPartners = () => {
     }
   };
 
-  // View partner details
+  // View leads detailly
   const handleView = (id) => {
     const selected = viewLeadersData.find((lead) => lead.id === id);
     if (selected) {
@@ -272,10 +279,12 @@ const ViewPartners = () => {
   };
 
   const totalPartners = viewLeadersData.length;
+
   const totalVendors = viewLeadersData.filter(
     (partner) =>
       (partner.partner_definition?.trim().toLowerCase() || "") === "vendors"
   ).length;
+
   const totalClients = viewLeadersData.filter(
     (partner) =>
       (partner.partner_definition?.trim().toLowerCase() || "") === "clients"
@@ -408,7 +417,7 @@ const ViewPartners = () => {
               <StatBoxSkeleton />
             ) : (
               <StatBox
-                title={totalClients}
+                title={totalClients} 
                 subtitle="Total Clients"
                 progress="0.11"
                 increase="+11%"

@@ -31,6 +31,7 @@ import AddBotDialogBox from "../../components/AddBotDialogBox";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const AddBot = () => {
   const theme = useTheme();

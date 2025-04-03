@@ -13,40 +13,50 @@ import {
   Typography,
   Alert,
   CircularProgress,
+  IconButton,
 } from "@mui/material";
-import Header from "../../components/Header";
-import { tokens } from "../../theme";
+import Header from "../../../components/Header";
+import { tokens } from "../../../theme";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import axios from "axios";
+import { DataGrid } from "@mui/x-data-grid";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const TrainBots = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const isTab = useMediaQuery("(max-width:1234px)");
-  
   const isNonMobile = useMediaQuery("(min-width:768px)");
 
-
+  // Snackbar states
   const [openSnackbar, setOpenSnackbar] = useState(false);
-
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
   };
 
- 
-
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
-
-  // api integration for feed back
-  const [selectedBots, setSelectedBots] = useState([]);
-  const [botsList, setBotsList] = useState([]);
-  const [feedback, setFeedback] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [websiteURL, setWebsiteURL] = useState("");
-
+  // Auth token
   const token = sessionStorage.getItem("authToken");
 
+  // Bots
+  const [selectedBots, setSelectedBots] = useState([]);
+  const [botsList, setBotsList] = useState([]);
+
+  // Feedback states
+  const [feedback, setFeedback] = useState("");
+  const [feedbackData, setFeedbackData] = useState([]); // For the DataGrid
+  const [loadingFeedback, setLoadingFeedback] = useState(false); // For fetching feedback
+
+  // Crawling states
+  const [websiteURL, setWebsiteURL] = useState("");
+  const [loadingCrawl, setLoadingCrawl] = useState(false);
+
+  // Knowledge base upload states
+  const [uploadKnowledgeBase, setUploadKnowledgeBase] = useState(null);
+  const [loadingUpload, setLoadingUpload] = useState(false);
+
+  // Fetch the list of bots on mount
   useEffect(() => {
     const fetchBots = async () => {
       try {
@@ -67,10 +77,26 @@ const TrainBots = () => {
     fetchBots();
   }, [token]);
 
+  // Fetch feedback when selectedBots changes
+  useEffect(() => {
+    if (selectedBots.length > 0) {
+      fetchFeedback();
+    }
+  }, [selectedBots]);
+
+  // Handle input changes
   const handleFeedbackInput = (event) => {
     setFeedback(event.target.value);
   };
+  const handleuploadKnowledgeBaseChange = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    setUploadKnowledgeBase(file);
+    // Reset the file input so the same file can be selected again
+    event.target.value = null;
+  };
 
+  // Submit feedback for a selected bot
   const submitFeedback = async () => {
     if (!selectedBots.length || !feedback) {
       setSnackbarMessage("Please select a bot and enter feedback.");
@@ -99,27 +125,61 @@ const TrainBots = () => {
       setFeedback("");
       setSelectedBots([]);
     } catch (error) {
+      console.error("Failed to submit feedback:", error);
       setSnackbarMessage("Failed to submit feedback.");
       setSnackbarSeverity("error");
       setOpenSnackbar(true);
     }
   };
 
-
-  const startCrawling = async () => {
-    if (!selectedBots.length || !websiteURL ) {
-      setSnackbarMessage(
-        "Please select a bot, enter a website URL."
-      );
+  // Fetch feedback for the selected bot
+  const fetchFeedback = async () => {
+    if (!selectedBots.length) {
+      setSnackbarMessage("Please select a bot to fetch feedback.");
       setSnackbarSeverity("error");
       setOpenSnackbar(true);
       return;
     }
 
-    const botId = selectedBots[0]; 
-    console.log("Starting crawl for bot:", botId);
+    setLoadingFeedback(true);
+    try {
+      const response = await axios.get(
+        "https://app.medicarebot.live/feedback",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            bot_id: selectedBots[0],
+          },
+        }
+      );
 
-    setLoading(true);
+      setFeedbackData(response.data || []);
+      setSnackbarMessage("Feedback fetched successfully.");
+      setSnackbarSeverity("success");
+      setOpenSnackbar(true);
+    } catch (error) {
+      console.error("Error fetching feedback:", error);
+      setSnackbarMessage("Error fetching feedback data.");
+      setSnackbarSeverity("error");
+      setOpenSnackbar(true);
+    } finally {
+      setLoadingFeedback(false);
+    }
+  };
+
+  // Start website crawling
+  const startCrawling = async () => {
+    if (!selectedBots.length || !websiteURL) {
+      setSnackbarMessage("Please select a bot and enter a website URL.");
+      setSnackbarSeverity("error");
+      setOpenSnackbar(true);
+      return;
+    }
+
+    const botId = selectedBots[0];
+    setLoadingCrawl(true);
     try {
       const response = await axios.post(
         "https://app.medicarebot.live/crawl",
@@ -132,39 +192,22 @@ const TrainBots = () => {
         }
       );
 
-      console.log("Crawling Response:", response.data);
-
       setSnackbarMessage(
         response.data.message || "Crawling started successfully."
       );
       setSnackbarSeverity("success");
+      setOpenSnackbar(true);
     } catch (error) {
       console.error("Crawling API Error:", error.response || error);
       setSnackbarMessage(error.response?.data?.message || "Crawling failed.");
       setSnackbarSeverity("error");
-    } finally {
       setOpenSnackbar(true);
-      setLoading(false);
+    } finally {
+      setLoadingCrawl(false);
     }
   };
 
-  // upload knowledge base file
-
-  const [uploadKnowledgeBase, setUploadKnowledgeBase] = useState(null);
-  const [loadingUpload, setLoadingUpload] = useState(false);
-
-  const handleuploadKnowledgeBaseChange = (event) => {
-    const file = event.target.files[0];
-    if (!file) return; // Prevent empty selection
-
-    console.log("Selected file:", file); // Debugging file selection
-    setUploadKnowledgeBase(file);
-
-    // Reset the file input so the same file can be selected again
-    event.target.value = null;
-  };
-
-
+  // Upload knowledge base file
   const uploadKnowledgeBaseFile = async () => {
     if (!selectedBots.length || !uploadKnowledgeBase) {
       setSnackbarMessage("Please select a bot and choose a file to upload.");
@@ -175,13 +218,8 @@ const TrainBots = () => {
 
     setLoadingUpload(true);
     const formData = new FormData();
-    formData.append("bot_id", selectedBots[0]); // First selected bot
+    formData.append("bot_id", selectedBots[0]);
     formData.append("knowledge_base_file", uploadKnowledgeBase);
-
-    // Debugging FormData before sending
-    for (let [key, value] of formData.entries()) {
-      console.log(`${key}:`, value);
-    }
 
     try {
       const response = await axios.post(
@@ -196,26 +234,73 @@ const TrainBots = () => {
         }
       );
 
-      console.log("Upload Response:", response.data);
-
       setSnackbarMessage(
         response.data.message || "File uploaded successfully."
       );
       setSnackbarSeverity("success");
-
       setUploadKnowledgeBase(null);
+      setOpenSnackbar(true);
     } catch (error) {
       console.error("Upload Error:", error.response || error);
       setSnackbarMessage(error.response?.data?.message || "Upload failed.");
       setSnackbarSeverity("error");
-    } finally {
       setOpenSnackbar(true);
+    } finally {
       setLoadingUpload(false);
     }
   };
 
+  // Handle delete action in table (stub)
+  const handleDelete = (feedbackId) => {
+    // Implement your delete logic here
+    console.log("Delete feedback ID:", feedbackId);
+  };
+
+  // DataGrid columns
+  const columns = [
+    {
+      field: "id",
+      headerName: "ID",
+      flex: 0.1,
+      headerAlign: "center",
+      minWidth: 50,
+      align: "center",
+    },
+    {
+      field: "content",
+      headerName: "Feedback",
+      flex: 1,
+      minWidth: 420,
+    },
+    {
+      field: "created_at",
+      headerName: "Created At",
+      flex: 0.3,
+      minWidth: 150,
+    },
+    {
+      field: "action",
+      headerName: "Action",
+      flex: 0.15,
+      headerAlign: "center",
+      minWidth: 100,
+      align: "center",
+      renderCell: (params) => (
+        <Box display="flex" gap=".1em" justifyContent="center">
+          <IconButton
+            onClick={() => handleDelete(params.row.id)}
+            aria-label="delete"
+          >
+            <DeleteIcon color="error" sx={{ fontSize: "14px" }} />
+          </IconButton>
+        </Box>
+      ),
+    },
+  ];
+
   return (
     <Box m="20px">
+      {/* Header */}
       <Box
         display="flex"
         justifyContent="space-between"
@@ -224,10 +309,11 @@ const TrainBots = () => {
       >
         <Header
           title="TRAIN BOTS"
-          subtitle=" Train Your bots to perform your task"
+          subtitle="Train Your bots to perform your tasks"
         />
       </Box>
 
+      {/* Select Bots */}
       <Box
         display="grid"
         gap="30px"
@@ -250,7 +336,6 @@ const TrainBots = () => {
                 "&.Mui-focused": {
                   color: colors.grey[100],
                   fontWeight: "bold",
-
                 },
               }}
             >
@@ -301,7 +386,7 @@ const TrainBots = () => {
         </Box>
       </Box>
 
-      {/* User Feedback */}
+      {/* Feedback System */}
       <Box>
         <Typography
           variant="h3"
@@ -315,7 +400,7 @@ const TrainBots = () => {
           value={feedback}
           onChange={handleFeedbackInput}
           label="Feedback"
-          placeholder="Enter you Feedback"
+          placeholder="Enter your Feedback"
           multiline
           rows={10}
           variant="outlined"
@@ -370,10 +455,66 @@ const TrainBots = () => {
           >
             Submit Feedback
           </Button>
-          {/* <p>{feedbackList}</p> */}
+        </Box>
+
+        {/* Feedback Table */}
+        <Box
+          gridColumn="span 12"
+          height="450px"
+          sx={{
+            "& .MuiDataGrid-root": { border: "none" },
+            "& .MuiDataGrid-columnHeaders": {
+              backgroundColor: colors.primary[400],
+              borderBottom: `1px solid ${colors.grey[700]}`,
+            },
+            "& .MuiDataGrid-footerContainer": {
+              borderTop: `1px solid ${colors.grey[700]}`,
+              backgroundColor: colors.primary[400],
+            },
+          }}
+        >
+          {loadingFeedback ? (
+            <p style={{ padding: "1em" }}>Loading data...</p>
+          ) : (
+            <DataGrid
+              rows={feedbackData}
+              columns={columns}
+              getRowId={(row) => row.id}
+              rowHeight={40}
+              headerHeight={40}
+              initialState={{
+                sorting: {
+                  sortModel: [{ field: "id", sort: "asc" }],
+                },
+              }}
+            />
+          )}
+        </Box>
+
+        <Box
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            gap: "1em",
+            padding: ".5em",
+          }}
+        >
+          <Button
+            onClick={fetchFeedback}
+            color="secondary"
+            variant="outlined"
+            style={{
+              borderRadius: "20px",
+              marginRight: "8px",
+            }}
+          >
+            Fetch Feedback
+          </Button>
         </Box>
       </Box>
 
+      {/* Website Crawling */}
       <Box>
         <Typography
           variant="h3"
@@ -428,19 +569,18 @@ const TrainBots = () => {
               },
             }}
           />
-
         </Box>
         <Box mt="1.5em">
           <Button
             variant="outlined"
-            disabled={loading}
+            disabled={loadingCrawl}
             onClick={startCrawling}
             sx={{
               width: "160px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              gap: "8px", // Add space between spinner and text
+              gap: "8px",
               color: colors.blueAccent[300],
               borderColor: colors.blueAccent[300],
               borderRadius: "20px",
@@ -451,7 +591,7 @@ const TrainBots = () => {
               },
             }}
           >
-            {loading ? (
+            {loadingCrawl ? (
               <>
                 <CircularProgress
                   size={20}
@@ -466,6 +606,7 @@ const TrainBots = () => {
         </Box>
       </Box>
 
+      {/* Upload Knowledge Base File */}
       <Box mt={"2em"}>
         <Typography
           variant="h3"
