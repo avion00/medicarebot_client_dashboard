@@ -348,7 +348,7 @@ const ViewPartners = () => {
           borderRadius="8px"
         >
           <StatBox
-            title={totalPartners} // ✅ Dynamic total partners
+            title={totalPartners} 
             subtitle="Total Patners"
             progress="0.3"
             increase="+30%"
@@ -368,7 +368,7 @@ const ViewPartners = () => {
           borderRadius="8px"
         >
           <StatBox
-            title={totalVendors} // ✅ Dynamic total vendors
+            title={totalVendors} 
             subtitle="Total Vendors"
             progress="0.25"
             increase="+25%"
