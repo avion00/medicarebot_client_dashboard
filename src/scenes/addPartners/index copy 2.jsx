@@ -137,7 +137,7 @@ const AddPartners = () => {
 
     try {
       const response = await axios.post(
-        "https://app.buy2rent.eu/add-lead",
+        "https://app.medicarebot.live/add-lead",
         {
           fullname: values.fullName,
           email: values.email,
@@ -289,7 +289,7 @@ const AddPartners = () => {
 
     try {
       const response = await axios.post(
-        "https://app.buy2rent.eu/upload-leads",
+        "https://app.medicarebot.live/upload-leads",
         formData,
         {
           headers: {

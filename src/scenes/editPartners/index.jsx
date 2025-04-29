@@ -65,12 +65,9 @@ const EditPartners = () => {
   useEffect(() => {
     const fetchLeadData = async () => {
       try {
-        const response = await axios.get(
-          "https://app.medicarebot.live/list-leads",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const response = await axios.get("https://app.buy2rent.eu/list-leads", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
         if (response.data.leads) {
           const foundLead = response.data.leads.find(

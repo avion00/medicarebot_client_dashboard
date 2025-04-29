@@ -67,11 +67,14 @@ const AllBots = () => {
     const fetchBots = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("https://app.buy2rent.eu/list-bots", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get(
+          "https://app.medicarebot.live/list-bots",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         if (response.data.bots) {
           const botsWithStatus = response.data.bots.map((bot) => ({
@@ -124,7 +127,7 @@ const AllBots = () => {
 
     try {
       const response = await axios.delete(
-        "https://app.buy2rent.eu/delete-bots",
+        "https://app.medicarebot.live/delete-bots",
         {
           headers: { Authorization: `Bearer ${token}` },
           data: { bot_ids: [botId] },
@@ -165,7 +168,7 @@ const AllBots = () => {
         setLoadingState((prev) => ({ ...prev, [id]: true }));
 
         const response = await axios.post(
-          "https://app.buy2rent.eu/activate-email-bot",
+          "https://app.medicarebot.live/activate-email-bot",
           {
             bot_id: selected.bot_id,
           },

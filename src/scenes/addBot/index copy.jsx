@@ -307,7 +307,7 @@ const AddBot = () => {
 
     try {
       const response = await axios.post(
-        "https://app.buy2rent.eu/create_bot",
+        "https://app.medicarebot.live/create_bot",
         formData,
         {
           headers: {

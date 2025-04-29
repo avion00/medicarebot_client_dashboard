@@ -66,14 +66,11 @@ const TrainBots = () => {
   useEffect(() => {
     const fetchBots = async () => {
       try {
-        const response = await axios.get(
-          "https://app.medicarebot.live/list-bots",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.get("https://app.buy2rent.eu/list-bots", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setBotsList(response.data.bots);
       } catch (error) {
         // setError(error.message);
@@ -114,7 +111,7 @@ const TrainBots = () => {
 
     try {
       const response = await axios.post(
-        "https://app.medicarebot.live/feedback",
+        "https://app.buy2rent.eu/feedback",
         {
           content: feedback,
           bot_id: selectedBots[0],
@@ -151,17 +148,14 @@ const TrainBots = () => {
 
     setLoadingFeedback(true);
     try {
-      const response = await axios.get(
-        "https://app.medicarebot.live/feedback",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: {
-            bot_id: selectedBots[0],
-          },
-        }
-      );
+      const response = await axios.get("https://app.buy2rent.eu/feedback", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          bot_id: selectedBots[0],
+        },
+      });
 
       setFeedbackData(response.data || []);
       setSnackbarMessage("Feedback fetched successfully.");
@@ -195,7 +189,7 @@ const TrainBots = () => {
     setLoadingCrawl(true);
     try {
       const response = await axios.post(
-        "https://app.medicarebot.live/crawl",
+        "https://app.buy2rent.eu/crawl",
         {
           bot_id: botId,
           base_url: websiteURL,
@@ -236,7 +230,7 @@ const TrainBots = () => {
 
     try {
       const response = await axios.post(
-        "https://app.medicarebot.live/knowledge_base/",
+        "https://app.buy2rent.eu/knowledge_base/",
         formData,
         {
           headers: {
@@ -268,14 +262,11 @@ const TrainBots = () => {
   const handleDelete = async (feedbackId) => {
     try {
       // Send DELETE request to the /feedback endpoint
-      await axios.delete(
-        `https://app.medicarebot.live/feedback/${feedbackId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.delete(`https://app.buy2rent.eu/feedback/${feedbackId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       // Remove the deleted feedback from the feedbackData state
       setFeedbackData((prevFeedbackData) =>

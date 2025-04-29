@@ -58,7 +58,7 @@ const ConvertCSV = () => {
 
     try {
       const response = await axios.post(
-        "https://app.medicarebot.live/convert-excel",
+        "https://app.buy2rent.eu/convert-excel",
         formData,
         {
           headers: {

@@ -14,6 +14,7 @@ import {
   Checkbox,
   // Divider
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
@@ -87,7 +88,7 @@ const LogIn = () => {
 
   const handleFormSubmit = async (values, { setSubmitting }) => {
     try {
-      const response = await fetch("https://app.medicarebot.live/login", {
+      const response = await fetch("https://app.buy2rent.eu/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -423,11 +424,9 @@ const LogIn = () => {
                     type="submit"
                     color="secondary"
                     variant="contained"
-                    startIcon={<LoginIcon />}
                     disabled={isSubmitting}
                     sx={{
                       background: "linear-gradient(45deg, #062994, #0E72E1)",
-                      // color: colors.grey[100],
                       color: "#fff",
                       width: isNonMobile ? "50%" : "100%",
                       fontSize: "14px",
@@ -435,11 +434,18 @@ const LogIn = () => {
                       padding: "10px 20px",
                       transition: "all 0.5s ease",
                       "&:hover": {
-                        opacity: ".7",
+                        opacity: 0.7,
                       },
                     }}
+                    startIcon={
+                      isSubmitting ? (
+                        <CircularProgress size={20} color="inherit" />
+                      ) : (
+                        <LoginIcon />
+                      )
+                    }
                   >
-                    {isSubmitting ? "Logging in..." : "Log In"}
+                    {isSubmitting ? "Logging in…" : "Log In"}
                   </Button>
                 </Box>
                 {/* Horizontal line and centered text */}

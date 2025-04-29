@@ -62,14 +62,11 @@ const ViewPartners = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(
-          "https://app.medicarebot.live/list-leads",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.get("https://app.buy2rent.eu/list-leads", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (response.data.status === "success") {
           // Unwrap the nested array if necessary
@@ -112,7 +109,7 @@ const ViewPartners = () => {
     try {
       const token = sessionStorage.getItem("authToken");
       const response = await axios.delete(
-        `https://app.medicarebot.live/delete-lead/${id}`,
+        `https://app.buy2rent.eu/delete-lead/${id}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -228,7 +225,7 @@ const ViewPartners = () => {
     setIsDownloading(true);
     try {
       const response = await axios.get(
-        "https://app.medicarebot.live/list-leads?export=csv",
+        "https://app.buy2rent.eu/list-leads?export=csv",
         {
           responseType: "blob",
           headers: {

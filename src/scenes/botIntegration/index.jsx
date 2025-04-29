@@ -44,7 +44,7 @@ const BotIntegration = () => {
 
     try {
       const response = await fetch(
-        `https://app.medicarebot.live/generate_snippet/${summaryId}`,
+        `https://app.buy2rent.eu/generate_snippet/${summaryId}`,
         {
           method: "GET",
           headers: {

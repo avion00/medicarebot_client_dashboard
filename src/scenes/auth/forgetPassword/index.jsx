@@ -38,7 +38,7 @@ const ForgetPassword = () => {
     setIsSubmitting(true);
     try {
       const response = await axios.post(
-        "https://app.medicarebot.live/request_password_reset",
+        "https://app.buy2rent.eu/request_password_reset",
         {
           email: values.email,
         }
