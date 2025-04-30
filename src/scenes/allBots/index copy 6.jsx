@@ -520,7 +520,6 @@ const AllBots = () => {
                       height: "60%",
                       background: colors.primary[400],
                       borderRadius: "50%",
-                      
                     },
                   }}
                 />
